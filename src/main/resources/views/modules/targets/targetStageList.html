@@ -1,0 +1,86 @@
+<% layout('/layouts/default.html', {title: '阶段目标管理', libs: ['dataGrid']}){ %>
+<div class="main-content">
+	<div class="box box-main">
+		<div class="box-header">
+			<div class="box-title">
+				<i class="fa fa-list-alt"></i> ${text('阶段目标管理')}
+			</div>
+			<div class="box-tools pull-right">
+				<a href="#" class="btn btn-default" id="btnSearch" title="${text('查询')}"><i class="fa fa-filter"></i> ${text('查询')}</a>
+				<% if(hasPermi('targets:targetStage:edit')){ %>
+					<a href="${ctx}/targets/targetStage/form" class="btn btn-default btnTool" title="${text('新增阶段目标')}"><i class="fa fa-plus"></i> ${text('新增')}</a>
+				<% } %>
+			</div>
+		</div>
+		<div class="box-body">
+			<#form:form id="searchForm" model="${targetStage}" action="${ctx}/targets/targetStage/listData" method="post" class="form-inline hide"
+					data-page-no="${parameter.pageNo}" data-page-size="${parameter.pageSize}" data-order-by="${parameter.orderBy}">
+				<div class="form-group">
+					<label class="control-label">${text('关联目标对象')}：</label>
+					<div class="control-inline">
+						<#form:input path="targetId" maxlength="255" class="form-control width-120"/>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="control-label">${text('分解周期')}：</label>
+					<div class="control-inline">
+						<#form:input path="cycle" maxlength="255" class="form-control width-120"/>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="control-label">${text('目标值')}：</label>
+					<div class="control-inline">
+						<#form:input path="targetValue" maxlength="255" class="form-control width-120"/>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="control-label">${text('权重 存储 整型，计算换算')}：</label>
+					<div class="control-inline">
+						<#form:input path="weight" maxlength="11" class="form-control width-120"/>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="control-label">${text('争创值')}：</label>
+					<div class="control-inline">
+						<#form:input path="effortValue" maxlength="255" class="form-control width-120"/>
+					</div>
+				</div>
+				<div class="form-group">
+					<button type="submit" class="btn btn-primary btn-sm">${text('查询')}</button>
+					<button type="reset" class="btn btn-default btn-sm">${text('重置')}</button>
+				</div>
+			</#form:form>
+			<table id="dataGrid"></table>
+			<div id="dataGridPage"></div>
+		</div>
+	</div>
+</div>
+<% } %>
+<script>
+// 初始化DataGrid对象
+$('#dataGrid').dataGrid({
+	searchForm: $("#searchForm"),
+	columnModel: [
+		{header:'${text("关联目标对象")}', name:'targetId', index:'a.target_id', width:150, align:"left", frozen:true, formatter: function(val, obj, row, act){
+			return '<a href="${ctx}/targets/targetStage/form?id='+row.id+'" class="btnList" data-title="${text("编辑阶段目标")}">'+(val||row.id)+'</a>';
+		}},
+		{header:'${text("分解周期")}', name:'cycle', index:'a.cycle', width:150, align:"left"},
+		{header:'${text("目标值")}', name:'targetValue', index:'a.target_value', width:150, align:"left"},
+		{header:'${text("权重 存储 整型，计算换算")}', name:'weight', index:'a.weight', width:150, align:"center"},
+		{header:'${text("争创值")}', name:'effortValue', index:'a.effort_value', width:150, align:"left"},
+		{header:'${text("修改时间")}', name:'updateDate', index:'a.update_date', width:150, align:"center"},
+		{header:'${text("操作")}', name:'actions', width:120, sortable:false, title:false, formatter: function(val, obj, row, act){
+			var actions = [];
+			<% if(hasPermi('targets:targetStage:edit')){ %>
+				actions.push('<a href="${ctx}/targets/targetStage/form?id='+row.id+'" class="btnList" title="${text("编辑阶段目标")}"><i class="fa fa-pencil"></i></a>&nbsp;');
+				actions.push('<a href="${ctx}/targets/targetStage/delete?id='+row.id+'" class="btnList" title="${text("删除阶段目标")}" data-confirm="${text("确认要删除该阶段目标吗？")}"><i class="fa fa-trash-o"></i></a>&nbsp;');
+			<% } %>
+			return actions.join('');
+		}}
+	],
+	// 加载成功后执行事件
+	ajaxSuccess: function(data){
+		
+	}
+});
+</script>

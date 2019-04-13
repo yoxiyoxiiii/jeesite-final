@@ -1,0 +1,309 @@
+<% layout('/layouts/default.html', {title: '', bodyClass: ''}){ %>
+<!-- <link rel="stylesheet" href="${ctxStatic}/modules/sys/sysDesktop.css?${_version}"> -->
+<div class="content pb0">
+	<!-- Info boxes -->
+	<div class="row">
+		<div class="col-md-3 col-sm-6 col-xs-12">
+			<div class="info-box">
+				<span class="info-box-icon bg-aqua"><i class="fa fa-anchor"></i></span>
+				<div class="info-box-content">
+					<span class="info-box-text">基本任务</span>
+					<span class="info-box-number">90<small>%</small></span>
+				</div>
+			</div>
+		</div>
+		<div class="col-md-3 col-sm-6 col-xs-12">
+			<div class="info-box">
+				<span class="info-box-icon bg-red"><i class="fa fa-empire"></i></span>
+				<div class="info-box-content">
+					<span class="info-box-text">重点工作</span>
+					<span class="info-box-number">41,410</span>
+				</div>
+			</div>
+		</div>
+
+		<!-- fix for small devices only -->
+		<div class="clearfix visible-sm-block"></div>
+
+		<div class="col-md-3 col-sm-6 col-xs-12">
+			<div class="info-box">
+				<span class="info-box-icon bg-green"><i class="fa fa-connectdevelop"></i></span>
+				<div class="info-box-content">
+					<span class="info-box-text">综合评价</span>
+					<span class="info-box-number">760</span>
+				</div>
+			</div>
+		</div>
+		<div class="col-md-3 col-sm-6 col-xs-12">
+			<div class="info-box">
+				<span class="info-box-icon bg-yellow"><i class="fa fa-puzzle-piece"></i></span>
+
+				<div class="info-box-content">
+					<span class="info-box-text">奖扣</span>
+					<span class="info-box-number">2,000</span>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!-- Chart boxes -->
+	<div class="row">
+		<div class="col-md-12">
+			<div class="box box-widget">
+				<div class="box-header with-border">
+					<h3 class="box-title">重点工作</h3>
+					<div class="box-tools pull-right">
+						<button type="button" class="btn btn-box-tool" data-widget="collapse">
+							<i class="fa fa-minus"></i>
+						</button>
+						<div class="btn-group">
+							<button type="button" class="btn btn-box-tool dropdown-toggle" data-toggle="dropdown">
+								<i class="fa fa-wrench"></i></button>
+							<ul class="dropdown-menu" role="menu">
+								<li><a href="#">导出Excel</a></li>
+								<li><a href="#">导出Word</a></li>
+								<li class="divider"></li>
+								<li><a href="#">基本设置</a></li>
+							</ul>
+						</div>
+						<button type="button" class="btn btn-box-tool" data-widget="remove">
+							<i class="fa fa-times"></i>
+						</button>
+					</div>
+				</div>
+				<div class="box-body">
+					<div class="row">
+							<script type="text/javascript" src="http://echarts.baidu.com/gallery/vendors/echarts/echarts.min.js"></script>
+							<script type="text/javascript" src="http://echarts.baidu.com/gallery/vendors/echarts-gl/echarts-gl.min.js"></script>
+							<script type="text/javascript" src="http://echarts.baidu.com/gallery/vendors/echarts-stat/ecStat.min.js"></script>
+							<script type="text/javascript" src="http://echarts.baidu.com/gallery/vendors/echarts/extension/dataTool.min.js"></script>
+							<script type="text/javascript" src="http://echarts.baidu.com/gallery/vendors/echarts/map/js/china.js"></script>
+							<script type="text/javascript" src="http://echarts.baidu.com/gallery/vendors/echarts/map/js/world.js"></script>
+							<script type="text/javascript" src="https://api.map.baidu.com/api?v=2.0&ak=xfhhaTThl11qYVrqLZii6w8qE5ggnhrY&__ec_v__=20190126"></script>
+							<script type="text/javascript" src="http://echarts.baidu.com/gallery/vendors/echarts/extension/bmap.min.js"></script>
+							<script type="text/javascript" src="http://echarts.baidu.com/gallery/vendors/simplex.js"></script>
+							
+						<div class="col-md-4">
+							<div class="chart">
+								<div id="myChartRadio" style="height:240px;"></div>
+
+								<script type="text/javascript">
+									var dom = document.getElementById("myChartRadio");
+									var myChart = echarts.init(dom);
+									var app = {};
+									option = null;
+									option = {
+										// title: {
+										// 	text: '基础雷达图'
+										// },
+										tooltip: {},
+										// legend: {
+										// 	data: ['预算分配（Allocated Budget）', '实际开销（Actual Spending）']
+										// },
+										radar: {
+											// shape: 'circle',
+											name: {
+												textStyle: {
+													color: '#fff',
+													backgroundColor: '#999',
+													borderRadius: 3,
+													padding: [3, 5]
+											   }
+											},
+											indicator: [
+											   { name: '改革', max: 6500},
+											   { name: '执法', max: 16000},
+											   { name: '队伍', max: 30000},
+											   { name: '廉政', max: 38000},
+											   { name: '党建', max: 52000},
+											   { name: '综合', max: 25000}
+											]
+										},
+										series: [{
+											name: '目标 vs 得分',
+											type: 'radar',
+											// areaStyle: {normal: {}},
+											itemStyle: {normal: {areaStyle: {opacity: 0.3, type: 'default'}}},
+											data : [
+												{
+													value : [4300, 10000, 28000, 35000, 50000, 19000],
+													name : '考核目标'
+												},
+												 {
+													value : [5000, 14000, 28000, 31000, 42000, 21000],
+													name : '实际得分'
+												}
+											]
+										}]
+									};;
+									if (option && typeof option === "object") {
+										myChart.setOption(option, true);
+									}
+										   </script>
+							
+							</div>
+						</div>
+						<div class="col-md-4">
+								<div id="myChartMonth" style="height:240px;"></div>
+
+								<script type="text/javascript">
+									var domM = document.getElementById("myChartMonth");
+									var myChartM = echarts.init(domM);
+									var appM = {};
+									optionM = null;
+									optionM= {										
+										tooltip: {},										
+										radar: {											
+											name: {
+												textStyle: {
+													color: '#fff',
+													backgroundColor: '#999',
+													borderRadius: 3,
+													padding: [3, 5]
+											   }
+											},
+											indicator: (function (){
+													var res = [];
+													for (var i = 1; i <= 12; i++) {
+														res.push({text:i+'月',max:100});
+													}
+													return res;
+												})(),
+										},
+										series: [{
+											name: '目标 vs 得分',
+											type: 'radar',
+											// areaStyle: {normal: {}},
+											itemStyle: {normal: {areaStyle: {opacity: 0.3,type: 'default'}}},
+											data: [
+												{
+													name: '指标',
+													value: [2.6, 5.9, 9.0, 26.4, 28.7, 70.7, 75.6, 82.2, 48.7, 18.8, 6.0, 2.3],
+												},
+												{
+													name:'得分',
+													value:[2.0, 4.9, 7.0, 23.2, 25.6, 76.7, 35.6, 62.2, 32.6, 20.0, 6.4, 3.3]
+												}
+											]
+										}]
+									};;
+									if (optionM && typeof optionM === "object") {
+										myChartM.setOption(optionM, true);
+									}
+										   </script>
+							
+						</div>
+						<div class="col-md-4">
+								<div id="myChartYBP" style="height:240px;"></div>
+								<script type="text/javascript">
+									var domYBP = document.getElementById("myChartYBP");
+									var myChartYBP = echarts.init(domYBP);
+									var IndexName = 0;
+									var appYBP = {};
+									optionYBP = null;
+									optionYBP = {
+										tooltip : {
+											formatter: "{a} <br/>{b} : {c}%"
+										},
+										
+										series: [
+											{
+												name: '业务指标',
+												type: 'gauge',
+												min: 0,
+												max:60,
+												radius: '110%',
+												splitNumber: 5,    
+												center: ['50%', '45%'], 
+												title : {
+													offsetCenter: [0, '80%'],       //改变标题的位置
+													// textStyle: {       // 其余属性默认使用全局文本样式，详见TEXTSTYLE
+													// 	fontWeight: 'bolder',
+													// 	fontSize: 12,
+													// 	color: '#000',
+													// 	shadowColor : '#000', //默认透明
+													// }
+												},  
+												axisLabel: {            // 坐标轴小标记              
+													textStyle: {       // 属性lineStyle控制线条样式
+														color: '#000',
+														fontSize:9,   //改变仪表盘内刻度数字的大小
+														shadowColor : '#000', //默认透明														
+													}
+												},    
+												
+												axisLine: {            // 坐标轴线  38c231
+														lineStyle: {       // 属性lineStyle控制线条样式
+															width: 5,  
+															color: [[0.2, '#c23531'], [0.8, '#63869e'], [1, '#38c231']]
+																	}  
+																},  
+												detail: {formatter:'{value}%'},
+												data: [{value: 50, name: '省厅任务'}]
+											}
+										]
+									};
+									
+									setInterval(function () {
+										names = ["政治稳定","治安稳定","化解风险"];
+										optionYBP.series[0].data[0].value = (Math.random() * 100).toFixed(2) - 0;
+										optionYBP.series[0].data[0].name = names[IndexName];
+										IndexName++;
+										if(IndexName >= names.length){IndexName = 0;}
+										myChartYBP.setOption(optionYBP, true);
+									},2000);
+									;
+									if (optionYBP && typeof optionYBP === "object") {
+										myChartYBP.setOption(optionYBP, true);
+									}
+										   </script>
+						</div>
+					</div>
+				</div>
+				<div class="box-footer">
+					<div class="row">
+						<div class="col-sm-3 col-xs-6">
+							<div class="description-block border-right">
+								<span class="description-percentage text-green"><i class="fa fa-caret-up"></i> 90%</span>
+								<h5 class="description-header">-1, -2, -0.1</h5>
+								<span class="description-text">机制运行</span>
+							</div>
+						</div>
+						<div class="col-sm-3 col-xs-6">
+							<div class="description-block border-right">
+								<span class="description-percentage text-yellow"><i class="fa fa-caret-left"></i> 80%</span>
+								<h5 class="description-header">-0.05, -0.3, -0.02</h5>
+								<span class="description-text">天幕工程建设</span>
+							</div>
+						</div>
+						<div class="col-sm-3 col-xs-6">
+							<div class="description-block border-right">
+								<span class="description-percentage text-green"><i class="fa fa-caret-up"></i> 90%</span>
+								<h5 class="description-header">-0.02, -0.5, -0.2</h5>
+								<span class="description-text">深化科技信息化</span>
+							</div>
+						</div>
+						<div class="col-sm-3 col-xs-6">
+							<div class="description-block">
+								<span class="description-percentage text-red"><i class="fa fa-caret-down"></i> 100%</span>
+								<h5 class="description-header">-0.00, -0.00, -0.00</h5>
+								<span class="description-text">深化三中心</span>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<footer class="main-footer m0">
+	<div class="pull-right hidden-xs">监督电话： ${@Global.getConfig('serverPhone')}</div>
+	&copy; ${@DateUtils.getYear()} ${@Global.getConfig('serverDepartment')} - Powered By <a href="http://www.or3.net">3000Dan</a>
+</footer>
+<% } %>
+<script>
+$(window).resize(function(){
+	var footerHeight  = $('.main-footer').outerHeight() || 0;
+	var windowHeight  = $(window).height();
+	$('.content').css('min-height', windowHeight - footerHeight)
+}).resize();
+</script>

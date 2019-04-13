@@ -1,0 +1,30 @@
+body{
+    background: url("login1.png");
+    animation-name:myfirst;
+    animation-duration:12s;   
+    animation-delay:2s;
+    animation-iteration-count:infinite;
+    animation-play-state:running;
+}
+@keyframes myfirst
+{
+    0%   {background:url("login1.png");}
+    34%  {background:url("login2.png");}
+    67%  {background:url("login3.png");}
+    100% {background:url("login4.png");}
+}
+.login-page{
+    background-color:#222222 !important;
+}
+.login-logo, .login-logo a{
+    color:white !important;
+} 
+
+.login-copyright, .login-copyright a{
+    color:white !important;
+}
+
+.login-box-body{
+    background: rgba(255,255,255,0.9) !important;
+    box-shadow: 0 0 0 #999 !important;
+}

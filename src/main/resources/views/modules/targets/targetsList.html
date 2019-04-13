@@ -1,0 +1,227 @@
+<% layout('/layouts/default.html', {title: '目标管理', libs: ['dataGrid']}){ %>
+<div class="main-content">
+	<div class="box box-main">
+		<div class="box-header">
+			<div class="box-title">
+				<i class="fa fa-list-alt"></i> ${text('目标管理')}
+			</div>
+			<div class="box-tools pull-right">
+				<a href="#" class="btn btn-default" id="btnSearch" title="${text('查询')}"><i class="fa fa-filter"></i> ${text('查询')}</a>
+				<% if(hasPermi('targets:targets:edit')){ %>
+					<a href="${ctx}/targets/targets/form" class="btn btn-default btnTool" title="${text('新增目标')}"><i class="fa fa-plus"></i> ${text('新增')}</a>
+				<% } %>
+			</div>
+		</div>
+		<div class="box-body">
+			<#form:form id="searchForm" model="${targets}" action="${ctx}/targets/targets/listData" method="post" class="form-inline hide"
+					data-page-no="${parameter.pageNo}" data-page-size="${parameter.pageSize}" data-order-by="${parameter.orderBy}">
+<!--				<div class="form-group">-->
+<!--					<label class="control-label">${text('上级指标')}：</label>-->
+<!--					<div class="control-inline">-->
+<!--						<#form:input path="pid" maxlength="255" class="form-control width-120"/>-->
+<!--					</div>-->
+<!--				</div>-->
+				<div class="form-group">
+					<label class="control-label">${text('目标名称')}：</label>
+					<div class="control-inline">
+						<#form:input path="targetName" maxlength="255" class="form-control width-120"/>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="control-label">${text('目标值')}：</label>
+					<div class="control-inline">
+						<#form:input path="targetValue" maxlength="255" class="form-control width-120"/>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="control-label">${text('争创值')}：</label>
+					<div class="control-inline">
+						<#form:input path="effortValue" maxlength="255" class="form-control width-120"/>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="control-label">${text('指标属性 ')}：</label>
+					<div class="control-inline">
+						<#form:input path="targetAttribute" maxlength="4" class="form-control width-120"/>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="control-label">${text('分类ID')}：</label>
+					<div class="control-inline">
+						<#form:input path="targetTypeId" maxlength="50" class="form-control width-120"/>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="control-label">${text('指标顺序')}：</label>
+					<div class="control-inline">
+						<#form:input path="targetOrder" maxlength="4" class="form-control width-120"/>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="control-label">${text('权重')}：</label>
+					<div class="control-inline">
+						<#form:input path="weigh" maxlength="4" class="form-control width-120"/>
+					</div>
+				</div>
+<!--				<div class="form-group">-->
+<!--					<label class="control-label">${text('年份')}：</label>-->
+<!--					<div class="control-inline">-->
+<!--						<#form:input path="createYear" maxlength="255" class="form-control width-120"/>-->
+<!--					</div>-->
+<!--				</div>-->
+<!--				<div class="form-group">-->
+<!--					<label class="control-label">${text('创建月份')}：</label>-->
+<!--					<div class="control-inline">-->
+<!--						<#form:input path="createMonth" maxlength="255" class="form-control width-120"/>-->
+<!--					</div>-->
+<!--				</div>-->
+				<div class="form-group">
+					<label class="control-label">${text('考核周期')}：</label>
+					<div class="control-inline">
+						<#form:input path="checkCycle" maxlength="255" class="form-control width-120"/>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="control-label">${text('采集周期 关联定时任务 表达式')}：</label>
+					<div class="control-inline">
+						<#form:input path="acquisitionCycle" maxlength="255" class="form-control width-120"/>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="control-label">${text('选择分档')}：</label>
+					<div class="control-inline">
+						<#form:input path="gradeId" maxlength="255" class="form-control width-120"/>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="control-label">${text('完成标准/文字描述/公式结果')}：</label>
+					<div class="control-inline">
+						<#form:input path="complete" maxlength="255" class="form-control width-120"/>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="control-label">${text('指标归属')}：</label>
+					<div class="control-inline">
+						<#form:input path="belong" maxlength="255" class="form-control width-120"/>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="control-label">${text('考核依据')}：</label>
+					<div class="control-inline">
+						<#form:input path="checkBasis" maxlength="255" class="form-control width-120"/>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="control-label">${text('执行部门')}：</label>
+					<div class="control-inline">
+						<#form:input path="executeDepartment" maxlength="255" class="form-control width-120"/>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="control-label">${text('协同部门')}：</label>
+					<div class="control-inline">
+						<#form:input path="jointWorkDepartment" maxlength="255" class="form-control width-120"/>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="control-label">${text('描述信息')}：</label>
+					<div class="control-inline">
+						<#form:input path="description" maxlength="255" class="form-control width-120"/>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="control-label">${text('是否被分解')}：</label>
+					<div class="control-inline">
+						<#form:input path="isAnalyze" maxlength="1" class="form-control width-120"/>
+					</div>
+				</div>
+<!--				<div class="form-group">-->
+<!--					<label class="control-label">${text('handle_id')}：</label>-->
+<!--					<div class="control-inline">-->
+<!--						<#form:input path="handleId" maxlength="50" class="form-control width-120"/>-->
+<!--					</div>-->
+<!--				</div>-->
+				<div class="form-group">
+					<label class="control-label">${text('审批是否通过 1 通过 0 不通过')}：</label>
+					<div class="control-inline">
+						<#form:input path="isApproval" maxlength="1" class="form-control width-120"/>
+					</div>
+				</div>
+<!--				<div class="form-group">-->
+<!--					<label class="control-label">${text('审批人')}：</label>-->
+<!--					<div class="control-inline">-->
+<!--						<#form:input path="approvalBy" maxlength="255" class="form-control width-120"/>-->
+<!--					</div>-->
+<!--				</div>-->
+<!--				<div class="form-group">-->
+<!--					<label class="control-label">${text('审批备注')}：</label>-->
+<!--					<div class="control-inline">-->
+<!--						<#form:input path="approvalMsg" maxlength="255" class="form-control width-120"/>-->
+<!--					</div>-->
+<!--				</div>-->
+<!--				<div class="form-group">-->
+<!--					<label class="control-label">${text('handle_id')}：</label>-->
+<!--					<div class="control-inline">-->
+<!--						<#form:input path="handleId" maxlength="50" class="form-control width-120"/>-->
+<!--					</div>-->
+<!--				</div>-->
+				<div class="form-group">
+					<button type="submit" class="btn btn-primary btn-sm">${text('查询')}</button>
+					<button type="reset" class="btn btn-default btn-sm">${text('重置')}</button>
+				</div>
+			</#form:form>
+			<table id="dataGrid"></table>
+			<div id="dataGridPage"></div>
+		</div>
+	</div>
+</div>
+<% } %>
+<script>
+// 初始化DataGrid对象
+$('#dataGrid').dataGrid({
+	searchForm: $("#searchForm"),
+	columnModel: [
+		{header:'${text("目标名称")}', name:'targetName', index:'a.target_name', width:150, align:"left", frozen:true, formatter: function(val, obj, row, act){
+			return '<a href="${ctx}/targets/targets/form?id='+row.id+'" class="btnList" data-title="${text("编辑targets")}">'+(val||row.id)+'</a>';
+		}},
+		// {header:'${text("目标名称")}', name:'targetName', index:'a.target_name', width:150, align:"left"},
+		{header:'${text("目标值")}', name:'targetValue', index:'a.target_value', width:150, align:"left"},
+		{header:'${text("争创值")}', name:'effortValue', index:'a.effort_value', width:150, align:"left"},
+		{header:'${text("指标属性 ")}', name:'targetAttribute', index:'a.target_attribute', width:150, align:"center"},
+		{header:'${text("分类ID")}', name:'targetTypeId', index:'a.target_type_id', width:150, align:"left"},
+		{header:'${text("排序")}', name:'targetOrder', index:'a.target_order', width:150, align:"center"},
+		{header:'${text("权重")}', name:'weigh', index:'a.weigh', width:150, align:"center"},
+		// {header:'${text("年份")}', name:'createYear', index:'a.create_year', width:150, align:"left"},
+		// {header:'${text("创建月份")}', name:'createMonth', index:'a.create_month', width:150, align:"left"},
+
+		// {header:'${text("考核周期")}', name:'checkCycle', index:'a.check_cycle', width:150, align:"left"},
+		// {header:'${text("采集周期 关联定时任务 表达式")}', name:'acquisitionCycle', index:'a.acquisition_cycle', width:150, align:"left"},
+		{header:'${text("选择分档")}', name:'gradeId', index:'a.grade_id', width:150, align:"left"},
+		// {header:'${text("完成标准/文字描述/公式结果")}', name:'complete', index:'a.complete', width:150, align:"left"},
+		{header:'${text("指标归属")}', name:'belongs.officeName', index:'belongOffice.office_name', width:150, align:"left"},
+		// {header:'${text("考核依据")}', name:'checkBasis', index:'a.check_basis', width:150, align:"left"},
+		// {header:'${text("执行部门")}', name:'executeDepartments.officeName', index:'a.execute_department', width:150, align:"left"},
+		// {header:'${text("协同部门")}', name:'jointWorkDepartments.officeName', index:'a.joint_work_department', width:150, align:"left"},
+		{header:'${text("描述")}', name:'description', index:'a.description', width:150, align:"left"},
+		{header:'${text("分解")}', name:'isAnalyze', index:'a.is_analyze', width:150, align:"center"},
+		// {header:'${text("handle_id")}', name:'handleId', index:'a.handle_id', width:150, align:"left"},
+		// {header:'${text("审批是否通过 1 通过 0 不通过")}', name:'isApproval', index:'a.is_approval', width:150, align:"center"},
+		// {header:'${text("审批人")}', name:'approvalBy', index:'a.approval_by', width:150, align:"left"},
+		{header:'${text("审批备注")}', name:'approvalMsg', index:'a.approval_msg', width:150, align:"left"},
+		{header:'${text("修改时间")}', name:'updateDate', index:'a.update_date', width:150, align:"center"},
+		// {header:'${text("handle_id")}', name:'handleId', index:'a.handle_id', width:150, align:"left"},
+		{header:'${text("操作")}', name:'actions', width:120, sortable:false, title:false, formatter: function(val, obj, row, act){
+			var actions = [];
+			<% if(hasPermi('targets:targets:edit')){ %>
+				actions.push('<a href="${ctx}/targets/targets/form?id='+row.id+'" class="btnList" title="${text("编辑targets")}"><i class="fa fa-pencil"></i></a>&nbsp;');
+				actions.push('<a href="${ctx}/targets/targets/delete?id='+row.id+'" class="btnList" title="${text("删除targets")}" data-confirm="${text("确认要删除该targets吗？")}"><i class="fa fa-trash-o"></i></a>&nbsp;');
+			<% } %>
+			return actions.join('');
+		}}
+	],
+	// 加载成功后执行事件
+	ajaxSuccess: function(data){
+		
+	}
+});
+</script>

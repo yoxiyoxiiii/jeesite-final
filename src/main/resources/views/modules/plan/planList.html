@@ -1,0 +1,180 @@
+<% layout('/layouts/default.html', {title: '考核计划管理', libs: ['dataGrid']}){ %>
+<div class="main-content">
+	<div class="box box-main">
+		<div class="box-header">
+			<div class="box-title">
+				<i class="fa fa-list-alt"></i> ${text('考核计划管理')}
+			</div>
+			<div class="box-tools pull-right">
+				<a href="#" class="btn btn-default" id="btnSearch" title="${text('查询')}"><i class="fa fa-filter"></i> ${text('查询')}</a>
+				<% if(hasPermi('plan:plan:edit')){ %>
+					<a href="${ctx}/plan/plan/form" class="btn btn-default btnTool" title="${text('新增考核计划')}"><i class="fa fa-plus"></i> ${text('新增')}</a>
+				<% } %>
+			</div>
+		</div>
+		<div class="box-body">
+			<#form:form id="searchForm" model="${plan}" action="${ctx}/plan/plan/listData" method="post" class="form-inline hide"
+					data-page-no="${parameter.pageNo}" data-page-size="${parameter.pageSize}" data-order-by="${parameter.orderBy}">
+				<div class="form-group">
+					<label class="control-label">${text('计划名称')}：</label>
+					<div class="control-inline">
+						<#form:input path="name" maxlength="255" class="form-control width-120"/>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="control-label">${text('考核计划分类')}：</label>
+					<div class="control-inline">
+						<#form:input path="planType" maxlength="255" class="form-control width-120"/>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="control-label">${text('计划创建年')}：</label>
+					<div class="control-inline">
+						<#form:input path="createYear" maxlength="255" class="form-control width-120"/>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="control-label">${text('创建月')}：</label>
+					<div class="control-inline">
+						<#form:input path="createMonth" maxlength="255" class="form-control width-120"/>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="control-label">${text('部门Id，考核计划归属的部门')}：</label>
+					<div class="control-inline">
+						<#form:input path="departmentId" maxlength="50" class="form-control width-120"/>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="control-label">${text('序号')}：</label>
+					<div class="control-inline">
+						<#form:input path="order" maxlength="255" class="form-control width-120"/>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="control-label">${text('专业类型 ')}：</label>
+					<div class="control-inline">
+						<#form:input path="majorType" maxlength="4" class="form-control width-120"/>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="control-label">${text('负责人')}：</label>
+					<div class="control-inline">
+						<#form:input path="userId" maxlength="100" class="form-control width-120"/>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="control-label">${text('责任人')}：</label>
+					<div class="control-inline">
+						<#form:input path="dutyId" maxlength="100" class="form-control width-120"/>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="control-label">${text('完成时间')}：</label>
+					<div class="control-inline">
+						<#form:input path="completeTime" readonly="true" maxlength="20" class="form-control Wdate-datetime"
+							dataFormat="datetime" onclick="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm',isShowClear:false});"/>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="control-label">${text('关键措施')}：</label>
+					<div class="control-inline">
+						<#form:input path="keyStep" maxlength="255" class="form-control width-120"/>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="control-label">${text('工作成果')}：</label>
+					<div class="control-inline">
+						<#form:input path="result" maxlength="255" class="form-control width-120"/>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="control-label">${text('计划状态 1 未启动、2 已完成、3 执行中、4 废除')}：</label>
+					<div class="control-inline width-120">
+						<#form:select path="status" dictType="sys_search_status" blankOption="true" class="form-control"/>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="control-label">${text('紧急程度')}：</label>
+					<div class="control-inline">
+						<#form:input path="urgent" maxlength="255" class="form-control width-120"/>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="control-label">${text('审核是否通过 1 通过 0 不通过')}：</label>
+					<div class="control-inline">
+						<#form:input path="isApproval" maxlength="255" class="form-control width-120"/>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="control-label">${text('审批备注')}：</label>
+					<div class="control-inline">
+						<#form:input path="approvalMsg" maxlength="255" class="form-control width-120"/>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="control-label">${text('审批人')}：</label>
+					<div class="control-inline">
+						<#form:input path="approvalBy" maxlength="255" class="form-control width-120"/>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="control-label">${text('评价状态 ')}：</label>
+					<div class="control-inline">
+						<#form:input path="checkStatus" maxlength="4" class="form-control width-120"/>
+					</div>
+				</div>
+				<div class="form-group">
+					<button type="submit" class="btn btn-primary btn-sm">${text('查询')}</button>
+					<button type="reset" class="btn btn-default btn-sm">${text('重置')}</button>
+				</div>
+			</#form:form>
+			<table id="dataGrid"></table>
+			<div id="dataGridPage"></div>
+		</div>
+	</div>
+</div>
+<% } %>
+<script>
+// 初始化DataGrid对象
+$('#dataGrid').dataGrid({
+	searchForm: $("#searchForm"),
+	columnModel: [
+		{header:'${text("计划名称")}', name:'name', index:'a.name', width:150, align:"left", frozen:true, formatter: function(val, obj, row, act){
+			return '<a href="${ctx}/plan/plan/form?id='+row.id+'" class="btnList" data-title="${text("编辑考核计划")}">'+(val||row.id)+'</a>';
+		}},
+		{header:'${text("考核计划分类")}', name:'planType', index:'a.plan_type', width:150, align:"left"},
+		{header:'${text("计划创建年")}', name:'createYear', index:'a.create_year', width:150, align:"left"},
+		{header:'${text("创建月")}', name:'createMonth', index:'a.create_month', width:150, align:"left"},
+		{header:'${text("更新时间")}', name:'updateDate', index:'a.update_date', width:150, align:"center"},
+		{header:'${text("部门Id，考核计划归属的部门")}', name:'departmentId', index:'a.department_id', width:150, align:"left"},
+		{header:'${text("序号")}', name:'order', index:'a.order', width:150, align:"left"},
+		{header:'${text("专业类型 ")}', name:'majorType', index:'a.major_type', width:150, align:"center"},
+		{header:'${text("负责人")}', name:'userId', index:'a.user_id', width:150, align:"left"},
+		{header:'${text("责任人")}', name:'dutyId', index:'a.duty_id', width:150, align:"left"},
+		{header:'${text("完成时间")}', name:'completeTime', index:'a.complete_time', width:150, align:"center"},
+		{header:'${text("关键措施")}', name:'keyStep', index:'a.key_step', width:150, align:"left"},
+		{header:'${text("工作成果")}', name:'result', index:'a.result', width:150, align:"left"},
+		{header:'${text("计划状态 1 未启动、2 已完成、3 执行中、4 废除")}', name:'status', index:'a.status', width:150, align:"center", formatter: function(val, obj, row, act){
+			return js.getDictLabel(${@DictUtils.getDictListJson('sys_search_status')}, val, '${text("未知")}', true);
+		}},
+		{header:'${text("紧急程度")}', name:'urgent', index:'a.urgent', width:150, align:"left"},
+		{header:'${text("审核是否通过 1 通过 0 不通过")}', name:'isApproval', index:'a.is_approval', width:150, align:"left"},
+		{header:'${text("审批备注")}', name:'approvalMsg', index:'a.approval_msg', width:150, align:"left"},
+		{header:'${text("审批人")}', name:'approvalBy', index:'a.approval_by', width:150, align:"left"},
+		{header:'${text("评价状态 ")}', name:'checkStatus', index:'a.check_status', width:150, align:"center"},
+		{header:'${text("操作")}', name:'actions', width:120, sortable:false, title:false, formatter: function(val, obj, row, act){
+			var actions = [];
+			<% if(hasPermi('plan:plan:edit')){ %>
+				actions.push('<a href="${ctx}/plan/plan/form?id='+row.id+'" class="btnList" title="${text("编辑考核计划")}"><i class="fa fa-pencil"></i></a>&nbsp;');
+				actions.push('<a href="${ctx}/plan/plan/delete?id='+row.id+'" class="btnList" title="${text("删除考核计划")}" data-confirm="${text("确认要删除该考核计划吗？")}"><i class="fa fa-trash-o"></i></a>&nbsp;');
+			<% } %>
+			return actions.join('');
+		}}
+	],
+	// 加载成功后执行事件
+	ajaxSuccess: function(data){
+		
+	}
+});
+</script>
