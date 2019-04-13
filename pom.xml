@@ -9,8 +9,8 @@
 		<version>4.1.4-SNAPSHOT</version>
 	</parent>
 	
-	<artifactId>jeesite-web</artifactId>
-	<packaging>war</packaging>
+	<artifactId>jeesite-final</artifactId>
+	<packaging>jar</packaging>
 	
 	<name>JeeSite Web</name>
 	<url>http://jeesite.com</url>
@@ -18,7 +18,7 @@
 	
 	<properties>
 		
-		<finalName>web</finalName><!-- war包的名称 -->
+		<finalName>jeesite-final</finalName><!-- war包的名称 -->
 		<start-class>com.jeesite.modules.Application</start-class>
 		
 		<!-- environment setting -->
