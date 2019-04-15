@@ -5,9 +5,12 @@ package com.jeesite.modules.targets.web;
 
 import com.jeesite.common.config.Global;
 import com.jeesite.common.entity.Page;
+import com.jeesite.common.lang.StringUtils;
 import com.jeesite.common.web.BaseController;
 import com.jeesite.modules.targets.entity.TargetDepartment;
+import com.jeesite.modules.targets.entity.Targets;
 import com.jeesite.modules.targets.service.TargetDepartmentService;
+import com.jeesite.modules.targets.service.TargetsService;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -32,6 +35,10 @@ public class TargetDepartmentController extends BaseController {
 
 	@Autowired
 	private TargetDepartmentService targetDepartmentService;
+
+	//顶级目标
+	@Autowired
+	private TargetsService targetsService;
 	
 	/**
 	 * 获取数据
@@ -71,6 +78,20 @@ public class TargetDepartmentController extends BaseController {
 	public String form(TargetDepartment targetDepartment, Model model) {
 		model.addAttribute("targetDepartment", targetDepartment);
 		return "modules/targets/targetDepartmentForm";
+	}
+	/**
+	 * 部门目标分解
+	 */
+	@RequiresPermissions("targets:targetDepartment:decompose")
+	@RequestMapping(value = "decompose")
+	public String decompose(String targetid, Model model) {
+		TargetDepartment targetDepartment = new TargetDepartment();
+		if (!"".equals(targetid) && targetid !=null) {
+			Targets targets = targetsService.get(targetid);
+			targetDepartment.setTarget(targets);
+		}
+		model.addAttribute("targetDepartment", targetDepartment);
+		return "modules/targets/targetDepartmentFormDecompose";
 	}
 
 	/**

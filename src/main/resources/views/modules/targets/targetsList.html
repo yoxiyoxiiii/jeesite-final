@@ -231,9 +231,20 @@ $('#dataGrid').dataGrid({
 		{header:'${text("操作")}', name:'actions', width:120, sortable:false, title:false, formatter: function(val, obj, row, act){
 			var actions = [];
 			<% if(hasPermi('targets:targets:edit')){ %>
-				actions.push('<a href="${ctx}/targets/targets/form?id='+row.id+'" class="btnList" title="${text("编辑targets")}"><i class="fa fa-pencil"></i></a>&nbsp;');
-				actions.push('<a href="${ctx}/targets/targets/delete?id='+row.id+'" class="btnList" title="${text("删除targets")}" data-confirm="${text("确认要删除该targets吗？")}"><i class="fa fa-trash-o"></i></a>&nbsp;');
+				actions.push('<a href="${ctx}/targets/targets/form?id='+row.id+'" class="btnList" title="${text("编辑")}"><i class="fa fa-pencil"></i></a>&nbsp;');
+				actions.push('<a href="${ctx}/targets/targets/delete?id='+row.id+'" class="btnList" title="${text("删除")}" data-confirm="${text("确认要删除该目标吗？")}"><i class="fa fa-trash-o"></i></a>&nbsp;');
 			<% } %>
+			<% if(hasPermi('sys:empUser:authRole,sys:empUser:authDataScope,sys:empUser:resetpwd', 'or')){ %>
+					actions.push('<a href="javascript:" class="btnMore" title="${text("分解")}"><i class="fa fa-chevron-circle-right"></i></a>&nbsp;');
+					actions.push('<div class="moreItems">');
+				<% if(hasPermi('sys:empUser:authRole')){ %>
+						actions.push('<a href="${ctx}/sys/empUser/form?userCode='+row.userCode+'&op=auth" class="btn btn-default btn-xs btnList" title="${text("阶段目标分解")}"><i class="fa fa-check-square-o"></i> ${text("阶段目标分解")}</a>&nbsp;');
+					<% } %>
+				<% if(hasPermi('targets:targetDepartment:decompose')){ %>
+						actions.push('<a href="${ctx}/targets/targetDepartment/decompose?targetid='+row.id+'" class="btn btn-default btn-xs btnList" title="${text("纵向分解")}"><i class="fa fa-check-circle-o"></i> ${text("纵向分解")}</a>&nbsp;');
+					<% } %>
+					actions.push('</div>');
+				<% } %>
 			return actions.join('');
 		}}
 	],

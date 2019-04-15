@@ -155,6 +155,12 @@ public class TargetsController extends BaseController {
 	}
 
 
+	/**
+	 * 树形结构展示
+	 * @param excludeCode
+	 * @param isShowCode
+	 * @return
+	 */
 	@RequiresPermissions("targets:targets:view")
 	@RequestMapping(value = "treeData")
 	@ResponseBody

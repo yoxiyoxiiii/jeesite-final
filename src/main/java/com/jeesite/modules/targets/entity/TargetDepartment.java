@@ -16,7 +16,7 @@ import org.hibernate.validator.constraints.Length;
  */
 @Table(name="target_department", alias="a", columns={
 		@Column(name="id", attrName="id", label="id", isPK=true),
-		@Column(name="target_id", attrName="targetId", label="关联目标id"),
+		@Column(name="target_id", attrName="target", label="关联目标id"),
 		@Column(name="department_id", attrName="departmentId", label="目标分解到的部门"),
 		@Column(name="handle_id", attrName="handleId", label="操作人"),
 		@Column(name="target_name", attrName="targetName", label="指标名称", queryType= QueryType.LIKE),
@@ -31,7 +31,7 @@ import org.hibernate.validator.constraints.Length;
 public class TargetDepartment extends DataEntity<TargetDepartment> {
 	
 	private static final long serialVersionUID = 1L;
-	private String targetId;		// 关联目标id
+	private Targets target;		// 关联目标id
 	private String departmentId;		// 目标分解到的部门
 	private String handleId;		// 操作人
 	private String targetName;		// 指标名称
@@ -47,13 +47,12 @@ public class TargetDepartment extends DataEntity<TargetDepartment> {
 		super(id);
 	}
 	
-	@Length(min=0, max=50, message="关联目标id长度不能超过 50 个字符")
-	public String getTargetId() {
-		return targetId;
+	public Targets getTarget() {
+		return target;
 	}
 
-	public void setTargetId(String targetId) {
-		this.targetId = targetId;
+	public void setTarget(Targets target) {
+		this.target = target;
 	}
 	
 	@Length(min=0, max=50, message="目标分解到的部门长度不能超过 50 个字符")
