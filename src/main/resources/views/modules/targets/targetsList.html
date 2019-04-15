@@ -9,6 +9,7 @@
 				<a href="#" class="btn btn-default" id="btnSearch" title="${text('查询')}"><i class="fa fa-filter"></i> ${text('查询')}</a>
 				<% if(hasPermi('targets:targets:edit')){ %>
 					<a href="${ctx}/targets/targets/form" class="btn btn-default btnTool" title="${text('新增目标')}"><i class="fa fa-plus"></i> ${text('新增')}</a>
+				    <a href="#" class="btn btn-default" id="btnUpdateSort" title="保存排序"><i class="fa fa-sort-amount-asc"></i> 保存排序</a>
 				<% } %>
 			</div>
 		</div>
@@ -170,7 +171,9 @@
 					<button type="reset" class="btn btn-default btn-sm">${text('重置')}</button>
 				</div>
 			</#form:form>
+			<#form:form id="dataGridForm" action="${ctx}/targets/targets/updateTreeSort" method="post">
 			<table id="dataGrid"></table>
+			</#form:form>
 			<div id="dataGridPage"></div>
 		</div>
 	</div>
@@ -187,29 +190,44 @@ $('#dataGrid').dataGrid({
 		// {header:'${text("目标名称")}', name:'targetName', index:'a.target_name', width:150, align:"left"},
 		{header:'${text("目标值")}', name:'targetValue', index:'a.target_value', width:150, align:"left"},
 		{header:'${text("争创值")}', name:'effortValue', index:'a.effort_value', width:150, align:"left"},
-		{header:'${text("指标属性 ")}', name:'targetAttribute', index:'a.target_attribute', width:150, align:"center"},
-		{header:'${text("分类ID")}', name:'targetTypeId', index:'a.target_type_id', width:150, align:"left"},
-		{header:'${text("排序")}', name:'targetOrder', index:'a.target_order', width:150, align:"center"},
-		{header:'${text("权重")}', name:'weigh', index:'a.weigh', width:150, align:"center"},
+		{header:'${text("指标属性 ")}', name:'targetAttribute', index:'a.target_attribute', width:150, align:"center",formatter: function(val, obj, row, act) {
+				return js.getDictLabel(${@DictUtils.getDictListJson('target_belong_type')}, val, '未知', true);
+		}},
+		// {header:'${text("分类ID")}', name:'targetTypeId', index:'a.target_type_id', width:150, align:"left"},
+
+		{header:'${text("权重 %")}', name:'weigh', index:'a.weigh', width:150, align:"center"},
 		// {header:'${text("年份")}', name:'createYear', index:'a.create_year', width:150, align:"left"},
 		// {header:'${text("创建月份")}', name:'createMonth', index:'a.create_month', width:150, align:"left"},
 
 		// {header:'${text("考核周期")}', name:'checkCycle', index:'a.check_cycle', width:150, align:"left"},
 		// {header:'${text("采集周期 关联定时任务 表达式")}', name:'acquisitionCycle', index:'a.acquisition_cycle', width:150, align:"left"},
-		{header:'${text("选择分档")}', name:'gradeId', index:'a.grade_id', width:150, align:"left"},
+		{header:'${text("选择分档")}', name:'gradeId', index:'a.grade_id', width:150, align:"left",formatter: function(val, obj, row, act) {
+				return js.getDictLabel(${@DictUtils.getDictListJson('target_grade_type')}, val, '未知', true);}},
 		// {header:'${text("完成标准/文字描述/公式结果")}', name:'complete', index:'a.complete', width:150, align:"left"},
 		{header:'${text("指标归属")}', name:'belongs.officeName', index:'belongOffice.office_name', width:150, align:"left"},
 		// {header:'${text("考核依据")}', name:'checkBasis', index:'a.check_basis', width:150, align:"left"},
 		// {header:'${text("执行部门")}', name:'executeDepartments.officeName', index:'a.execute_department', width:150, align:"left"},
 		// {header:'${text("协同部门")}', name:'jointWorkDepartments.officeName', index:'a.joint_work_department', width:150, align:"left"},
 		{header:'${text("描述")}', name:'description', index:'a.description', width:150, align:"left"},
-		{header:'${text("分解")}', name:'isAnalyze', index:'a.is_analyze', width:150, align:"center"},
+		//{header:'${text("分解")}', name:'isAnalyze', index:'a.is_analyze', width:150, align:"center"},
 		// {header:'${text("handle_id")}', name:'handleId', index:'a.handle_id', width:150, align:"left"},
 		// {header:'${text("审批是否通过 1 通过 0 不通过")}', name:'isApproval', index:'a.is_approval', width:150, align:"center"},
 		// {header:'${text("审批人")}', name:'approvalBy', index:'a.approval_by', width:150, align:"left"},
-		{header:'${text("审批备注")}', name:'approvalMsg', index:'a.approval_msg', width:150, align:"left"},
+		//{header:'${text("审批备注")}', name:'approvalMsg', index:'a.approval_msg', width:150, align:"left"},
 		{header:'${text("修改时间")}', name:'updateDate', index:'a.update_date', width:150, align:"center"},
 		// {header:'${text("handle_id")}', name:'handleId', index:'a.handle_id', width:150, align:"left"},
+
+		{header:'${text("排序")}', name:'targetOrder', index:'a.target_order', width:150, align:"center",
+			formatter: function(val, obj, row, act){
+				var html = [];
+			<% if(hasPermi('targets:targets:edit')){ %>
+					html.push('<input type="hidden" name="ids" value="'+row.id+'"/>');
+					html.push('<input name="sorts" type="text" value="'+row.targetOrder+'" style="width:50px;height:19px;margin:0;padding:0;text-align:center;border:1px solid #ddd">');
+				<% }else{ %>
+					html.push(row.targetOrder);
+				<% } %>
+				return html.join('');
+			}},
 		{header:'${text("操作")}', name:'actions', width:120, sortable:false, title:false, formatter: function(val, obj, row, act){
 			var actions = [];
 			<% if(hasPermi('targets:targets:edit')){ %>
@@ -223,5 +241,15 @@ $('#dataGrid').dataGrid({
 	ajaxSuccess: function(data){
 		
 	}
+});
+
+// 绑定更新排序按钮
+$('#btnUpdateSort').click(function(){
+	js.ajaxSubmitForm($("#dataGridForm"), function(data){
+		if(data.result == Global.TRUE){
+			$('#btnRefreshTree').click();
+		}
+		js.showMessage(data.message);
+	}, "json");
 });
 </script>
