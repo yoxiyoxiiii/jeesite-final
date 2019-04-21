@@ -37,9 +37,10 @@
 					<div class="col-xs-6">
 						<div class="form-group">
 							<label class="control-label col-sm-4" title="">
-								<span class="required hide">*</span> ${text('目标考核周期 周、半月、月、季度、半年、年 ，定时任务关联')}：<i class="fa icon-question hide"></i></label>
+								<span class="required hide">*</span> ${text('目标考核周期')}：<i class="fa icon-question hide"></i></label>
 							<div class="col-sm-8">
-								<#form:input path="targetCheckCycle" maxlength="255" class="form-control"/>
+<!--								<#form:input path="targetCheckCycle" maxlength="255" class="form-control"/>-->
+								<#form:select path="targetCheckCycle" dictType="target_check_cycle" blankOption="true" class="form-control" />
 							</div>
 						</div>
 					</div>
@@ -49,6 +50,7 @@
 								<span class="required hide">*</span> ${text('考核依据')}：<i class="fa icon-question hide"></i></label>
 							<div class="col-sm-8">
 								<#form:input path="targetCheckBasic" maxlength="255" class="form-control"/>
+
 							</div>
 						</div>
 					</div>
