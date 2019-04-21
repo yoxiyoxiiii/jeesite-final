@@ -79,8 +79,8 @@ public class Targets extends DataEntity<Targets> {
 	private String complete;		// 完成标准/文字描述/公式结果
 	private Office belongs;		// 指标归属
 	private String checkBasis;		// 考核依据
-	private Office executeDepartments;		// 执行部门
-	private Office jointWorkDepartments;		// 协同部门
+	private Office executeDepartments1;		// 执行部门
+	private Office jointWorkDepartments1;		// 协同部门
 	private String description;		// 描述信息
 	private Integer isAnalyze;		// 是否被分解
 	private String handleId;		// handle_id
@@ -242,20 +242,20 @@ public class Targets extends DataEntity<Targets> {
 	
 //	@Length(min=0, max=255, message="执行部门长度不能超过 255 个字符")
 	public Office getExecuteDepartments() {
-		return executeDepartments;
+		return executeDepartments1;
 	}
 
 	public void setExecuteDepartments(Office executeDepartment) {
-		this.executeDepartments = executeDepartment;
+		this.executeDepartments1 = executeDepartment;
 	}
 	
 //	@Length(min=0, max=255, message="协同部门长度不能超过 255 个字符")
 	public Office getJointWorkDepartments() {
-		return jointWorkDepartments;
+		return jointWorkDepartments1;
 	}
 
 	public void setJointWorkDepartments(Office jointWorkDepartment) {
-		this.jointWorkDepartments = jointWorkDepartment;
+		this.jointWorkDepartments1 = jointWorkDepartment;
 	}
 	
 	@Length(min=0, max=255, message="描述信息长度不能超过 255 个字符")
