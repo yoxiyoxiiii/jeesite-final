@@ -5,8 +5,10 @@ package com.jeesite.modules.targets.entity;
 
 import com.jeesite.common.entity.DataEntity;
 import com.jeesite.common.mybatis.annotation.Column;
+import com.jeesite.common.mybatis.annotation.JoinTable;
 import com.jeesite.common.mybatis.annotation.Table;
 import com.jeesite.common.mybatis.mapper.query.QueryType;
+import com.jeesite.modules.sys.entity.Office;
 import org.hibernate.validator.constraints.Length;
 
 /**
@@ -16,7 +18,7 @@ import org.hibernate.validator.constraints.Length;
  */
 @Table(name="target_department", alias="a", columns={
 		@Column(name="id", attrName="id", label="id", isPK=true),
-		@Column(name="target_id", attrName="target", label="关联目标id"),
+		@Column(name="target_id", attrName="targetId", label="关联目标id"),
 		@Column(name="department_id", attrName="departmentId", label="目标分解到的部门"),
 		@Column(name="handle_id", attrName="handleId", label="操作人"),
 		@Column(name="target_name", attrName="targetName", label="指标名称", queryType= QueryType.LIKE),
@@ -26,7 +28,12 @@ import org.hibernate.validator.constraints.Length;
 		@Column(name="create_by", attrName="createBy", label="创建人", isUpdate=false, isQuery=false),
 		@Column(name="create_date", attrName="createDate", label="创建时间", isUpdate=false, isQuery=false),
 		@Column(name="update_date", attrName="updateDate", label="更新时间", isQuery=false),
-	}, orderBy="a.update_date DESC"
+	}, joinTable = {
+		@JoinTable(type= JoinTable.Type.LEFT_JOIN, entity= Targets.class, alias="t",
+				on="t.id = a.target_id", attrName = "target",
+				columns={@Column(includeEntity=Targets.class)}),
+		},
+		orderBy="a.update_date DESC"
 )
 public class TargetDepartment extends DataEntity<TargetDepartment> {
 	

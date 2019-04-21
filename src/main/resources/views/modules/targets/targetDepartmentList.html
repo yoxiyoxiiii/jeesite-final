@@ -73,7 +73,7 @@
 $('#dataGrid').dataGrid({
 	searchForm: $("#searchForm"),
 	columnModel: [
-		{header:'${text("关联目标id")}', name:'targetId', index:'a.target_id', width:150, align:"left", frozen:true, formatter: function(val, obj, row, act){
+		{header:'${text("关联目标")}', name:'target.targetName', index:'t.target_name', width:150, align:"left", frozen:true, formatter: function(val, obj, row, act){
 			return '<a href="${ctx}/targets/targetDepartment/form?id='+row.id+'" class="btnList" data-title="${text("编辑单位/部门目标分解")}">'+(val||row.id)+'</a>';
 		}},
 		{header:'${text("目标分解到的部门")}', name:'departmentId', index:'a.department_id', width:150, align:"left"},

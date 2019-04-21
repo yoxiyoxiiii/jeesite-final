@@ -240,7 +240,7 @@ public class Targets extends DataEntity<Targets> {
 		this.checkBasis = checkBasis;
 	}
 	
-	@Length(min=0, max=255, message="执行部门长度不能超过 255 个字符")
+//	@Length(min=0, max=255, message="执行部门长度不能超过 255 个字符")
 	public Office getExecuteDepartments() {
 		return executeDepartments;
 	}
@@ -249,7 +249,7 @@ public class Targets extends DataEntity<Targets> {
 		this.executeDepartments = executeDepartment;
 	}
 	
-	@Length(min=0, max=255, message="协同部门长度不能超过 255 个字符")
+//	@Length(min=0, max=255, message="协同部门长度不能超过 255 个字符")
 	public Office getJointWorkDepartments() {
 		return jointWorkDepartments;
 	}
@@ -309,5 +309,4 @@ public class Targets extends DataEntity<Targets> {
 	public void setApprovalMsg(String approvalMsg) {
 		this.approvalMsg = approvalMsg;
 	}
-	
 }
