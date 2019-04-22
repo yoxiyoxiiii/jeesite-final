@@ -21,7 +21,8 @@ import com.jeesite.modules.businesstarget.dao.BusinessTargetDao;
 @Service
 @Transactional(readOnly=true)
 public class BusinessTargetService extends CrudService<BusinessTargetDao, BusinessTarget> {
-	
+
+
 	/**
 	 * 获取单条数据
 	 * @param businessTarget
