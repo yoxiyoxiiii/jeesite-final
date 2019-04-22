@@ -20,6 +20,7 @@ import com.jeesite.common.mybatis.mapper.query.QueryType;
 @Table(name="business_stage_target", alias="a", columns={
 		@Column(name="id", attrName="id", label="id", isPK=true),
 		@Column(name="stage_number", attrName="stageNumber", label="期数"),
+		@Column(name="stage_name", attrName="stageName", label="阶段目标名称"),
 		@Column(name="target_id", attrName="businessTargets.id", label="上级目标"),
 		@Column(name="stage_target_value", attrName="stageTargetValue", label="目标值"),
 		@Column(name="stage_weight", attrName="stageWeight", label="权重%"),
@@ -42,7 +43,15 @@ public class StageTarget extends DataEntity<StageTarget> {
 	private String stageTargetValue;		// 目标值
 	private Integer stageWeight;		// 权重%
 	private String stageTryHardValue;		// 争创值
-	
+	private String stageName;		// 阶段目标名称
+
+	public String getStageName() {
+		return stageName;
+	}
+
+	public void  setStageName(String stageName) {
+		this.stageName = stageName;
+	}
 	public StageTarget() {
 		this(null);
 	}

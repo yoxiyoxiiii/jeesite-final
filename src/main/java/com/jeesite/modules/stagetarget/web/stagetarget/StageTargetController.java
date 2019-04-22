@@ -6,6 +6,8 @@ package com.jeesite.modules.stagetarget.web.stagetarget;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.jeesite.common.codec.EncodeUtils;
+import com.jeesite.common.mapper.JsonMapper;
 import com.jeesite.modules.businesstarget.entity.BusinessTarget;
 import com.jeesite.modules.businesstarget.service.BusinessTargetService;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
@@ -25,6 +27,7 @@ import com.jeesite.modules.stagetarget.entity.stagetarget.StageTarget;
 import com.jeesite.modules.stagetarget.service.stagetarget.StageTargetService;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * 阶段目标Controller
@@ -109,6 +112,16 @@ public class StageTargetController extends BaseController {
 	public String delete(StageTarget stageTarget) {
 		stageTargetService.delete(stageTarget);
 		return renderResult(Global.TRUE, text("删除阶段目标成功！"));
+	}
+
+	@RequestMapping({"listSelects"})
+	public String listSelect(StageTarget stageTarget, String selectData, Model model) {
+		String selectDataJson = EncodeUtils.decodeUrl(selectData);
+		if (JsonMapper.fromJson(selectDataJson, Map.class) != null) {
+			model.addAttribute("selectData", selectDataJson);
+		}
+		model.addAttribute("stageTarget", stageTarget);
+		return "modules/stagetarget/stagetarget/listSelect";
 	}
 	
 }

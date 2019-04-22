@@ -81,7 +81,13 @@ public class BusinessTargetDataItemController extends BaseController {
 	 */
 	@RequiresPermissions("businesstargetdataitem:businessTargetDataItem:view")
 	@RequestMapping(value = "form")
-	public String form(BusinessTargetDataItem businessTargetDataItem, BusinessTarget businessTarget, StageTarget stageTarget, Model model) {
+	public String form(BusinessTargetDataItem businessTargetDataItem, String stageId, BusinessTarget businessTarget, StageTarget stageTarget, Model model) {
+		if (stageId != null) {
+			stageTarget = stageTargetService.get(stageId);
+			businessTargetDataItem.setStageTargets(stageTarget);
+			model.addAttribute("businessTargetDataItem", businessTargetDataItem);
+			return "modules/businesstargetdataitem/businessTargetDataItemFormHasStageTarget";
+		}
 		List<BusinessTarget> businessTargetList = businessTargetService.findList(businessTarget);
 		List<StageTarget> stageTargetList = stageTargetService.findList(stageTarget);
 		if (businessTargetList.size() == 0) {

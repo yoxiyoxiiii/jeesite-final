@@ -19,9 +19,7 @@
 							<label class="control-label col-sm-4" title="">
 								<span class="required hide">*</span> ${text('阶段目标')}：<i class="fa icon-question hide"></i></label>
 							<div class="col-sm-8">
-								<#form:listselect id="listSelect" title="阶段目标"
-								url="${ctx}/stagetarget/stagetarget/stageTarget/listSelects" allowClear="false"
-								checkbox="false" itemCode="id" itemName="stageName"/>
+								<#form:input path="stageTargets.stageName" readonly="true" maxlength="255" class="form-control"/>
 							</div>
 						</div>
 					</div>
