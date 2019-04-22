@@ -72,5 +72,8 @@ public class BusinessTargetService extends CrudService<BusinessTargetDao, Busine
 	public void delete(BusinessTarget businessTarget) {
 		super.delete(businessTarget);
 	}
-	
+
+	public List<BusinessTarget> findList() {
+		return super.dao.findList();
+	}
 }
