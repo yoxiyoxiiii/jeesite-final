@@ -11,5 +11,8 @@
 		</where>
 		ORDER BY ${sqlMap.order.toSql()}
 	</select> -->
-	
+
+    <select id="findList" resultType="com.jeesite.modules.businesstarget.entity.BusinessTarget">
+        select * from ${sqlMap.table.toSql()}
+    </select>
 </mapper>
