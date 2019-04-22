@@ -72,5 +72,9 @@ public class StageTargetService extends CrudService<StageTargetDao, StageTarget>
 	public void delete(StageTarget stageTarget) {
 		super.delete(stageTarget);
 	}
-	
+
+	public List<StageTarget> findList() {
+
+		return super.dao.findList();
+	}
 }

@@ -14,7 +14,7 @@
 #   Set larger code cache with -XX:ReservedCodeCacheSize=
 # This output file may be truncated or incomplete.
 #
-#  Out of Memory Error (c:/BuildAgent/work/dd4f663211fab7c/src/hotspot/os/windows/os_windows.cpp:3272), pid=6260, tid=18288
+#  Out of Memory Error (c:/BuildAgent/work/dd4f663211fab7c/src/hotspot/os/windows/os_windows.cpp:3272), pid=16060, tid=17796
 #
 # JRE version:  (11.0.2+9) (build )
 # Java VM: OpenJDK 64-Bit Server VM (11.0.2+9-b159.30, mixed mode, aot, sharing, tiered, compressed oops, g1 gc, windows-amd64)
@@ -26,13 +26,13 @@
 Command Line: org.jetbrains.git4idea.http.GitAskPassApp Username for 'https://github.com': 
 
 Host: Intel(R) Core(TM) i7-4710MQ CPU @ 2.50GHz, 8 cores, 15G,  Windows 10 , 64 bit Build 18362 (10.0.18362.53)
-Time: Mon Apr 22 12:20:45 2019 ?D1迆㊣那℅?那㊣?? elapsed time: 0 seconds (0d 0h 0m 0s)
+Time: Mon Apr 22 16:45:43 2019 ?D1迆㊣那℅?那㊣?? elapsed time: 0 seconds (0d 0h 0m 0s)
 
 ---------------  T H R E A D  ---------------
 
-Current thread (0x000002336dfda000):  JavaThread "Unknown thread" [_thread_in_vm, id=18288, stack(0x0000004762f00000,0x0000004763000000)]
+Current thread (0x000001acffcb8000):  JavaThread "Unknown thread" [_thread_in_vm, id=17796, stack(0x00000024a6f00000,0x00000024a7000000)]
 
-Stack: [0x0000004762f00000,0x0000004763000000]
+Stack: [0x00000024a6f00000,0x00000024a7000000]
 Native frames: (J=compiled Java code, j=interpreted, Vv=VM code, C=native code)
 V  [jvm.dll+0x5da82a]
 V  [jvm.dll+0x70b6c9]
@@ -65,22 +65,22 @@ C  [ntdll.dll+0x6ce71]
 ---------------  P R O C E S S  ---------------
 
 Threads class SMR info:
-_java_thread_list=0x000002336bf3a710, length=0, elements={
+_java_thread_list=0x000001acfeef9860, length=0, elements={
 }
 
 Java Threads: ( => current thread )
 
 Other Threads:
-  0x000002336dff0000 GCTaskThread "GC Thread#0" [stack: 0x0000004763000000,0x0000004763100000] [id=10324]
-  0x000002336e04f800 ConcurrentGCThread "G1 Main Marker" [stack: 0x0000004763100000,0x0000004763200000] [id=8376]
-  0x000002336e051800 ConcurrentGCThread "G1 Conc#0" [stack: 0x0000004763200000,0x0000004763300000] [id=5592]
+  0x000001acffccf000 GCTaskThread "GC Thread#0" [stack: 0x00000024a7000000,0x00000024a7100000] [id=17024]
+  0x000001acffd2e800 ConcurrentGCThread "G1 Main Marker" [stack: 0x00000024a7100000,0x00000024a7200000] [id=17272]
+  0x000001acffd31000 ConcurrentGCThread "G1 Conc#0" [stack: 0x00000024a7200000,0x00000024a7300000] [id=16604]
 
-[error occurred during error reporting (printing all threads), id 0xc0000005, EXCEPTION_ACCESS_VIOLATION (0xc0000005) at pc=0x00007ffe420f5687]
+[error occurred during error reporting (printing all threads), id 0xc0000005, EXCEPTION_ACCESS_VIOLATION (0xc0000005) at pc=0x00007ffe433c5687]
 
 VM state:not at safepoint (not fully initialized)
 
 VM Mutex/Monitor currently owned by a thread:  ([mutex/lock_event])
-[0x000002336dfd7d40] Heap_lock - owner thread: 0x000002336dfda000
+[0x000001acffcb5c80] Heap_lock - owner thread: 0x000001acffcb8000
 
 Heap address: 0x0000000701200000, size: 4078 MB, Compressed Oops mode: Non-zero based: 0x0000000701200000
 Narrow klass base: 0x0000000000000000, Narrow klass shift: 0
@@ -118,15 +118,15 @@ Dynamic libraries:
 0x00007ffe740d0000 - 0x00007ffe741f0000 	C:\WINDOWS\System32\RPCRT4.dll
 0x00007ffe72220000 - 0x00007ffe722a1000 	C:\WINDOWS\System32\bcryptPrimitives.dll
 0x00007ffe72c80000 - 0x00007ffe72cae000 	C:\WINDOWS\System32\IMM32.DLL
-0x00007ffe6a240000 - 0x00007ffe6a257000 	C:\Users\84681\AppData\Local\JetBrains\IntelliJ IDEA 2019.1\jre64\bin\vcruntime140.dll
-0x00007ffe54690000 - 0x00007ffe5472d000 	C:\Users\84681\AppData\Local\JetBrains\IntelliJ IDEA 2019.1\jre64\bin\msvcp140.dll
-0x00007ffe41e10000 - 0x00007ffe428c6000 	C:\Users\84681\AppData\Local\JetBrains\IntelliJ IDEA 2019.1\jre64\bin\server\jvm.dll
+0x00007ffe65960000 - 0x00007ffe65977000 	C:\Users\84681\AppData\Local\JetBrains\IntelliJ IDEA 2019.1\jre64\bin\vcruntime140.dll
+0x00007ffe54630000 - 0x00007ffe546cd000 	C:\Users\84681\AppData\Local\JetBrains\IntelliJ IDEA 2019.1\jre64\bin\msvcp140.dll
+0x00007ffe430e0000 - 0x00007ffe43b96000 	C:\Users\84681\AppData\Local\JetBrains\IntelliJ IDEA 2019.1\jre64\bin\server\jvm.dll
 0x00007ffe73fb0000 - 0x00007ffe74053000 	C:\WINDOWS\System32\ADVAPI32.dll
 0x00007ffe72cb0000 - 0x00007ffe72d47000 	C:\WINDOWS\System32\sechost.dll
 0x00007ffe73c50000 - 0x00007ffe73c58000 	C:\WINDOWS\System32\PSAPI.DLL
-0x00007ffe6e380000 - 0x00007ffe6e3a4000 	C:\WINDOWS\SYSTEM32\WINMM.dll
-0x00007ffe60f10000 - 0x00007ffe60f19000 	C:\WINDOWS\SYSTEM32\WSOCK32.dll
 0x00007ffe6a5e0000 - 0x00007ffe6a5ea000 	C:\WINDOWS\SYSTEM32\VERSION.dll
+0x00007ffe60f10000 - 0x00007ffe60f19000 	C:\WINDOWS\SYSTEM32\WSOCK32.dll
+0x00007ffe6e380000 - 0x00007ffe6e3a4000 	C:\WINDOWS\SYSTEM32\WINMM.dll
 0x00007ffe74060000 - 0x00007ffe740cf000 	C:\WINDOWS\System32\WS2_32.dll
 0x00007ffe6e330000 - 0x00007ffe6e35d000 	C:\WINDOWS\SYSTEM32\winmmbase.dll
 0x00007ffe71d30000 - 0x00007ffe71d7a000 	C:\WINDOWS\System32\cfgmgr32.dll
@@ -134,7 +134,7 @@ Dynamic libraries:
 0x00007ffe65910000 - 0x00007ffe65921000 	C:\Users\84681\AppData\Local\JetBrains\IntelliJ IDEA 2019.1\jre64\bin\verify.dll
 0x00007ffe5f910000 - 0x00007ffe5fb04000 	C:\WINDOWS\SYSTEM32\DBGHELP.DLL
 0x00007ffe5f740000 - 0x00007ffe5f76a000 	C:\WINDOWS\SYSTEM32\dbgcore.DLL
-0x00007ffe61d00000 - 0x00007ffe61d29000 	C:\Users\84681\AppData\Local\JetBrains\IntelliJ IDEA 2019.1\jre64\bin\java.dll
+0x00007ffe63690000 - 0x00007ffe636b9000 	C:\Users\84681\AppData\Local\JetBrains\IntelliJ IDEA 2019.1\jre64\bin\java.dll
 0x00007ffe65860000 - 0x00007ffe65877000 	C:\Users\84681\AppData\Local\JetBrains\IntelliJ IDEA 2019.1\jre64\bin\zip.dll
 0x00007ffe6e880000 - 0x00007ffe6e88b000 	C:\Users\84681\AppData\Local\JetBrains\IntelliJ IDEA 2019.1\jre64\bin\jimage.dll
 
@@ -187,8 +187,8 @@ OS: Windows 10 , 64 bit Build 18362 (10.0.18362.53)
 
 CPU:total 8 (initial active 8) (4 cores per cpu, 2 threads per core) family 6 model 60 stepping 3, cmov, cx8, fxsr, mmx, sse, sse2, sse3, ssse3, sse4.1, sse4.2, popcnt, avx, avx2, aes, clmul, erms, lzcnt, ht, tsc, tscinvbit, bmi1, bmi2, fma
 
-Memory: 4k page, system-wide physical 16306M (4413M free)
-TotalPageFile size 16306M (AvailPageFile size 116M)
+Memory: 4k page, system-wide physical 16306M (4788M free)
+TotalPageFile size 16306M (AvailPageFile size 247M)
 current process WorkingSet (physical memory assigned to process): 10M, peak: 10M
 current process commit charge ("private bytes"): 60M, peak: 316M
 

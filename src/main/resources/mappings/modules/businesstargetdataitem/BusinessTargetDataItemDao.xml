@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.jeesite.modules.stagetarget.dao.stagetarget.StageTargetDao">
+<mapper namespace="com.jeesite.modules.businesstargetdataitem.dao.BusinessTargetDataItemDao">
 	
 	<!-- 查询数据
-	<select id="findList" resultType="StageTarget">
+	<select id="findList" resultType="BusinessTargetDataItem">
 		SELECT ${sqlMap.column.toSql()}
 		FROM ${sqlMap.table.toSql()}
 		<where>
@@ -11,9 +11,5 @@
 		</where>
 		ORDER BY ${sqlMap.order.toSql()}
 	</select> -->
-
-    <select id="findList" resultType="com.jeesite.modules.stagetarget.entity.stagetarget.StageTarget">
-        SELECT ${sqlMap.column.toSql()}
-		FROM ${sqlMap.table.toSql()}
-    </select>
+	
 </mapper>

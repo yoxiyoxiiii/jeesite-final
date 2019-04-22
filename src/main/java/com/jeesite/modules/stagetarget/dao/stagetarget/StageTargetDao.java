@@ -7,6 +7,8 @@ import com.jeesite.common.dao.CrudDao;
 import com.jeesite.common.mybatis.annotation.MyBatisDao;
 import com.jeesite.modules.stagetarget.entity.stagetarget.StageTarget;
 
+import java.util.List;
+
 /**
  * 阶段目标DAO接口
  * @author StageTarget
@@ -14,5 +16,6 @@ import com.jeesite.modules.stagetarget.entity.stagetarget.StageTarget;
  */
 @MyBatisDao
 public interface StageTargetDao extends CrudDao<StageTarget> {
-	
+
+    List<StageTarget> findList();
 }

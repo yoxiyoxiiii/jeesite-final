@@ -6,10 +6,13 @@ package com.jeesite.modules.businesstarget.web;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.jeesite.common.codec.EncodeUtils;
 import com.jeesite.common.idgen.IdGen;
 import com.jeesite.common.lang.StringUtils;
+import com.jeesite.common.mapper.JsonMapper;
 import com.jeesite.modules.businesstargettype.entity.BusinessTargetType;
 import com.jeesite.modules.businesstargettype.service.BusinessTargetTypeService;
+import com.jeesite.modules.sys.entity.EmpUser;
 import com.jeesite.modules.sys.entity.Office;
 import com.jeesite.modules.sys.service.OfficeService;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
@@ -29,6 +32,7 @@ import com.jeesite.modules.businesstarget.entity.BusinessTarget;
 import com.jeesite.modules.businesstarget.service.BusinessTargetService;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * 指标Controller
@@ -160,6 +164,18 @@ public class BusinessTargetController extends BaseController {
 	public String delete(BusinessTarget businessTarget) {
 		businessTargetService.delete(businessTarget);
 		return renderResult(Global.TRUE, text("删除指标成功！"));
+	}
+
+
+	@RequiresPermissions({"user"})
+	@RequestMapping({"listSelect"})
+	public String listSelect(BusinessTarget businessTarget, String selectData, Model model) {
+		String selectDataJson = EncodeUtils.decodeUrl(selectData);
+		if (JsonMapper.fromJson(selectDataJson, Map.class) != null) {
+			model.addAttribute("selectData", selectDataJson);
+		}
+		model.addAttribute("businessTarget", businessTarget);
+		return "modules/businesstarget/listSelect";
 	}
 	
 }
