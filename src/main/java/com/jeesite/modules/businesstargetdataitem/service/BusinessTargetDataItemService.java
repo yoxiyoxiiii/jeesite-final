@@ -5,6 +5,9 @@ package com.jeesite.modules.businesstargetdataitem.service;
 
 import java.util.List;
 
+import com.jeesite.modules.businesstarget.entity.BusinessTarget;
+import com.jeesite.modules.stagetarget.service.stagetarget.StageTargetService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -22,7 +25,10 @@ import com.jeesite.modules.file.utils.FileUploadUtils;
 @Service
 @Transactional(readOnly=true)
 public class BusinessTargetDataItemService extends CrudService<BusinessTargetDataItemDao, BusinessTargetDataItem> {
-	
+
+	@Autowired
+	private StageTargetService stageTargetService;
+
 	/**
 	 * 获取单条数据
 	 * @param businessTargetDataItem
@@ -36,7 +42,6 @@ public class BusinessTargetDataItemService extends CrudService<BusinessTargetDat
 	/**
 	 * 查询分页数据
 	 * @param businessTargetDataItem 查询条件
-	 * @param businessTargetDataItem.page 分页对象
 	 * @return
 	 */
 	@Override
@@ -51,6 +56,9 @@ public class BusinessTargetDataItemService extends CrudService<BusinessTargetDat
 	@Override
 	@Transactional(readOnly=false)
 	public void save(BusinessTargetDataItem businessTargetDataItem) {
+		String stageId = businessTargetDataItem.getStageTargets().getId();
+		BusinessTarget businessTargets = stageTargetService.get(stageId).getBusinessTargets();
+		businessTargetDataItem.setTargetId(businessTargets);
 		super.save(businessTargetDataItem);
 		// 保存上传图片
 		FileUploadUtils.saveFileUpload(businessTargetDataItem.getId(), "businessTargetDataItem_image");

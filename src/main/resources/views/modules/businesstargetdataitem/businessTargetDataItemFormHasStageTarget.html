@@ -20,6 +20,7 @@
 								<span class="required hide">*</span> ${text('阶段目标')}：<i class="fa icon-question hide"></i></label>
 							<div class="col-sm-8">
 								<#form:input path="stageTargets.stageName" readonly="true" maxlength="255" class="form-control"/>
+								<#form:hidden path="stageTargets.id"/>
 							</div>
 						</div>
 					</div>
