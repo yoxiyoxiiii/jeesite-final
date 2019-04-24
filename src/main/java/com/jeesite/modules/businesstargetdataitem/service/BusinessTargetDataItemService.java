@@ -56,7 +56,7 @@ public class BusinessTargetDataItemService extends CrudService<BusinessTargetDat
 	@Override
 	@Transactional(readOnly=false)
 	public void save(BusinessTargetDataItem businessTargetDataItem) {
-		String stageId = businessTargetDataItem.getStageTargets().getId();
+		String stageId = businessTargetDataItem.getStagetargetId();
 		BusinessTarget businessTargets = stageTargetService.get(stageId).getBusinessTargets();
 		businessTargetDataItem.setTargetId(businessTargets);
 		super.save(businessTargetDataItem);

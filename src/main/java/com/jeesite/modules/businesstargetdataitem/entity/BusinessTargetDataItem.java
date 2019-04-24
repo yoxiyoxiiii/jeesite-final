@@ -6,6 +6,8 @@ package com.jeesite.modules.businesstargetdataitem.entity;
 import com.jeesite.common.mybatis.annotation.JoinTable;
 import com.jeesite.modules.businesstarget.entity.BusinessTarget;
 import com.jeesite.modules.stagetarget.entity.stagetarget.StageTarget;
+import lombok.Getter;
+import lombok.Setter;
 import org.hibernate.validator.constraints.Length;
 
 import com.jeesite.common.entity.DataEntity;
@@ -47,6 +49,9 @@ public class BusinessTargetDataItem extends DataEntity<BusinessTargetDataItem> {
 	private Integer itemWeight;		// 数据项权重
 	private String itemScore;		// 数据项得分
 	private String itemDescription;		// 说明
+	@Getter
+	@Setter
+	private String stagetargetId;
 	
 	public BusinessTargetDataItem() {
 		this(null);
