@@ -167,7 +167,6 @@ public class BusinessTargetController extends BaseController {
 	}
 
 
-	@RequiresPermissions({"user"})
 	@RequestMapping({"listSelect"})
 	public String listSelect(BusinessTarget businessTarget, String selectData, Model model) {
 		String selectDataJson = EncodeUtils.decodeUrl(selectData);
