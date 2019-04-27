@@ -5,6 +5,10 @@ package com.jeesite.modules.businesscheckplan.service;
 
 import java.util.List;
 
+import com.jeesite.modules.sys.entity.User;
+import com.jeesite.modules.sys.service.UserService;
+import net.bytebuddy.asm.Advice;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -21,7 +25,10 @@ import com.jeesite.modules.businesscheckplan.dao.BusinessCheckPlanDao;
 @Service
 @Transactional(readOnly=true)
 public class BusinessCheckPlanService extends CrudService<BusinessCheckPlanDao, BusinessCheckPlan> {
-	
+
+	@Autowired
+	private UserService userService;
+
 	/**
 	 * 获取单条数据
 	 * @param businessCheckPlan

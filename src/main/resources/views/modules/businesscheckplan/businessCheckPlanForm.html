@@ -19,7 +19,9 @@
 							<label class="control-label col-sm-4" title="">
 								<span class="required hide">*</span> ${text('模板')}：<i class="fa icon-question hide"></i></label>
 							<div class="col-sm-8">
-								<#form:input path="tempId" maxlength="50" class="form-control"/>
+								<#form:listselect id="listSelectbusinesschecktemplat" title="模板"
+								url="${ctx}/businesschecktemplat/businessCheckTemplate/listSelect" allowClear="false"
+								path="businessCheckTemplate.id"  labelPath="businessCheckTemplate.tempName" value= "id" checkbox="false" itemCode="id" itemName="tempName"/>
 							</div>
 						</div>
 					</div>
@@ -28,7 +30,7 @@
 							<label class="control-label col-sm-4" title="">
 								<span class="required hide">*</span> ${text('专业类型')}：<i class="fa icon-question hide"></i></label>
 							<div class="col-sm-8">
-								<#form:input path="planMajorType" maxlength="4" class="form-control digits"/>
+								<#form:select path="planMajorType" dictType="plan_major_type" blankOption="true" class="form-control" />
 							</div>
 						</div>
 					</div>
@@ -92,8 +94,12 @@
 							<label class="control-label col-sm-4" title="">
 								<span class="required hide">*</span> ${text('负责人')}：<i class="fa icon-question hide"></i></label>
 							<div class="col-sm-8">
-								<#form:input path="planCheckUserId" maxlength="50" class="form-control"/>
+<!--								<#form:input path="planCheckUserId" maxlength="50" class="form-control"/>-->
+								<#form:listselect id="planCheckUserIdselect" title="负责人"
+								url="${ctx}/sys/user/userSelect" allowClear="false"
+								path="planCheckUser.userCode"  labelPath="planCheckUser.userName" value= "userCode" checkbox="false" itemCode="userCode" itemName="userName"/>
 							</div>
+
 						</div>
 					</div>
 				</div>
@@ -103,7 +109,10 @@
 							<label class="control-label col-sm-4" title="">
 								<span class="required hide">*</span> ${text('责任人')}：<i class="fa icon-question hide"></i></label>
 							<div class="col-sm-8">
-								<#form:input path="planDutyUserId" maxlength="50" class="form-control"/>
+<!--								<#form:input path="planDutyUserId" maxlength="50" class="form-control"/>-->
+								<#form:listselect id="planDutyUserIdSelect" title="责任人"
+								url="${ctx}/sys/user/userSelect" allowClear="false"
+								path="planDutyUser.userCode"  labelPath="planDutyUser.userName" name="planDutyUserCode" value= "userCode" checkbox="false" itemCode="userCode" itemName="userName"/>
 							</div>
 						</div>
 					</div>
@@ -134,7 +143,7 @@
 							<label class="control-label col-sm-4" title="">
 								<span class="required hide">*</span> ${text('状态')}：<i class="fa icon-question hide"></i></label>
 							<div class="col-sm-8">
-								<#form:input path="planStatus" maxlength="2" class="form-control digits"/>
+								<#form:select path="planStatus" dictType="plan_status" blankOption="true" class="form-control" />
 							</div>
 						</div>
 					</div>

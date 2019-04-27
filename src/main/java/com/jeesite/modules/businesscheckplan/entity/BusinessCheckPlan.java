@@ -3,6 +3,11 @@
  */
 package com.jeesite.modules.businesscheckplan.entity;
 
+import com.jeesite.modules.businesschecktemplat.entity.BusinessCheckTemplate;
+import com.jeesite.modules.businesstarget.entity.BusinessTarget;
+import com.jeesite.modules.sys.entity.User;
+import lombok.Getter;
+import lombok.Setter;
 import org.hibernate.validator.constraints.Length;
 import java.util.Date;
 import com.jeesite.common.mybatis.annotation.JoinTable;
@@ -21,7 +26,7 @@ import com.jeesite.common.mybatis.mapper.query.QueryType;
  */
 @Table(name="business_check_plan", alias="a", columns={
 		@Column(name="id", attrName="id", label="id", isPK=true),
-		@Column(name="temp_id", attrName="tempId", label="模板"),
+		@Column(name="temp_id", attrName="businessCheckTemplate.id", label="模板"),
 		@Column(name="plan_major_type", attrName="planMajorType", label="专业类型"),
 		@Column(name="plan_name", attrName="planName", label="计划名称", queryType=QueryType.LIKE),
 		@Column(name="create_date", attrName="createDate", label="创建时间", isUpdate=false, isQuery=false),
@@ -30,26 +35,41 @@ import com.jeesite.common.mybatis.mapper.query.QueryType;
 		@Column(name="plan_end_time", attrName="planEndTime", label="结束时间"),
 		@Column(name="plan_scoring_start_time", attrName="planScoringStartTime", label="评分开始时间"),
 		@Column(name="plan_scoring_end_time", attrName="planScoringEndTime", label="评分结束时间"),
-		@Column(name="plan_check_user_id", attrName="planCheckUserId", label="负责人"),
-		@Column(name="plan_duty_user_id", attrName="planDutyUserId", label="责任人"),
+		@Column(name="plan_check_user_id", attrName="planCheckUser.userCode", label="负责人"),
+		@Column(name="plan_duty_user_id", attrName="planDutyUser.userCode", label="责任人"),
 		@Column(name="plan_work_results", attrName="planWorkResults", label="工作成果"),
 		@Column(name="plan_key", attrName="planKey", label="关键措施分析"),
 		@Column(name="plan_status", attrName="planStatus", label="状态"),
 		@Column(name="plan_weight", attrName="planWeight", label="权重%"),
-	}, orderBy="a.update_date DESC"
+	},
+		joinTable = {
+				@JoinTable(type = JoinTable.Type.LEFT_JOIN, entity = BusinessCheckTemplate.class, alias = "businessCheckTemplate",
+						on = "businessCheckTemplate.id = a.temp_id", attrName = "businessCheckTemplate",
+						columns = {@Column(includeEntity = BusinessCheckTemplate.class)}),
+				@JoinTable(type = JoinTable.Type.LEFT_JOIN, entity = User.class, alias = "planCheckUser",
+						on = "planCheckUser.user_code = a.plan_check_user_id", attrName = "planCheckUser",
+						columns = {@Column(includeEntity = User.class)}),
+				@JoinTable(type = JoinTable.Type.LEFT_JOIN, entity = User.class, alias = "planDutyUser",
+						on = "planDutyUser.user_code = a.plan_duty_user_id", attrName = "planDutyUser",
+						columns = {@Column(includeEntity = User.class)}),
+		},
+		orderBy="a.update_date DESC"
 )
 public class BusinessCheckPlan extends DataEntity<BusinessCheckPlan> {
 	
 	private static final long serialVersionUID = 1L;
-	private String tempId;		// 模板
+	private BusinessCheckTemplate businessCheckTemplate;		// 模板
 	private Integer planMajorType;		// 专业类型
 	private String planName;		// 计划名称
 	private Date planStartTime;		// 开始时间
 	private Date planEndTime;		// 结束时间
 	private Date planScoringStartTime;		// 评分开始时间
 	private Date planScoringEndTime;		// 评分结束时间
-	private String planCheckUserId;		// 负责人
-	private String planDutyUserId;		// 责任人
+	private User planCheckUser;		// 负责人
+	private User planDutyUser;		// 责任人
+	@Getter
+	@Setter
+	private String planDutyUserCode;		// 责任人Code
 	private String planWorkResults;		// 工作成果
 	private String planKey;		// 关键措施分析
 	private Integer planStatus;		// 状态
@@ -63,13 +83,12 @@ public class BusinessCheckPlan extends DataEntity<BusinessCheckPlan> {
 		super(id);
 	}
 	
-	@Length(min=0, max=50, message="模板长度不能超过 50 个字符")
-	public String getTempId() {
-		return tempId;
+	public BusinessCheckTemplate getBusinessCheckTemplate() {
+		return businessCheckTemplate;
 	}
 
-	public void setTempId(String tempId) {
-		this.tempId = tempId;
+	public void setBusinessCheckTemplate(BusinessCheckTemplate businessCheckTemplate) {
+		this.businessCheckTemplate = businessCheckTemplate;
 	}
 	
 	public Integer getPlanMajorType() {
@@ -125,22 +144,20 @@ public class BusinessCheckPlan extends DataEntity<BusinessCheckPlan> {
 		this.planScoringEndTime = planScoringEndTime;
 	}
 	
-	@Length(min=0, max=50, message="负责人长度不能超过 50 个字符")
-	public String getPlanCheckUserId() {
-		return planCheckUserId;
+	public User getPlanCheckUser() {
+		return planCheckUser;
 	}
 
-	public void setPlanCheckUserId(String planCheckUserId) {
-		this.planCheckUserId = planCheckUserId;
+	public void setPlanCheckUser(User planCheckUser) {
+		this.planCheckUser = planCheckUser;
 	}
 	
-	@Length(min=0, max=50, message="责任人长度不能超过 50 个字符")
-	public String getPlanDutyUserId() {
-		return planDutyUserId;
+	public User getPlanDutyUser() {
+		return planDutyUser;
 	}
 
-	public void setPlanDutyUserId(String planDutyUserId) {
-		this.planDutyUserId = planDutyUserId;
+	public void setPlanDutyUser(User planDutyUser) {
+		this.planDutyUser = planDutyUser;
 	}
 	
 	@Length(min=0, max=255, message="工作成果长度不能超过 255 个字符")

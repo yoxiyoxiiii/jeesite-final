@@ -113,21 +113,26 @@
 $('#dataGrid').dataGrid({
 	searchForm: $("#searchForm"),
 	columnModel: [
-		{header:'${text("模板")}', name:'tempId', index:'a.temp_id', width:150, align:"left", frozen:true, formatter: function(val, obj, row, act){
-			return '<a href="${ctx}/businesscheckplan/businessCheckPlan/form?id='+row.id+'" class="btnList" data-title="${text("编辑考核计划")}">'+(val||row.id)+'</a>';
+		{header:'${text("计划名称")}', name:'planName', index:'a.plan_name', width:150, align:"left",formatter: function(val, obj, row, act){
+				return '<a href="${ctx}/businesscheckplan/businessCheckPlan/form?id='+row.id+'" class="btnList" data-title="${text("编辑考核计划")}">'+(val||row.id)+'</a>';
+			}},
+		{header:'${text("模板")}', name:'businessCheckTemplate.tempName', index:'businessCheckTemplate.temp_name', width:150, align:"left"},
+		{header:'${text("专业类型")}', name:'planMajorType', index:'a.plan_major_type', width:150, align:"center",formatter: function(val, obj, row, act){
+				return js.getDictLabel(${@DictUtils.getDictListJson('plan_major_type')}, val, '${text("未知")}', true);
 		}},
-		{header:'${text("专业类型")}', name:'planMajorType', index:'a.plan_major_type', width:150, align:"center"},
-		{header:'${text("计划名称")}', name:'planName', index:'a.plan_name', width:150, align:"left"},
+
 		{header:'${text("更新时间")}', name:'updateDate', index:'a.update_date', width:150, align:"center"},
 		{header:'${text("开始时间")}', name:'planStartTime', index:'a.plan_start_time', width:150, align:"center"},
 		{header:'${text("结束时间")}', name:'planEndTime', index:'a.plan_end_time', width:150, align:"center"},
 		{header:'${text("评分开始时间")}', name:'planScoringStartTime', index:'a.plan_scoring_start_time', width:150, align:"center"},
 		{header:'${text("评分结束时间")}', name:'planScoringEndTime', index:'a.plan_scoring_end_time', width:150, align:"center"},
-		{header:'${text("负责人")}', name:'planCheckUserId', index:'a.plan_check_user_id', width:150, align:"left"},
-		{header:'${text("责任人")}', name:'planDutyUserId', index:'a.plan_duty_user_id', width:150, align:"left"},
+		{header:'${text("负责人")}', name:'planCheckUser.userName', index:'a.plan_check_user_id', width:150, align:"left"},
+		{header:'${text("责任人")}', name:'planDutyUser.userName', index:'a.plan_duty_user_id', width:150, align:"left"},
 		{header:'${text("工作成果")}', name:'planWorkResults', index:'a.plan_work_results', width:150, align:"left"},
 		{header:'${text("关键措施分析")}', name:'planKey', index:'a.plan_key', width:150, align:"left"},
-		{header:'${text("状态")}', name:'planStatus', index:'a.plan_status', width:150, align:"center"},
+		{header:'${text("状态")}', name:'planStatus', index:'a.plan_status', width:150, align:"center",formatter: function(val, obj, row, act){
+				return js.getDictLabel(${@DictUtils.getDictListJson('plan_status')}, val, '${text("未知")}', true);
+		}},
 		{header:'${text("权重%")}', name:'planWeight', index:'a.plan_weight', width:150, align:"center"},
 		{header:'${text("操作")}', name:'actions', width:120, sortable:false, title:false, formatter: function(val, obj, row, act){
 			var actions = [];
