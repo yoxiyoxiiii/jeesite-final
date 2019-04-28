@@ -1,0 +1,93 @@
+<%/* Copyright (c) 2013-Now http://jeesite.com All rights reserved. */ %>
+<% layout('/layouts/default.html', {title: '作业调度管理', libs: ['dataGrid']}){ %>
+<div class="main-content">
+	<div class="box box-main">
+		<div class="box-header">
+			<div class="box-title">
+				<i class="fa icon-notebook"></i> 作业调度（定时器：${isRunning?'运行中':'停止中'}...）
+			</div>
+			<div class="box-tools pull-right">
+				<% if(!isRunning){ %>
+					<a href="#" class="btn btn-default" id="btnStart" title="运行定时器"><i class="fa fa-play"></i> 启动定时器</a>
+				<% }else{ %>
+					<a href="#" class="btn btn-default" id="btnStop" title="停止定时器"><i class="fa fa-stop"></i> 停止定时器</a>
+				<% } %>
+				<a href="#" class="btn btn-default" id="btnRefresh" title="刷新页面"><i class="fa fa-refresh"></i> 刷新页面</a>
+				<a href="${ctx}/job/jobLog/list" class="btn btn-default btnTool" title="作业调度日志"><i class="fa fa-file-text-o"></i> 调度日志</a>
+				<% if(hasPermi('sys:job:edit')){ %>
+					<a href="${ctx}/job/form" class="btn btn-default btnTool" title="新增作业调度"><i class="fa fa-plus"></i> 新增</a>
+				<% } %>
+			</div>
+		</div>
+		<div class="box-body">
+			<#form:form id="searchForm" model="${job}" action="${ctx}/job/listData" method="post" class="form-inline hide"
+					data-page-no="${parameter.pageNo}" data-page-size="${parameter.pageSize}" data-order-by="${parameter.orderBy}">
+				<div class="form-group">
+					<button type="submit" class="btn btn-primary btn-sm">查询</button>
+					<button type="reset" class="btn btn-default btn-sm">重置</button>
+				</div>
+			</#form:form>			
+			<table id="dataGrid"></table>
+		</div>
+	</div>
+</div>
+<% } %>
+<script>
+// 初始化DataGrid对象
+$('#dataGrid').dataGrid({
+	searchForm: $("#searchForm"),
+	columnModel: [
+		{header:'任务名称', name:'jobName', index:'jobName', width:100, align:"left", frozen:true, formatter: function(val, obj, row, act){
+			return '<a href="${ctx}/job/form?jobName='+row.jobName+'&jobGroup='+row.jobGroup+'" class="btnList" data-title="编辑作业调度">'+(val||row.id)+'</a>';
+		}},
+		{header:'任务分组', name:'jobGroup', index:'jobGroup', width:50, align:"center", formatter: function(val, obj, row, act){
+			return js.getDictLabel(${@DictUtils.getDictListJson('sys_job_group')}, val, '未知', true);
+		}},
+		{header:'任务描述', name:'description', width:110, align:'left'},
+		{header:'调用目标字符串', name:'invokeTarget', width:130, align:'left'},
+		{header:'周期表达式', name:'cronExpression', width:90, align:'center'},
+		{header:'上次运行时间', name:'prevFireTime', width:80, align:'center'},
+		{header:'下次运行时间', name:'nextFireTime', width:80, align:'center'},
+		{header:'状态', name:'status', width:50, align:'center', formatter: function(val, obj, row, act){
+			return js.getDictLabel(${@DictUtils.getDictListJson('sys_job_status')}, val, '未知', true);
+		}},
+		{header:'操作', name:'actions', width:110, sortable:false, title:false, formatter: function(val, obj, row, act){
+			var actions = [], params = 'jobName='+encodeURIComponent(row.jobName)+'&jobGroup='+encodeURIComponent(row.jobGroup);
+			<% if(hasPermi('sys:job:edit')){ %>
+				if (row.status == '2'/*暂停*/){
+					actions.push('<a href="${ctx}/job/resume?'+params+'" class="btnList" title="恢复作业" data-confirm="确认要恢复该作业吗？"><i class="fa fa-play"></i></a>&nbsp;');
+				}else{
+					actions.push('<a href="${ctx}/job/pause?'+params+'" class="btnList" title="暂停作业" data-confirm="确认要暂停该作业吗？"><i class="fa fa-pause"></i></a>&nbsp;');
+				}
+				actions.push('<a href="${ctx}/job/runOnce?'+params+'" class="btnList" title="立即运行一次" data-confirm="确认要立即运行一次该作业吗？"><i class="fa fa-forward"></i></a>&nbsp;');
+				if (row.jobGroup != 'sys' || '${job.currentUser.admin}' == 'true'){
+					actions.push('<a href="${ctx}/job/form?'+params+'" class="btnList" title="编辑作业"><i class="fa fa-pencil"></i></a>&nbsp;');
+					actions.push('<a href="${ctx}/job/delete?'+params+'" class="btnList" title="删除作业" data-confirm="确认要删除该作业吗？"><i class="fa fa-trash-o"></i></a>&nbsp;');
+				}
+			<% } %>
+			actions.push('<a href="${ctx}/job/jobLog/list?'+params+'" class="btnList" title="监控调度日志"><i class="fa fa-file-text-o"></i></a>&nbsp;');
+			return actions.join('');
+		}}
+	],
+	// 加载成功后执行事件
+	ajaxSuccess: function(data){
+		
+	}
+});
+$("#btnRefresh").click(function(){
+	js.showMessage("页面已刷新。");
+	location = "${ctx}/job/list";
+});
+$("#btnStart").click(function(){ 
+	js.ajaxSubmit("${ctx}/job/startAll", function(data){
+		js.showMessage(data.message);
+		location = "${ctx}/job/list";
+	});
+});
+$("#btnStop").click(function(){ 
+	js.ajaxSubmit("${ctx}/job/stopAll", function(data){
+		js.showMessage(data.message);
+		location = "${ctx}/job/list";
+	});
+});
+</script>

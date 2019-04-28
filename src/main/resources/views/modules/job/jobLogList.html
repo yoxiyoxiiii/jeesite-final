@@ -1,0 +1,98 @@
+<%/* Copyright (c) 2013-Now http://jeesite.com All rights reserved. */ %>
+<% layout('/layouts/default.html', {title: '调度日志管理', libs: ['dataGrid']}){ %>
+<div class="main-content">
+	<div class="box box-main">
+		<div class="box-header">
+			<div class="box-title">
+				<i class="fa fa-file-text-o"></i> 调度日志查询
+			</div>
+			<div class="box-tools pull-right">
+				<a href="#" class="btn btn-default" id="btnSearch" title="查询"><i class="fa fa-filter"></i> 查询</a>
+			</div>
+		</div>
+		<div class="box-body">
+			<#form:form id="searchForm" model="${jobLog}" action="${ctx}/job/jobLog/listData" method="post" class="form-inline hide"
+					data-page-no="${parameter.pageNo}" data-page-size="${parameter.pageSize}" data-order-by="${parameter.orderBy}">
+				<div class="form-group">
+					<label class="control-label">任务名称：</label>
+					<div class="control-inline">
+						<#form:input path="jobName" maxlength="64" class="form-control width-90"/>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="control-label">任务组名：</label>
+					<div class="control-inline">
+						<#form:input path="jobGroup" maxlength="64" class="form-control width-90"/>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="control-label">日志类型：</label>
+					<div class="control-inline width-90">
+						<#form:select path="jobType" dictType="sys_job_type" blankOption="true" class="form-control "/>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="control-label">日志事件：</label>
+					<div class="control-inline width-90">
+						<#form:select path="jobEvent" dictType="sys_job_event" blankOption="true" class="form-control "/>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="control-label">日志信息：</label>
+					<div class="control-inline">
+						<#form:input path="jobMessage" maxlength="500" class="form-control width-90"/>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="control-label">是否异常：</label>
+					<div class="control-inline width-60">
+						<#form:select path="isException" dictType="sys_yes_no" blankOption="true" class="form-control"/>
+					</div>
+				</div>
+				<div class="form-group">
+					<button type="submit" class="btn btn-primary btn-sm">查询</button>
+					<button type="reset" class="btn btn-default btn-sm">重置</button>
+				</div>
+			</#form:form>			
+			<table id="dataGrid"></table>
+			<div id="dataGridPage"></div>
+		</div>
+	</div>
+</div>
+<% } %>
+<script>
+// 初始化DataGrid对象
+$('#dataGrid').dataGrid({
+	searchForm: $("#searchForm"),
+	columnModel: [
+		{header:'任务名称', name:'jobName', index:'a.job_name', width:200, align:"center", frozen:true, formatter: function(val, obj, row, act){
+			return '<a href="${ctx}/job/jobLog/form?id='+row.id+'" class="btnList" data-title="编辑调度日志">'+(val||row.id)+'</a>';
+		}},
+		{header:'任务分组', name:'jobGroup', index:'a.job_group', width:150, align:"center", formatter: function(val, obj, row, act){
+			return js.getDictLabel(${@DictUtils.getDictListJson('sys_job_group')}, val, val, true);
+		}},
+		{header:'日志类型', name:'jobType', index:'a.job_type', width:150, align:"center", formatter: function(val, obj, row, act){
+			return js.getDictLabel(${@DictUtils.getDictListJson('sys_job_type')}, val, '未知', true);
+		}},
+		{header:'日志事件', name:'jobEvent', index:'a.job_event', width:150, align:"center", formatter: function(val, obj, row, act){
+			return js.getDictLabel(${@DictUtils.getDictListJson('sys_job_event')}, val, '未知', true);
+		}},
+		{header:'日志信息', name:'jobMessage', index:'a.job_message', width:150, align:"center"},
+		{header:'是否异常', name:'isException', index:'a.is_exception', width:150, align:"center", formatter: function(val, obj, row, act){
+			return js.getDictLabel(${@DictUtils.getDictListJson('sys_yes_no')}, val, '未知', true);
+		}},
+		{header:'发生时间', name:'createDate', index:'a.create_date', width:200, align:"center"}/* ,
+		{header:'操作', name:'actions', width:130, sortable:false, title:false, formatter: function(val, obj, row, act){
+			var actions = [];
+			<% if(hasPermi('sys:job:edit')){ %>
+				actions.push('<a href="${ctx}/job/jobLog/form?id='+row.id+'" class="btnList" title="编辑调度日志"><i class="fa fa-file-text-o"></i></a>&nbsp;');
+			<% } %>
+			return actions.join('');
+		}} */
+	],
+	// 加载成功后执行事件
+	ajaxSuccess: function(data){
+		
+	}
+});
+</script>

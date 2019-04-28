@@ -1,0 +1,163 @@
+<%/* Copyright (c) 2013-Now http://jeesite.com All rights reserved. */ %>
+<% layout('/layouts/default.html', {title: '作业调度管理', libs: ['validate']}){ %>
+<div class="main-content">
+	<div class="box box-main">
+		<div class="box-header with-border">
+			<div class="box-title">
+				<i class="fa icon-notebook"></i> ${job.isNewRecord ? '新增作业调度' : '编辑作业调度'}
+			</div>
+			<div class="box-tools pull-right">
+				<button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
+			</div>
+		</div>
+		<#form:form id="inputForm" model="${job}" action="${ctx}/job/save" method="post" class="form-horizontal">
+			<#form:hidden path="status"/>
+			<#form:hidden name="instanceName" value="${@Global.getProperty('job.scheduler.instanceName', 'JeeSiteScheduler')}"/>
+			<div class="box-body">
+				<div class="form-unit">基本信息</div>
+				<div class="row">
+					<div class="col-xs-6">
+						<div class="form-group">
+							<label class="control-label col-sm-4" title="">
+								<span class="required ">*</span> 任务名称：<i class="fa icon-question hide"></i></label>
+							<div class="col-sm-8">
+								<#form:hidden path="isNewRecord"/>
+								<#form:input path="jobName" maxlength="32" readonly="${!job.isNewRecord}" class="form-control required "/>
+							</div>
+						</div>
+					</div>
+					<div class="col-xs-6">
+						<div class="form-group">
+							<label class="control-label col-sm-4" title="">
+								<span class="required ">*</span> 任务分组：<i class="fa icon-question hide"></i></label>
+							<div class="col-sm-8">
+								<% if(!job.isNewRecord){ %>
+									<#form:hidden path="jobGroup"/>
+									<#form:input name="jobGroupName" value="${@DictUtils.getDictLabel('sys_job_group',job.jobGroup,'')}" maxlength="32" readonly="true" class="form-control required "/>
+								<% }else{ %>
+									<#form:select path="jobGroup" dictType="sys_job_group" class="form-control required abc" />
+								<% } %>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-xs-12">
+						<div class="form-group">
+							<label class="control-label col-sm-2" title="">
+								<span class="required ">*</span> 任务描述：<i class="fa icon-question hide"></i></label>
+							<div class="col-sm-10">
+								<#form:input path="description" maxlength="100" class="form-control required "/>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-xs-12">
+						<div class="form-group">
+							<label class="control-label col-sm-2" title="">
+								<span class="required ">*</span> 调用目标串：<i class="fa icon-question hide"></i></label>
+							<div class="col-sm-10">
+								<#form:hidden path="invokeTarget"/>
+								<#form:input name="invokeTarget2" value="${job.invokeTarget}" maxlength="1000" class="form-control required "/>
+								<div class="alert alert-info" style="margin:10px 0 0 0">
+									<ul style="padding:0 0 0 20px;">
+										<li>Bean调用：Bean名.方法名(参数1, 参数2, 参数n...) 示例：testDataService.executeTestTask(userService, 1, 2L, 3F, 4D, 'abc')</li>
+										<li>静态类调用：静态类全名.方法名(参数1, 参数2, 参数n...)	示例： com.jeesite.common.config.Global.getConfig('productName')</li>
+										<li>参数说明：支持Bean名参数、数值类型参数、字符串参数，字符串参数需要加单引号。</li>
+									</ul>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-xs-6">
+						<div class="form-group">
+							<label class="control-label col-sm-4" title="">
+								<span class="required ">*</span> Cron执行表达式：<i class="fa icon-question hide"></i></label>
+							<div class="col-sm-8">
+								<#form:hidden path="cronExpression" maxlength="255" class="form-control required "/>
+								<iframe id="cronFrame" src="${ctxStatic}/cron-quartz/index.html?ctx=${ctx}" style="width:660px;height:530px;border:0"></iframe>
+								<script type="text/javascript">
+									$('#cronFrame').load(function(){
+										var win = $(this)[0].contentWindow;
+										win.$('#cron').val($('#cronExpression').val());
+										win.$("input[name^='v_'],#cron").change(function(){
+											$('#cronExpression').val(win.$('#cron').val());
+										});
+										win.$('#btnFan').click();
+									});
+								</script>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-xs-12">
+						<div class="form-group">
+							<label class="control-label col-sm-2" title="">
+								<span class="required ">*</span> 计划错误策略：<i class="fa icon-question hide"></i></label>
+							<div class="col-sm-10">
+								<#form:radio path="misfireInstruction" dictType="sys_job_misfire_instruction" class="form-control required" />
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-xs-12">
+						<div class="form-group">
+							<label class="control-label col-sm-2" title="">
+								<span class="required ">*</span> 是否并发执行：<i class="fa icon-question hide"></i></label>
+							<div class="col-sm-10">
+								<#form:radio path="concurrent" dictType="sys_yes_no" class="form-control required" />
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="form-unit">其它信息</div>
+				<div class="row">
+					<div class="col-xs-12">
+						<div class="form-group">
+							<label class="control-label col-sm-2" title="">
+								<span class="required hide">*</span> 备注信息：<i class="fa icon-question hide"></i></label>
+							<div class="col-sm-10">
+								<#form:textarea path="remarks" rows="4" maxlength="500" class="form-control "/>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="box-footer">
+				<div class="row">
+					<div class="col-sm-offset-2 col-sm-10">
+						<% if (hasPermi('sys:job:edit')){ %>
+							<button type="submit" class="btn btn-sm btn-primary" id="btnSubmit"><i class="fa fa-check"></i> 保 存</button>&nbsp;
+						<% } %>
+						<button type="button" class="btn btn-sm btn-default" id="btnCancel" onclick="js.closeCurrentTabPage()"><i class="fa fa-reply-all"></i> 关 闭</button>
+					</div>
+				</div>
+			</div>
+		</#form:form>
+	</div>
+</div>
+<% } %>
+<script>
+$("#inputForm").validate({
+	submitHandler: function(form){
+		if ($('#cronExpression').val($('#cronFrame')[0].contentWindow.$('#cron').val()).val() == ''){
+			js.showMessage('请填写Cron表达式！', '', 'warning');
+			return false;
+		}
+		$('#invokeTarget').val(Base64.encode($('#invokeTarget2').val()));
+		js.ajaxSubmitForm($(form), function(data){
+			js.showMessage(data.message);
+			if(data.result == Global.TRUE){
+				js.closeCurrentTabPage(function(contentWindow){
+					contentWindow.page();
+				});
+			}
+		}, "json");
+    }
+});
+</script>

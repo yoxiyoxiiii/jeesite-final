@@ -278,8 +278,8 @@ logging:
 #  defaultTimeZone: GMT+08:00
   
 # 任务调度（个人版）
-#job:
-#  enabled: false
+job:
+  enabled: false
 #
 #  # 是否自动启动任务调度（可关闭）
 #  autoStartup: true
