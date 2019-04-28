@@ -6,7 +6,10 @@ package com.jeesite.modules.businesscheckplan.web;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.jeesite.common.codec.EncodeUtils;
 import com.jeesite.common.lang.DateUtils;
+import com.jeesite.common.mapper.JsonMapper;
+import com.jeesite.modules.businesschecktemplat.entity.BusinessCheckTemplate;
 import com.jeesite.modules.msg.entity.MsgPush;
 import com.jeesite.modules.msg.entity.content.PcMsgContent;
 import com.jeesite.modules.msg.service.MsgPushService;
@@ -26,6 +29,8 @@ import com.jeesite.common.entity.Page;
 import com.jeesite.common.web.BaseController;
 import com.jeesite.modules.businesscheckplan.entity.BusinessCheckPlan;
 import com.jeesite.modules.businesscheckplan.service.BusinessCheckPlanService;
+
+import java.util.Map;
 
 /**
  * 考核计划Controller
@@ -123,6 +128,17 @@ public class BusinessCheckPlanController extends BaseController {
 		businessCheckPlanService.delete(businessCheckPlan);
 		return renderResult(Global.TRUE, text("删除考核计划成功！"));
 	}
+
+	@RequestMapping({"listSelect"})
+	public String listSelect(BusinessCheckTemplate businessCheckTemplate, String selectData, Model model) {
+		String selectDataJson = EncodeUtils.decodeUrl(selectData);
+		if (JsonMapper.fromJson(selectDataJson, Map.class) != null) {
+			model.addAttribute("selectData", selectDataJson);
+		}
+		model.addAttribute("businessCheckTemplate", businessCheckTemplate);
+		return "modules/businesscheckplan/listSelect";
+	}
+
 
 
 }

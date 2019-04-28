@@ -1,0 +1,72 @@
+<% layout('/layouts/default.html', {title: '考核名单管理', libs: ['validate']}){ %>
+<div class="main-content">
+	<div class="box box-main">
+		<div class="box-header with-border">
+			<div class="box-title">
+				<i class="fa fa-list-alt"></i> ${text(businessCheckPlanUser.isNewRecord ? '新增考核名单' : '编辑考核名单')}
+			</div>
+			<div class="box-tools pull-right">
+				<button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
+			</div>
+		</div>
+		<#form:form id="inputForm" model="${businessCheckPlanUser}" action="${ctx}/businesscheckplanuser/businessCheckPlanUser/save" method="post" class="form-horizontal">
+			<div class="box-body">
+				<div class="form-unit">${text('基本信息')}</div>
+				<#form:hidden path="id"/>
+				<div class="row">
+				<div class="row">
+					<div class="col-xs-12">
+						<div class="form-group">
+							<label class="control-label col-sm-2" title="">
+								<span class="required hide">*</span> ${text('考核对象')}：<i class="fa icon-question hide"></i></label>
+							<div class="col-sm-5">
+								<#form:listselect id="userId" title="${text('用户选择')}"
+									path="userId" labelPath=""
+									url="${ctx}/sys/user/userSelect" allowClear="false"
+								path="user.userCode"  labelPath="user.userName" value= "id" checkbox="false" itemCode="userCode" itemName="userName"/>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-xs-12">
+						<div class="form-group">
+							<label class="control-label col-sm-2" title="">
+								<span class="required hide">*</span> ${text('考核计划')}：<i class="fa icon-question hide"></i></label>
+							<div class="col-sm-5">
+								<#form:listselect id="listSelectplan" title="考核计划"
+								url="${ctx}/businesscheckplan/businessCheckPlan/listSelect" allowClear="false"
+								path="businessCheckPlan.id"  labelPath="businessCheckPlan.planName" value= "id" checkbox="false" itemCode="id" itemName="planName"/>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="box-footer">
+				<div class="row">
+					<div class="col-sm-offset-2 col-sm-10">
+						<% if (hasPermi('businesscheckplanuser:businessCheckPlanUser:edit')){ %>
+							<button type="submit" class="btn btn-sm btn-primary" id="btnSubmit"><i class="fa fa-check"></i> ${text('保 存')}</button>&nbsp;
+						<% } %>
+						<button type="button" class="btn btn-sm btn-default" id="btnCancel" onclick="js.closeCurrentTabPage()"><i class="fa fa-reply-all"></i> ${text('关 闭')}</button>
+					</div>
+				</div>
+			</div>
+		</#form:form>
+	</div>
+</div>
+<% } %>
+<script>
+$("#inputForm").validate({
+	submitHandler: function(form){
+		js.ajaxSubmitForm($(form), function(data){
+			js.showMessage(data.message);
+			if(data.result == Global.TRUE){
+				js.closeCurrentTabPage(function(contentWindow){
+					contentWindow.page();
+				});
+			}
+		}, "json");
+    }
+});
+</script>
