@@ -116,7 +116,7 @@ public class BusinessCheckPlanController extends BaseController {
 	@ResponseBody
 	public String enable(BusinessCheckPlan businessCheckPlan) {
 		businessCheckPlan.setPlanStatus(2);
-		businessCheckPlanService.updateStatus(businessCheckPlan);
+		businessCheckPlanService.start(businessCheckPlan);
 		return renderResult(Global.TRUE, text("启用考核计划成功"));
 	}
 	

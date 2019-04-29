@@ -16,8 +16,14 @@
        SELECT ${sqlMap.column.toSql()}
 		FROM ${sqlMap.table.toSql()}
     </select>
-    <select id="findListByCheckTemplateId" resultType="com.jeesite.modules.businesstarget.entity.BusinessTarget">
-        SELECT ${sqlMap.column.toSql()}
-		FROM ${sqlMap.table.toSql()}
+
+    <select id="findListIn" resultType="com.jeesite.modules.businesstarget.entity.BusinessTarget">
+        SELECT *
+        FROM business_target b
+        WHERE b.id IN
+        <foreach collection="list" item="id" index="index" open="(" close=")" separator=",">
+            #{id}
+        </foreach>
+
     </select>
 </mapper>

@@ -6,7 +6,10 @@ package com.jeesite.modules.businesscheckplan.service;
 import java.util.List;
 import java.util.UUID;
 
+import com.alibaba.fastjson.JSON;
 import com.jeesite.modules.businesschecktemplat.entity.BusinessCheckTemplate;
+import com.jeesite.modules.businesschecktemplateinfo.entity.BusinessCheckTemplateInfo;
+import com.jeesite.modules.businesschecktemplateinfo.service.BusinessCheckTemplateInfoService;
 import com.jeesite.modules.businessjob.entity.BusinessJob;
 import com.jeesite.modules.businessjob.service.BusinessJobService;
 import com.jeesite.modules.businessjob.service.QuartzService;
@@ -16,6 +19,8 @@ import com.jeesite.modules.sys.entity.User;
 import com.jeesite.modules.sys.service.UserService;
 import net.bytebuddy.asm.Advice;
 import org.hibernate.validator.constraints.Length;
+import org.quartz.JobDataMap;
+import org.quartz.SchedulerException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
@@ -43,6 +48,9 @@ public class BusinessCheckPlanService extends CrudService<BusinessCheckPlanDao, 
 
 	@Autowired
 	private BusinessTargetService businessTargetService;
+
+	@Autowired
+	private BusinessCheckTemplateInfoService businessCheckTemplateInfoService;
 
 
 	/**
@@ -91,28 +99,42 @@ public class BusinessCheckPlanService extends CrudService<BusinessCheckPlanDao, 
 	 * 更新状态
 	 * @param businessCheckPlan
 	 */
-	@Transactional(readOnly=false,propagation = Propagation.REQUIRED)
-	public void start(BusinessCheckPlan businessCheckPlan) {
+	@Transactional(readOnly=false,rollbackFor = Exception.class,propagation = Propagation.REQUIRED)
+	public void start(BusinessCheckPlan businessCheckPlan) throws SchedulerException, ClassNotFoundException {
 		this.updateStatus(businessCheckPlan);
 		//考核模板
 		BusinessCheckTemplate businessCheckTemplate = businessCheckPlan.getBusinessCheckTemplate();
 		String checkTemplateId = businessCheckTemplate.getId();
-		List<BusinessTarget> businessTargetList = businessTargetService.findListByCheckTemplateId(checkTemplateId);
-
+		List<String> businessTargetIdList = businessCheckTemplateInfoService.findListByCheckTemplateId(checkTemplateId);
+		List<BusinessTarget> businessTargetList = businessTargetService.findListIn(businessTargetIdList);
+		//每个目标都生成一个job
 		for (BusinessTarget item: businessTargetList){
-			//目标考核周期 周、半月、月、季度、半年、年 ，定时任务关联长度不能超过 255 个字符")
-			String targetCheckCycle = item.getTargetCheckCycle();
-			//添加定时任务
-			BusinessJob businessJob = new BusinessJob();
-			businessJob.setCorn(targetCheckCycle);
-			businessJob.setJobName("com.jeesite.modules.businessjob.Job.SendMsgJob"+"-"+ UUID.randomUUID());
-			businessJob.setJobGroup(businessCheckPlan.getId());
-			businessJobService.save(businessJob);
+			setJob(businessCheckPlan, item);
 		}
 	}
 
+	/**
+	 * 设置job
+	 * @param businessCheckPlan
+	 * @param businessTarget
+	 */
+	private void setJob(BusinessCheckPlan businessCheckPlan, BusinessTarget businessTarget) throws ClassNotFoundException, SchedulerException {
+		//目标考核周期 周、半月、月、季度、半年、年 ，定时任务关联长度不能超过 255 个字符")
+		String targetCheckCycle = businessTarget.getTargetCheckCycle();
+		//添加定时任务
+		BusinessJob businessJob = new BusinessJob();
+		businessJob.setCorn(targetCheckCycle);
+		businessJob.setJobName("com.jeesite.modules.businessjob.Job.SendMsgJob"+"-"+ UUID.randomUUID());
+		businessJob.setJobGroup(businessCheckPlan.getId());
+		JobDataMap jobDataMap = new JobDataMap();
 
-	
+		//设置Job 需要的参数
+		jobDataMap.put("businessTarget", businessTarget);
+		jobDataMap.put("businessCheckPlan",businessCheckPlan);
+		businessJobService.save(businessJob,jobDataMap);
+	}
+
+
 	/**
 	 * 删除数据
 	 * @param businessCheckPlan

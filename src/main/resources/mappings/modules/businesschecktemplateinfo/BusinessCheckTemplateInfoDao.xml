@@ -11,5 +11,10 @@
 		</where>
 		ORDER BY ${sqlMap.order.toSql()}
 	</select> -->
-	
+
+    <select id="findListByCheckTemplateId" resultType="java.lang.String">
+        SELECT b.target_id
+        FROM business_check_template_info b
+        WHERE temp_id = #{checkTemplateId}
+    </select>
 </mapper>

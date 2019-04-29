@@ -6,6 +6,9 @@ package com.jeesite.modules.businesschecktemplateinfo.dao;
 import com.jeesite.common.dao.CrudDao;
 import com.jeesite.common.mybatis.annotation.MyBatisDao;
 import com.jeesite.modules.businesschecktemplateinfo.entity.BusinessCheckTemplateInfo;
+import com.jeesite.modules.businesstarget.entity.BusinessTarget;
+
+import java.util.List;
 
 /**
  * 考核指标DAO接口
@@ -14,5 +17,6 @@ import com.jeesite.modules.businesschecktemplateinfo.entity.BusinessCheckTemplat
  */
 @MyBatisDao
 public interface BusinessCheckTemplateInfoDao extends CrudDao<BusinessCheckTemplateInfo> {
-	
+
+    List<String> findListByCheckTemplateId(String checkTemplateId);
 }

@@ -19,5 +19,6 @@ public interface BusinessTargetDao extends CrudDao<BusinessTarget> {
 
     List<BusinessTarget> findList();
 
-    List<BusinessTarget> findListByCheckTemplateId(String checkTemplateId);
+
+    List<BusinessTarget> findListIn(List<String> businessTargetIdList);
 }

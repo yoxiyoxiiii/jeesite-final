@@ -139,7 +139,7 @@ $('#dataGrid').dataGrid({
 			var actions = [];
 			<% if(hasPermi('businesscheckplan:businessCheckPlan:edit')){ %>
 				actions.push('<a href="${ctx}/businesscheckplan/businessCheckPlan/form?id='+row.id+'" class="btnList" title="${text("编辑考核计划")}"><i class="fa fa-pencil"></i></a>&nbsp;');
-				if (row.planStatus == "5"){
+				if (row.planStatus == "5" || row.planStatus == "1"){
 					actions.push('<a href="${ctx}/businesscheckplan/businessCheckPlan/enable?id='+row.id+'" class="btnList" title="${text("启用考核计划")}" data-confirm="${text("确认要启用该考核计划吗？")}"><i class="glyphicon glyphicon-ok-circle"></i></a>&nbsp;');
 				}else {
                     actions.push('<a href="${ctx}/businesscheckplan/businessCheckPlan/disable?id='+row.id+'" class="btnList" title="${text("停用考核计划")}" data-confirm="${text("确认要停用该考核计划吗？")}"><i class="glyphicon glyphicon-ban-circle"></i></a>&nbsp;');

@@ -5,6 +5,7 @@ package com.jeesite.modules.businessjob.service;
 
 import java.util.List;
 
+import org.quartz.JobDataMap;
 import org.quartz.SchedulerException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -52,18 +53,11 @@ public class BusinessJobService extends CrudService<BusinessJobDao, BusinessJob>
 	 * 保存数据（插入或更新）
 	 * @param businessJob
 	 */
-	@Override
 	@Transactional(readOnly=false)
-	public void save(BusinessJob businessJob) {
+	public void save(BusinessJob businessJob, JobDataMap jobDataMap) throws SchedulerException, ClassNotFoundException {
 		super.save(businessJob);
-		try {
-			//添加任务到quartz
-			quartzService.addJob(businessJob.getJobName(),businessJob.getJobGroup(),"",null);
-		} catch (ClassNotFoundException e) {
-			e.printStackTrace();
-		} catch (SchedulerException e) {
-			e.printStackTrace();
-		}
+		//添加任务到quartz
+		quartzService.addJob(businessJob.getJobName(),businessJob.getJobGroup(),businessJob.getCorn(),jobDataMap);
 	}
 	
 	/**

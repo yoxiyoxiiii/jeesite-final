@@ -81,5 +81,9 @@ public class BusinessCheckTemplateInfoService extends CrudService<BusinessCheckT
 	public void delete(BusinessCheckTemplateInfo businessCheckTemplateInfo) {
 		super.delete(businessCheckTemplateInfo);
 	}
-	
+
+	public List<String> findListByCheckTemplateId(String checkTemplateId) {
+		return super.dao.findListByCheckTemplateId(checkTemplateId);
+
+	}
 }

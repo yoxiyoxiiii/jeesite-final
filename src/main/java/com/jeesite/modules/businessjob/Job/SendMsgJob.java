@@ -12,6 +12,6 @@ import org.springframework.stereotype.Component;
 public class SendMsgJob implements Job {
     @Override
     public void execute(JobExecutionContext context) throws JobExecutionException {
-
+        System.out.println("ssssssssssssssssssss");
     }
 }
