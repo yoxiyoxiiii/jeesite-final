@@ -15,6 +15,7 @@ import com.jeesite.modules.msg.entity.content.PcMsgContent;
 import com.jeesite.modules.msg.service.MsgPushService;
 import com.jeesite.modules.msg.utils.MsgPushUtils;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
+import org.quartz.SchedulerException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -114,7 +115,7 @@ public class BusinessCheckPlanController extends BaseController {
 	@RequiresPermissions("businesscheckplan:businessCheckPlan:edit")
 	@RequestMapping(value = "enable")
 	@ResponseBody
-	public String enable(BusinessCheckPlan businessCheckPlan) {
+	public String enable(BusinessCheckPlan businessCheckPlan) throws ClassNotFoundException, SchedulerException {
 		businessCheckPlan.setPlanStatus(2);
 		businessCheckPlanService.start(businessCheckPlan);
 		return renderResult(Global.TRUE, text("启用考核计划成功"));
