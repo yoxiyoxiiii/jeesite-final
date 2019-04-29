@@ -87,17 +87,19 @@
 $('#dataGrid').dataGrid({
 	searchForm: $("#searchForm"),
 	columnModel: [
-		{header:'${text("考核目标")}', name:'targetId', index:'a.target_id', width:150, align:"left", frozen:true, formatter: function(val, obj, row, act){
+		{header:'${text("考核目标")}', name:'businessTarget.targetName', index:'a.target_id', width:150, align:"left", frozen:true, formatter: function(val, obj, row, act){
 			return '<a href="${ctx}/businessjob/businessJob/form?id='+row.id+'" class="btnList" data-title="${text("编辑定时任务")}">'+(val||row.id)+'</a>';
 		}},
-		{header:'${text("考核计划")}', name:'planId', index:'a.plan_id', width:150, align:"left"},
+		{header:'${text("考核计划")}', name:'businessCheckPlan.planName', index:'a.plan_id', width:150, align:"left"},
 		{header:'${text("执行周期")}', name:'corn', index:'a.corn', width:150, align:"center", formatter: function(val, obj, row, act){
-			return js.getDictLabel(${@DictUtils.getDictListJson('check_cycle_type')}, val, '${text("未知")}', true);
+			return js.getDictLabel(${@DictUtils.getDictListJson('target_check_cycle')}, val, '${text("未知")}', true);
 		}},
 		{header:'${text("任务名称")}', name:'jobName', index:'a.job_name', width:150, align:"left"},
 		{header:'${text("任务分组")}', name:'jobGroup', index:'a.job_group', width:150, align:"left"},
 		{header:'${text("bean名称")}', name:'beanName', index:'a.bean_name', width:150, align:"left"},
-		{header:'${text("任务状态")}', name:'jobStatus', index:'a.job_status', width:150, align:"left"},
+		{header:'${text("任务状态")}', name:'jobStatus', index:'a.job_status', width:150, align:"left",formatter: function(val, obj, row, act){
+				return js.getDictLabel(${@DictUtils.getDictListJson('sys_job_status')}, val, '${text("未知")}', true);
+		}},
 		{header:'${text("创建时间")}', name:'createTime', index:'a.create_time', width:150, align:"center"},
 		{header:'${text("更新时间")}', name:'updateTime', index:'a.update_time', width:150, align:"center"},
 		{header:'${text("操作")}', name:'actions', width:120, sortable:false, title:false, formatter: function(val, obj, row, act){

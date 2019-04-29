@@ -3,6 +3,10 @@
  */
 package com.jeesite.modules.businessjob.entity;
 
+import com.jeesite.modules.businesscheckplan.entity.BusinessCheckPlan;
+import com.jeesite.modules.businesschecktemplat.entity.BusinessCheckTemplate;
+import com.jeesite.modules.businesstarget.entity.BusinessTarget;
+import lombok.Data;
 import org.hibernate.validator.constraints.Length;
 import java.util.Date;
 import com.jeesite.common.mybatis.annotation.JoinTable;
@@ -21,8 +25,8 @@ import com.jeesite.common.mybatis.mapper.query.QueryType;
  */
 @Table(name="business_job", alias="a", columns={
 		@Column(name="id", attrName="id", label="id", isPK=true),
-		@Column(name="target_id", attrName="targetId", label="考核目标"),
-		@Column(name="plan_id", attrName="planId", label="考核计划"),
+		@Column(name="target_id", attrName="businessTarget.id", label="考核目标"),
+		@Column(name="plan_id", attrName="businessCheckPlan.id", label="考核计划"),
 		@Column(name="corn", attrName="corn", label="执行周期"),
 		@Column(name="job_name", attrName="jobName", label="任务名称", queryType=QueryType.LIKE),
 		@Column(name="job_group", attrName="jobGroup", label="任务分组"),
@@ -30,15 +34,41 @@ import com.jeesite.common.mybatis.mapper.query.QueryType;
 		@Column(name="job_status", attrName="jobStatus", label="任务状态"),
 		@Column(name="create_time", attrName="createTime", label="创建时间"),
 		@Column(name="update_time", attrName="updateTime", label="更新时间"),
-	}, orderBy="a.id DESC"
+	},
+		joinTable = {
+				@JoinTable(type = JoinTable.Type.LEFT_JOIN, entity = BusinessCheckPlan.class, alias = "businessCheckPlan",
+						on = "businessCheckPlan.id = a.plan_id", attrName = "businessCheckPlan",
+						columns = {@Column(includeEntity = BusinessCheckPlan.class)}),
+				@JoinTable(type = JoinTable.Type.LEFT_JOIN, entity = BusinessTarget.class, alias = "businessTarget",
+						on = "businessTarget.id = a.target_id", attrName = "businessTarget",
+						columns = {@Column(includeEntity = BusinessTarget.class)}),
+		},
+		orderBy="a.id DESC"
 )
 public class BusinessJob extends DataEntity<BusinessJob> {
 	
 	private static final long serialVersionUID = 1L;
-	private String targetId;		// 考核目标
-	private String planId;		// 考核计划
+	private BusinessTarget businessTarget;		// 考核目标
+	private BusinessCheckPlan businessCheckPlan;		// 考核计划
 	private String corn;		// 执行周期
 	private String jobName;		// 任务名称
+
+	public BusinessTarget getBusinessTarget() {
+		return businessTarget;
+	}
+
+	public void setBusinessTarget(BusinessTarget businessTarget) {
+		this.businessTarget = businessTarget;
+	}
+
+	public BusinessCheckPlan getBusinessCheckPlan() {
+		return businessCheckPlan;
+	}
+
+	public void setBusinessCheckPlan(BusinessCheckPlan businessCheckPlan) {
+		this.businessCheckPlan = businessCheckPlan;
+	}
+
 	private String jobGroup;		// 任务分组
 	private String beanName;		// bean名称
 	private String jobStatus;		// 任务状态
@@ -53,24 +83,7 @@ public class BusinessJob extends DataEntity<BusinessJob> {
 		super(id);
 	}
 	
-	@Length(min=0, max=50, message="考核目标长度不能超过 50 个字符")
-	public String getTargetId() {
-		return targetId;
-	}
 
-	public void setTargetId(String targetId) {
-		this.targetId = targetId;
-	}
-	
-	@Length(min=0, max=50, message="考核计划长度不能超过 50 个字符")
-	public String getPlanId() {
-		return planId;
-	}
-
-	public void setPlanId(String planId) {
-		this.planId = planId;
-	}
-	
 	@Length(min=0, max=255, message="执行周期长度不能超过 255 个字符")
 	public String getCorn() {
 		return corn;
