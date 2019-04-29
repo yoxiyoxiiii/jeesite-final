@@ -42,7 +42,8 @@ public class QuartzService {
                 .build();
 
         //获取job 的 子类
-        final Class<? extends Job> jobClazz = Class.forName(jobName).asSubclass(Job.class);
+        String className = jobName.split("-")[0];
+        final Class<? extends Job> jobClazz = Class.forName(className).asSubclass(Job.class);
 
         //设置 jobDetail
         final JobKey jobKey = JobKey.jobKey(jobName,jobGroup);
@@ -98,6 +99,7 @@ public class QuartzService {
                 JobKey jobKey = JobKey.jobKey(jobName,jobGroup);
                 scheduler.deleteJob(jobKey);
                 log.info("===> delete, triggerKey:{}", triggerKey);
+
             }
         } catch (SchedulerException e) {
             throw new ServiceException(e.getMessage());

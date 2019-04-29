@@ -4,12 +4,21 @@
 package com.jeesite.modules.businesscheckplan.service;
 
 import java.util.List;
+import java.util.UUID;
 
+import com.jeesite.modules.businesschecktemplat.entity.BusinessCheckTemplate;
+import com.jeesite.modules.businessjob.entity.BusinessJob;
+import com.jeesite.modules.businessjob.service.BusinessJobService;
+import com.jeesite.modules.businessjob.service.QuartzService;
+import com.jeesite.modules.businesstarget.entity.BusinessTarget;
+import com.jeesite.modules.businesstarget.service.BusinessTargetService;
 import com.jeesite.modules.sys.entity.User;
 import com.jeesite.modules.sys.service.UserService;
 import net.bytebuddy.asm.Advice;
+import org.hibernate.validator.constraints.Length;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.jeesite.common.entity.Page;
@@ -28,6 +37,13 @@ public class BusinessCheckPlanService extends CrudService<BusinessCheckPlanDao, 
 
 	@Autowired
 	private UserService userService;
+
+	@Autowired
+	private BusinessJobService businessJobService;
+
+	@Autowired
+	private BusinessTargetService businessTargetService;
+
 
 	/**
 	 * 获取单条数据
@@ -67,8 +83,35 @@ public class BusinessCheckPlanService extends CrudService<BusinessCheckPlanDao, 
 	@Override
 	@Transactional(readOnly=false)
 	public void updateStatus(BusinessCheckPlan businessCheckPlan) {
-		super.updateStatus(businessCheckPlan);
+//		super.updateStatus(businessCheckPlan);
+		super.dao.update(businessCheckPlan);
 	}
+
+	/**
+	 * 更新状态
+	 * @param businessCheckPlan
+	 */
+	@Transactional(readOnly=false,propagation = Propagation.REQUIRED)
+	public void start(BusinessCheckPlan businessCheckPlan) {
+		this.updateStatus(businessCheckPlan);
+		//考核模板
+		BusinessCheckTemplate businessCheckTemplate = businessCheckPlan.getBusinessCheckTemplate();
+		String checkTemplateId = businessCheckTemplate.getId();
+		List<BusinessTarget> businessTargetList = businessTargetService.findListByCheckTemplateId(checkTemplateId);
+
+		for (BusinessTarget item: businessTargetList){
+			//目标考核周期 周、半月、月、季度、半年、年 ，定时任务关联长度不能超过 255 个字符")
+			String targetCheckCycle = item.getTargetCheckCycle();
+			//添加定时任务
+			BusinessJob businessJob = new BusinessJob();
+			businessJob.setCorn(targetCheckCycle);
+			businessJob.setJobName("com.jeesite.modules.businessjob.Job.SendMsgJob"+"-"+ UUID.randomUUID());
+			businessJob.setJobGroup(businessCheckPlan.getId());
+			businessJobService.save(businessJob);
+		}
+	}
+
+
 	
 	/**
 	 * 删除数据

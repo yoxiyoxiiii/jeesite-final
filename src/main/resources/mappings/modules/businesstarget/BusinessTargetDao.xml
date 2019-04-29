@@ -16,4 +16,8 @@
        SELECT ${sqlMap.column.toSql()}
 		FROM ${sqlMap.table.toSql()}
     </select>
+    <select id="findListByCheckTemplateId" resultType="com.jeesite.modules.businesstarget.entity.BusinessTarget">
+        SELECT ${sqlMap.column.toSql()}
+		FROM ${sqlMap.table.toSql()}
+    </select>
 </mapper>

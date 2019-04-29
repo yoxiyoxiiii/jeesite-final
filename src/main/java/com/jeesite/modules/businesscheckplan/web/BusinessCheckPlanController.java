@@ -90,6 +90,7 @@ public class BusinessCheckPlanController extends BaseController {
 	@PostMapping(value = "save")
 	@ResponseBody
 	public String save(@Validated BusinessCheckPlan businessCheckPlan) {
+		businessCheckPlan.setPlanStatus(1);//未启动
 		businessCheckPlanService.save(businessCheckPlan);
 		return renderResult(Global.TRUE, text("保存考核计划成功！"));
 	}
@@ -101,19 +102,20 @@ public class BusinessCheckPlanController extends BaseController {
 	@RequestMapping(value = "disable")
 	@ResponseBody
 	public String disable(BusinessCheckPlan businessCheckPlan) {
-		businessCheckPlan.setStatus(BusinessCheckPlan.STATUS_DISABLE);
+		businessCheckPlan.setPlanStatus(5);
 		businessCheckPlanService.updateStatus(businessCheckPlan);
 		return renderResult(Global.TRUE, text("停用考核计划成功"));
 	}
 	
 	/**
 	 * 启用考核计划
+	 * 生成一个定时任务，并启动
 	 */
 	@RequiresPermissions("businesscheckplan:businessCheckPlan:edit")
 	@RequestMapping(value = "enable")
 	@ResponseBody
 	public String enable(BusinessCheckPlan businessCheckPlan) {
-		businessCheckPlan.setStatus(BusinessCheckPlan.STATUS_NORMAL);
+		businessCheckPlan.setPlanStatus(2);
 		businessCheckPlanService.updateStatus(businessCheckPlan);
 		return renderResult(Global.TRUE, text("启用考核计划成功"));
 	}

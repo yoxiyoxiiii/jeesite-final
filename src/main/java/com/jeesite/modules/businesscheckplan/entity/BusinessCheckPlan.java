@@ -41,6 +41,7 @@ import com.jeesite.common.mybatis.mapper.query.QueryType;
 		@Column(name="plan_key", attrName="planKey", label="关键措施分析"),
 		@Column(name="plan_status", attrName="planStatus", label="状态"),
 		@Column(name="plan_weight", attrName="planWeight", label="权重%"),
+		@Column(name="is_update", attrName="isUpdate", label="isUpdate"),
 	},
 		joinTable = {
 				@JoinTable(type = JoinTable.Type.LEFT_JOIN, entity = BusinessCheckTemplate.class, alias = "businessCheckTemplate",
@@ -74,7 +75,10 @@ public class BusinessCheckPlan extends DataEntity<BusinessCheckPlan> {
 	private String planKey;		// 关键措施分析
 	private Integer planStatus;		// 状态
 	private Integer planWeight;		// 权重%
-	
+	@Getter
+	@Setter
+	private Integer isUpdate;		// isUpdate
+
 	public BusinessCheckPlan() {
 		this(null);
 	}

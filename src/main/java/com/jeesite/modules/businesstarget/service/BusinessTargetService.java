@@ -77,4 +77,9 @@ public class BusinessTargetService extends CrudService<BusinessTargetDao, Busine
 	public List<BusinessTarget> findList() {
 		return super.dao.findList();
 	}
+
+	public List<BusinessTarget> findListByCheckTemplateId(String checkTemplateId) {
+		return super.dao.findListByCheckTemplateId(checkTemplateId);
+
+	}
 }
