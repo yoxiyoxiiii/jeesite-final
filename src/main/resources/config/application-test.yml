@@ -31,6 +31,10 @@ server:
     context-path: /js
   tomcat:
     uri-encoding: UTF-8
+# 前端基础路径
+frontPath: /f
+  # 管理基础路径
+adminPath: /a
     
 #======================================#
 #========== Database sttings ==========#
