@@ -104,7 +104,7 @@ public class BusinessCheckPlanController extends BaseController {
 	@ResponseBody
 	public String disable(BusinessCheckPlan businessCheckPlan) {
 		businessCheckPlan.setPlanStatus(5);
-		businessCheckPlanService.updateStatus(businessCheckPlan);
+		businessCheckPlanService.stop(businessCheckPlan);
 		return renderResult(Global.TRUE, text("停用考核计划成功"));
 	}
 	

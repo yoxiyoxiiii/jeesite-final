@@ -11,5 +11,10 @@
 		</where>
 		ORDER BY ${sqlMap.order.toSql()}
 	</select> -->
-	
+
+    <select id="findByBusinessCheckPlanId" resultType="com.jeesite.modules.businessjob.entity.BusinessJob">
+        SELECT *
+        FROM business_job
+        where plan_id = #{businessCheckPlanId}
+    </select>
 </mapper>

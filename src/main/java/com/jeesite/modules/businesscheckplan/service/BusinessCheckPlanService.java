@@ -96,7 +96,7 @@ public class BusinessCheckPlanService extends CrudService<BusinessCheckPlanDao, 
 	}
 
 	/**
-	 * 更新状态
+	 * 更新状态,关联定时任务
 	 * @param businessCheckPlan
 	 */
 	@Transactional(readOnly=false,rollbackFor = Exception.class,propagation = Propagation.REQUIRED)
@@ -114,6 +114,19 @@ public class BusinessCheckPlanService extends CrudService<BusinessCheckPlanDao, 
 	}
 
 	/**
+	 * 停止任务
+	 * @param businessCheckPlan
+	 */
+	@Transactional(readOnly=false,rollbackFor = Exception.class,propagation = Propagation.REQUIRED)
+	public void stop(BusinessCheckPlan businessCheckPlan)  {
+		this.updateStatus(businessCheckPlan);
+		List<BusinessJob> businessJobs = businessJobService.findByBusinessCheckPlanId(businessCheckPlan.getId());
+		businessJobs.forEach(businessJob -> {
+			businessJobService.delete(businessJob);
+		});
+	}
+
+	/**
 	 * 设置job
 	 * @param businessCheckPlan
 	 * @param businessTarget
@@ -126,11 +139,13 @@ public class BusinessCheckPlanService extends CrudService<BusinessCheckPlanDao, 
 		businessJob.setCorn(targetCheckCycle);
 		businessJob.setJobName("com.jeesite.modules.businessjob.Job.SendMsgJob"+"-"+ UUID.randomUUID());
 		businessJob.setJobGroup(businessCheckPlan.getId());
+		businessJob.setBusinessTarget(businessTarget);
+		businessJob.setBusinessCheckPlan(businessCheckPlan);
 		JobDataMap jobDataMap = new JobDataMap();
 
 		//设置Job 需要的参数
-		jobDataMap.put("businessTarget", businessTarget);
-		jobDataMap.put("businessCheckPlan",businessCheckPlan);
+//		jobDataMap.put("businessTarget", businessTarget);
+//		jobDataMap.put("businessCheckPlan",businessCheckPlan);
         businessJob.setJobStatus("5");//运行
 		businessJobService.save(businessJob,jobDataMap);
 	}
@@ -141,9 +156,10 @@ public class BusinessCheckPlanService extends CrudService<BusinessCheckPlanDao, 
 	 * @param businessCheckPlan
 	 */
 	@Override
-	@Transactional(readOnly=false)
+	@Transactional(rollbackFor = Exception.class, propagation = Propagation.REQUIRED)
 	public void delete(BusinessCheckPlan businessCheckPlan) {
 		super.delete(businessCheckPlan);
+
 	}
 	
 }

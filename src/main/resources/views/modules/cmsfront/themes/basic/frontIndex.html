@@ -1,0 +1,30 @@
+<% layout('/layouts/default.html', {title: '目标绩效考核系统', libs: ['dataGrid']}){ %>
+
+<div class="box-header">
+	<div class="box-title">
+		<i class="fa fa-list-alt"></i> ${text('首页信息')}
+	</div>
+	<div class="box-tools pull-right">
+		<a href="#" class="btn btn-default" id="btnSearch" title="${text('查询')}"><i class="fa fa-filter"></i> ${text('查询')}</a>
+		${isIndex}
+	</div>
+	<div>${site.siteName}</div>
+	<div>${site.title}</div>
+	<div>${site.copyright}</div>
+	<div>${site.domain}</div>
+	<div>${site.categoryList}</div>
+
+	<ul>
+
+<!--    ${zhibiao}-->
+
+
+	</ul>
+
+	<#form:validcode name="validCode" isRequired="true" isRemote="true" />
+</div>
+
+<% } %>
+
+
+
