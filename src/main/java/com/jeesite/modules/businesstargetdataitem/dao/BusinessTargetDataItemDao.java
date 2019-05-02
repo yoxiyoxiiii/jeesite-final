@@ -7,6 +7,8 @@ import com.jeesite.common.dao.CrudDao;
 import com.jeesite.common.mybatis.annotation.MyBatisDao;
 import com.jeesite.modules.businesstargetdataitem.entity.BusinessTargetDataItem;
 
+import java.util.List;
+
 /**
  * 数据采集项DAO接口
  * @author BusinessTargetDataItem
@@ -14,5 +16,6 @@ import com.jeesite.modules.businesstargetdataitem.entity.BusinessTargetDataItem;
  */
 @MyBatisDao
 public interface BusinessTargetDataItemDao extends CrudDao<BusinessTargetDataItem> {
-	
+
+    List<BusinessTargetDataItem> findByBusinessTargetId(String businessTargetId);
 }

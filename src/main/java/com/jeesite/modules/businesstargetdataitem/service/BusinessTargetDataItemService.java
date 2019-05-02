@@ -85,5 +85,8 @@ public class BusinessTargetDataItemService extends CrudService<BusinessTargetDat
 	public void delete(BusinessTargetDataItem businessTargetDataItem) {
 		super.delete(businessTargetDataItem);
 	}
-	
+
+	public List<BusinessTargetDataItem> findByBusinessTargetId(String businessTargetId) {
+		return dao.findByBusinessTargetId(businessTargetId);
+	}
 }

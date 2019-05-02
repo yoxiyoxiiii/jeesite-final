@@ -7,6 +7,8 @@ import com.jeesite.common.dao.CrudDao;
 import com.jeesite.common.mybatis.annotation.MyBatisDao;
 import com.jeesite.modules.businesscheckplanuser.entity.BusinessCheckPlanUser;
 
+import java.util.List;
+
 /**
  * 考核名单DAO接口
  * @author 考核名单
@@ -14,5 +16,6 @@ import com.jeesite.modules.businesscheckplanuser.entity.BusinessCheckPlanUser;
  */
 @MyBatisDao
 public interface BusinessCheckPlanUserDao extends CrudDao<BusinessCheckPlanUser> {
-	
+
+    List<BusinessCheckPlanUser> findByBusinessCheckPlanId(String businessCheckPlanId);
 }

@@ -72,5 +72,9 @@ public class BusinessCheckPlanUserService extends CrudService<BusinessCheckPlanU
 	public void delete(BusinessCheckPlanUser businessCheckPlanUser) {
 		super.delete(businessCheckPlanUser);
 	}
-	
+
+	public List<BusinessCheckPlanUser> findByBusinessCheckPlanId(String businessCheckPlanId) {
+
+		return dao.findByBusinessCheckPlanId(businessCheckPlanId);
+	}
 }

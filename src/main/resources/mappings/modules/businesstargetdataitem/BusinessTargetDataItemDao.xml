@@ -11,5 +11,12 @@
 		</where>
 		ORDER BY ${sqlMap.order.toSql()}
 	</select> -->
-	
+
+    <select id="findByBusinessTargetId" resultType="com.jeesite.modules.businesstargetdataitem.entity.BusinessTargetDataItem">
+
+        SELECT *
+        FROM business_target_data_item
+        where target_id = #{businessTargetId}
+
+    </select>
 </mapper>

@@ -144,8 +144,8 @@ public class BusinessCheckPlanService extends CrudService<BusinessCheckPlanDao, 
 		JobDataMap jobDataMap = new JobDataMap();
 
 		//设置Job 需要的参数
-//		jobDataMap.put("businessTarget", businessTarget);
-//		jobDataMap.put("businessCheckPlan",businessCheckPlan);
+		jobDataMap.put("businessTarget", businessTarget);
+		jobDataMap.put("businessCheckPlan",businessCheckPlan);
         businessJob.setJobStatus("5");//运行
 		businessJobService.save(businessJob,jobDataMap);
 	}
