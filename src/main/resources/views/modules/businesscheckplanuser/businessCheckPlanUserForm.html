@@ -13,14 +13,24 @@
 			<div class="box-body">
 				<div class="form-unit">${text('基本信息')}</div>
 				<#form:hidden path="id"/>
-				<div class="row">
+                <div class="row">
+                    <div class="col-xs-12">
+                        <div class="form-group">
+                            <label class="control-label col-sm-2" title="">
+                                <span class="required hide">*</span> ${text('考核名单')}：<i class="fa icon-question hide"></i></label>
+                            <div class="col-sm-5">
+                                <#form:input path="planUserName" maxlength="255" class="form-control"/>
+                            </div>
+                        </div>
+                    </div>
+                </div>
 				<div class="row">
 					<div class="col-xs-12">
 						<div class="form-group">
 							<label class="control-label col-sm-2" title="">
 								<span class="required hide">*</span> ${text('考核对象')}：<i class="fa icon-question hide"></i></label>
 							<div class="col-sm-5">
-								<#form:listselect id="userId" title="${text('用户选择')}"
+								<#form:listselect id="userId" title="${text('部门选择')}"
 									path="userId" labelPath=""
 									url="${ctx}/sys/user/userSelect" allowClear="false"
 								path="user.userCode"  labelPath="user.userName" value= "id" checkbox="false" itemCode="userCode" itemName="userName"/>

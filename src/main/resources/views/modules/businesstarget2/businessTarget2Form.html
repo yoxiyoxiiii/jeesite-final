@@ -1,0 +1,246 @@
+<% layout('/layouts/default.html', {title: '指标管理', libs: ['validate','dataGrid']}){ %>
+<div class="main-content">
+	<div class="box box-main">
+		<div class="box-header with-border">
+			<div class="box-title">
+				<i class="fa fa-list-alt"></i> ${text(businessTarget2.isNewRecord ? '新增指标' : '编辑指标')}
+			</div>
+			<div class="box-tools pull-right">
+				<button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
+			</div>
+		</div>
+		<#form:form id="inputForm" model="${businessTarget2}" action="${ctx}/businesstarget2/businessTarget2/save" method="post" class="form-horizontal">
+			<div class="box-body">
+				<div class="form-unit">${text('基本信息')}</div>
+				<#form:hidden path="id"/>
+				<div class="row">
+					<div class="col-xs-6">
+						<div class="form-group">
+							<label class="control-label col-sm-4" title="">
+								<span class="required hide">*</span> ${text('指标名称')}：<i class="fa icon-question hide"></i></label>
+							<div class="col-sm-8">
+								<#form:input path="targetName" maxlength="255" class="form-control"/>
+							</div>
+						</div>
+					</div>
+					<div class="col-xs-6">
+						<div class="form-group">
+							<label class="control-label col-sm-4" title="">
+								<span class="required hide">*</span> ${text('分类')}：<i class="fa icon-question hide"></i></label>
+							<div class="col-sm-8">
+								<#form:select path="targetTypes" items="${targetTypeList}" itemLabel="typeName" itemValue="id" class="form-control required" />
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-xs-6">
+						<div class="form-group">
+							<label class="control-label col-sm-4" title="">
+								<span class="required hide">*</span> ${text('目标考核周期')}：<i class="fa icon-question hide"></i></label>
+							<div class="col-sm-8">
+								<#form:select path="targetCheckCycle" dictType="target_check_cycle" blankOption="true" class="form-control" />
+							</div>
+						</div>
+					</div>
+					<div class="col-xs-6">
+						<div class="form-group">
+							<label class="control-label col-sm-4" title="">
+								<span class="required hide">*</span> ${text('考核依据')}：<i class="fa icon-question hide"></i></label>
+							<div class="col-sm-8">
+								<#form:input path="targetCheckBasic" maxlength="255" class="form-control"/>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-xs-6">
+						<div class="form-group">
+							<label class="control-label col-sm-4" title="">
+								<span class="required hide">*</span> ${text('指标属性 定性、定量')}：<i class="fa icon-question hide"></i></label>
+							<div class="col-sm-8">
+								<#form:select path="targetAttribute" dictType="target_belong_type" blankOption="true" class="form-control" />
+							</div>
+						</div>
+					</div>
+					<div class="col-xs-6">
+						<div class="form-group">
+							<label class="control-label col-sm-4" title="">
+								<span class="required hide">*</span> ${text('执行部门')}：<i class="fa icon-question hide"></i></label>
+							<div class="col-sm-8">
+								<#form:treeselect   model="${office}" id="executeDepartment" title="${text('执行部门')}"
+								path="executeDepartments.officeCode" labelPath="executeDepartments.officeName"
+								url="${ctx}/sys/office/treeData?excludeCode=${office.id}&ctrlPermi=2"
+								class="" allowClear="true" canSelectRoot="true" canSelectParent="true"/>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-xs-6">
+						<div class="form-group">
+							<label class="control-label col-sm-4" title="">
+								<span class="required hide">*</span> ${text('协同部门')}：<i class="fa icon-question hide"></i></label>
+							<div class="col-sm-8">
+								<#form:treeselect   model="${office}" id="jointWorkDepartments" title="${text('协同部门')}"
+								path="jointWorkDepartments.officeCode" labelPath="jointWorkDepartments.officeName"
+								url="${ctx}/sys/office/treeData?excludeCode=${office.id}&ctrlPermi=2"
+								class="" allowClear="true" canSelectRoot="true" canSelectParent="true"/>
+							</div>
+						</div>
+					</div>
+					<div class="col-xs-6">
+						<div class="form-group">
+							<label class="control-label col-sm-4" title="">
+								<span class="required hide">*</span> ${text('目标结果计算公式')}：<i class="fa icon-question hide"></i></label>
+							<div class="col-sm-8">
+								<#form:input path="targetResultExpression" maxlength="255" class="form-control"/>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-xs-6">
+						<div class="form-group">
+							<label class="control-label col-sm-4" title="">
+								<span class="required hide">*</span> ${text('是否分解')}：<i class="fa icon-question hide"></i></label>
+							<div class="col-sm-8">
+								<#form:input path="targetIsDecompose" maxlength="4" class="form-control digits"/>
+							</div>
+						</div>
+					</div>
+				</div>
+				<h4 class="form-unit">${text('阶段目标')}</h4>
+				<div class="ml10 mr10">
+					<table id="businessStageTarget2DataGrid"></table>
+					<% if (hasPermi('businesstarget2:businessTarget2:edit')){ %>
+						<a href="#" id="businessStageTarget2DataGridAddRowBtn" class="btn btn-primary btn-sm mt10 mb10"><i class="fa fa-plus"></i> ${text('增行')}</a>
+					<% } %>
+				</div>
+				<h4 class="form-unit">${text('数据采集项')}</h4>
+				<div class="ml10 mr10">
+					<table id="businessTargetDataItem2DataGrid"></table>
+					<% if (hasPermi('businesstarget2:businessTarget2:edit')){ %>
+					<a href="#" id="businessTargetDataItem2DataGridAddRowBtn" class="btn btn-primary btn-sm mt10 mb10"><i class="fa fa-plus"></i> ${text('增行')}</a>
+					<% } %>
+				</div>
+			</div>
+			<div class="box-footer">
+				<div class="row">
+					<div class="col-sm-offset-2 col-sm-10">
+						<% if (hasPermi('businesstarget2:businessTarget2:edit')){ %>
+							<button type="submit" class="btn btn-sm btn-primary" id="btnSubmit"><i class="fa fa-check"></i> ${text('保 存')}</button>&nbsp;
+						<% } %>
+						<button type="button" class="btn btn-sm btn-default" id="btnCancel" onclick="js.closeCurrentTabPage()"><i class="fa fa-reply-all"></i> ${text('关 闭')}</button>
+					</div>
+				</div>
+			</div>
+		</#form:form>
+	</div>
+</div>
+<% } %>
+<script>
+
+//初始化数据采集项DataGrid对象
+$("#businessTargetDataItem2DataGrid").dataGrid({
+
+	data: ${toJson(businessTarget2.businessTargetDataItem2List)},
+	datatype: "local", // 设置本地数据
+	autoGridHeight: function(){return 'auto'}, // 设置自动高度
+	
+	// 设置数据表格列
+	columnModel: [
+		{header:'状态', name:'status', editable:true, hidden:true},
+		{header:'主键', name:'id', editable:true, hidden:true},
+		// {header:'${text("目标ID")}', name:'targetId.id', editable:true, hidden:true},
+		// {header:'${text("阶段目标ID")}', name:'stageTargetId', width:150, editable:true, edittype:'text', editoptions:{'maxlength':'50', 'class':'form-control'}},
+		{header:'${text("采集数据项")}', name:'itemName', width:150, editable:true, edittype:'text', editoptions:{'maxlength':'255', 'class':'form-control'}},
+		{header:'${text("数据项权重")}', name:'itemWeight', width:150, editable:true, edittype:'text', editoptions:{'maxlength':'4', 'class':'form-control digits'}},
+		{header:'${text("数据项得分")}', name:'itemScore', width:150, editable:true, edittype:'text', editoptions:{'maxlength':'255', 'class':'form-control'}},
+		{header:'${text("说明")}', name:'itemDescription', width:150, editable:true, edittype:'text', editoptions:{'maxlength':'255', 'class':'form-control'}},
+		{header:'${text("操作")}', name:'actions', width:80, sortable:false, fixed:true, formatter: function(val, obj, row, act){
+			var actions = [];
+			if (val == 'new'){
+				actions.push('<a href="#" onclick="js.confirm(\'${text("你确认要删除这条数据吗？")}\', function(){$(\'#businessTargetDataItem2DataGrid\').dataGrid(\'delRowData\',\''+obj.rowId+'\')});return false;"><i class="fa fa-trash-o"></i></a>&nbsp;');
+			}else{
+				actions.push('<a href="#" onclick="js.confirm(\'${text("你确认要删除这条数据吗？")}\', function(){$(\'#businessTargetDataItem2DataGrid\').dataGrid(\'setRowData\',\''+obj.rowId+'\',null,{display:\'none\'});$(\'#'+obj.rowId+'_status\').val(\''+Global.STATUS_DELETE+'\');});return false;"><i class="fa fa-trash-o"></i></a>&nbsp;');
+			}
+			return actions.join('');
+		}, editoptions: {defaultValue: 'new'}}
+	],
+	
+	// 编辑表格参数
+	editGrid: true,				// 是否是编辑表格
+	editGridInitRowNum: 1,		// 编辑表格的初始化新增行数
+	editGridAddRowBtn: $('#businessTargetDataItem2DataGridAddRowBtn'),	// 子表增行按钮
+	editGridAddRowInitData: {id: '', status: Global.STATUS_NORMAL},	// 新增行的时候初始化的数据
+	
+	// 编辑表格的提交数据参数
+	editGridInputFormListName: 'businessTargetDataItem2List', // 提交的数据列表名
+	editGridInputFormListAttrs: 'status,id,targetId.id,stageTargetId,itemName,itemWeight,itemScore,itemDescription,createDate,updateDate,', // 提交数据列表的属性字段
+	
+	// 加载成功后执行事件
+	ajaxSuccess: function(data){
+		
+	}
+});
+
+
+//初始化阶段目标DataGrid对象
+$("#businessStageTarget2DataGrid").dataGrid({
+
+	data: ${toJson(businessTarget2.businessStageTarget2List)},
+	datatype: "local", // 设置本地数据
+	autoGridHeight: function(){return 'auto'}, // 设置自动高度
+
+	// 设置数据表格列
+	columnModel: [
+		{header:'状态', name:'status', editable:true, hidden:true},
+		{header:'主键', name:'id', editable:true, hidden:true},
+		// {header:'${text("target_id")}', name:'targetId.id', editable:true, hidden:true},
+		{header:'${text("期数")}', name:'stageNumber', width:150, editable:true, edittype:'text', editoptions:{'maxlength':'4', 'class':'form-control digits'}},
+		{header:'${text("目标值")}', name:'stageTargetValue', width:150, editable:true, edittype:'text', editoptions:{'maxlength':'255', 'class':'form-control'}},
+		{header:'${text("权重%")}', name:'stageWeight', width:150, editable:true, edittype:'text', editoptions:{'maxlength':'4', 'class':'form-control digits'}},
+		{header:'${text("争创值")}', name:'stageTryHardValue', width:150, editable:true, edittype:'text', editoptions:{'maxlength':'255', 'class':'form-control'}},
+		// {header:'${text("阶段目标名称")}', name:'stageName', width:150, editable:true, edittype:'text', editoptions:{'maxlength':'255', 'class':'form-control'}},
+		{header:'${text("操作")}', name:'actions', width:80, sortable:false, fixed:true, formatter: function(val, obj, row, act){
+			var actions = [];
+			if (val == 'new'){
+				actions.push('<a href="#" onclick="js.confirm(\'${text("你确认要删除这条数据吗？")}\', function(){$(\'#businessStageTarget2DataGrid\').dataGrid(\'delRowData\',\''+obj.rowId+'\')});return false;"><i class="fa fa-trash-o"></i></a>&nbsp;');
+			}else{
+				actions.push('<a href="#" onclick="js.confirm(\'${text("你确认要删除这条数据吗？")}\', function(){$(\'#businessStageTarget2DataGrid\').dataGrid(\'setRowData\',\''+obj.rowId+'\',null,{display:\'none\'});$(\'#'+obj.rowId+'_status\').val(\''+Global.STATUS_DELETE+'\');});return false;"><i class="fa fa-trash-o"></i></a>&nbsp;');
+			}
+			return actions.join('');
+		}, editoptions: {defaultValue: 'new'}}
+	],
+
+	// 编辑表格参数
+	editGrid: true,				// 是否是编辑表格
+	editGridInitRowNum: 1,		// 编辑表格的初始化新增行数
+	editGridAddRowBtn: $('#businessStageTarget2DataGridAddRowBtn'),	// 子表增行按钮
+	editGridAddRowInitData: {id: '', status: Global.STATUS_NORMAL},	// 新增行的时候初始化的数据
+
+	// 编辑表格的提交数据参数
+	editGridInputFormListName: 'businessStageTarget2List', // 提交的数据列表名
+	editGridInputFormListAttrs: 'status,id,targetId.id,stageNumber,stageTargetValue,stageWeight,stageTryHardValue,createDate,updateDate,stageName,', // 提交数据列表的属性字段
+
+	// 加载成功后执行事件
+	ajaxSuccess: function(data){
+
+	}
+});
+</script>
+<script>
+$("#inputForm").validate({
+	submitHandler: function(form){
+		js.ajaxSubmitForm($(form), function(data){
+			js.showMessage(data.message);
+			if(data.result == Global.TRUE){
+				js.closeCurrentTabPage(function(contentWindow){
+					contentWindow.page();
+				});
+			}
+		}, "json");
+    }
+});
+</script>

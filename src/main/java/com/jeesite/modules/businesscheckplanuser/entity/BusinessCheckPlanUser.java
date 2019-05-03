@@ -26,6 +26,7 @@ import com.jeesite.common.mybatis.mapper.query.QueryType;
 @Table(name="business_check_plan_user", alias="a", columns={
 		@Column(name="id", attrName="id", label="id", isPK=true),
 		@Column(name="user_id", attrName="user.userCode", label="被考核的人"),
+		@Column(name="plan_user_name", attrName="planUserName", label="考核名单名称"),
 		@Column(name="department_id", attrName="office.officeCode", label="被考核的人"),
 		@Column(name="post_id", attrName="post.postCode", label="被考核的人"),
 		@Column(name="plan_id", attrName="businessCheckPlan.id", label="考核计划"),
@@ -57,6 +58,7 @@ public class BusinessCheckPlanUser extends DataEntity<BusinessCheckPlanUser> {
 	private Office office;		// 被考核的部门
 	private Post post;		// 被考核的岗位
 	private BusinessCheckPlan businessCheckPlan;		// 考核计划
+	private String planUserName; //考核名单名称
 	
 	public BusinessCheckPlanUser() {
 		this(null);
