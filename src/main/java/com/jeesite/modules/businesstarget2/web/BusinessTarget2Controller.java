@@ -6,8 +6,10 @@ package com.jeesite.modules.businesstarget2.web;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.jeesite.common.codec.EncodeUtils;
 import com.jeesite.common.idgen.IdGen;
 import com.jeesite.common.lang.StringUtils;
+import com.jeesite.common.mapper.JsonMapper;
 import com.jeesite.modules.businesstarget.entity.BusinessTarget;
 import com.jeesite.modules.businesstargettype.entity.BusinessTargetType;
 import com.jeesite.modules.businesstargettype.service.BusinessTargetTypeService;
@@ -30,6 +32,7 @@ import com.jeesite.modules.businesstarget2.entity.BusinessTarget2;
 import com.jeesite.modules.businesstarget2.service.BusinessTarget2Service;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * 指标Controller
@@ -159,6 +162,16 @@ public class BusinessTarget2Controller extends BaseController {
 	public String delete(BusinessTarget2 businessTarget2) {
 		businessTarget2Service.delete(businessTarget2);
 		return renderResult(Global.TRUE, text("删除指标成功！"));
+	}
+
+	@RequestMapping({"listSelect"})
+	public String listSelect(BusinessTarget businessTarget, String selectData, Model model) {
+		String selectDataJson = EncodeUtils.decodeUrl(selectData);
+		if (JsonMapper.fromJson(selectDataJson, Map.class) != null) {
+			model.addAttribute("selectData", selectDataJson);
+		}
+		model.addAttribute("businessTarget", businessTarget);
+		return "modules/businesstarget2/listSelect";
 	}
 	
 }

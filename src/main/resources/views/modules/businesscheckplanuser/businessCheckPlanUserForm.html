@@ -29,11 +29,11 @@
 						<div class="form-group">
 							<label class="control-label col-sm-2" title="">
 								<span class="required hide">*</span> ${text('考核对象')}：<i class="fa icon-question hide"></i></label>
-							<div class="col-sm-5">
-								<#form:listselect id="userId" title="${text('部门选择')}"
-									path="userId" labelPath=""
-									url="${ctx}/sys/user/userSelect" allowClear="false"
-								path="user.userCode"  labelPath="user.userName" value= "id" checkbox="false" itemCode="userCode" itemName="userName"/>
+							<div class="col-sm-8">
+								<#form:treeselect   model="${office}" id="jointWorkDepartments" title="${text('考核对象')}"
+								path="office.officeCode" labelPath="office.officeName"
+								url="${ctx}/sys/office/treeData?excludeCode=${office.id}&ctrlPermi=2"
+								class="" allowClear="true" canSelectRoot="true" canSelectParent="true" checkbox="true"/>
 							</div>
 						</div>
 					</div>

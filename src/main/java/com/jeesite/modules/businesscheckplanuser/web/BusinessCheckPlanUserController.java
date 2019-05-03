@@ -6,6 +6,10 @@ package com.jeesite.modules.businesscheckplanuser.web;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.jeesite.common.idgen.IdGen;
+import com.jeesite.common.lang.StringUtils;
+import com.jeesite.modules.sys.entity.Office;
+import com.jeesite.modules.sys.service.OfficeService;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -33,6 +37,11 @@ public class BusinessCheckPlanUserController extends BaseController {
 
 	@Autowired
 	private BusinessCheckPlanUserService businessCheckPlanUserService;
+
+
+	//部门信息
+	@Autowired
+	private OfficeService officeService;
 	
 	/**
 	 * 获取数据
@@ -69,9 +78,50 @@ public class BusinessCheckPlanUserController extends BaseController {
 	 */
 	@RequiresPermissions("businesscheckplanuser:businessCheckPlanUser:view")
 	@RequestMapping(value = "form")
-	public String form(BusinessCheckPlanUser businessCheckPlanUser, Model model) {
+	public String form(BusinessCheckPlanUser businessCheckPlanUser,Office office,Model model) {
 		model.addAttribute("businessCheckPlanUser", businessCheckPlanUser);
+		// 创建并初始化下一个节点信息
+		office = createNextNode(office);
+		if (StringUtils.isNotBlank(office.getParentCode())) {
+			office.setParent(officeService.get(office.getParentCode()));
+		}
+		if (office.getIsNewRecord()) {
+			office.setTreeSort(30);
+			Office where = new Office();
+			where.setParentCode(office.getParentCode());
+			Office last = officeService.getLastByParentCode(where);
+			if (last != null) {
+				office.setTreeSort(last.getTreeSort() + 30);
+				office.setViewCode(IdGen.nextCode(last.getViewCode()));
+			} else if (office.getParent() != null) {
+				office.setViewCode(office.getParent().getViewCode() + "001");
+			}
+		}
+		model.addAttribute("office", office);
 		return "modules/businesscheckplanuser/businessCheckPlanUserForm";
+	}
+
+	public Office createNextNode(Office office) {
+		if (StringUtils.isNotBlank(office.getParentCode())) {
+			office.setParent(officeService.get(office.getParentCode()));
+		}
+		if (office.getIsNewRecord()) {
+			Office where = new Office();
+			where.setParentCode(office.getParentCode());
+			Office last = officeService.getLastByParentCode(where);
+			// 获取到下级最后一个节点
+			if (last != null){
+				office.setTreeSort(last.getTreeSort() + 30);
+				office.setViewCode(IdGen.nextCode(last.getViewCode()));
+			}else if(office.getParent() != null){
+				office.setViewCode(office.getParent().getViewCode() + "001");
+			}
+		}
+		// 以下设置表单默认数据
+		if (office.getTreeSort() == null){
+			office.setTreeSort(Office.DEFAULT_TREE_SORT);
+		}
+		return office;
 	}
 
 	/**

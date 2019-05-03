@@ -24,9 +24,9 @@
 			    <div class="form-group">
 					<label class="control-label">${text('考核对象')}：</label>
 					<div class="control-inline width-120" >
-						<#form:treeselect id="userId" title="${text('用户选择')}"
+						<#form:treeselect id="userId" title="${text('部门选择')}"
 							path="userId" labelPath="" 
-							url="${ctx}/sys/office/treeData?isLoadUser=true" allowClear="true"/>
+							url="${ctx}/sys/office/treeData?isLoadUser=true" allowClear="true" checkbox="true"/>
 					</div>
 				</div>
 
@@ -50,7 +50,7 @@ $('#dataGrid').dataGrid({
 			return '<a href="${ctx}/businesscheckplanuser/businessCheckPlanUser/form?id='+row.id+'" class="btnList" data-title="${text("编辑考核名单")}">'+(val||row.id)+'</a>';
 		}},
 		{header:'${text("考核计划")}', name:'businessCheckPlan.planName', index:'a.user_id', width:150, align:"left"},
-		{header:'${text("考核部门")}', name:'user.userName', index:'a.plan_id', width:150, align:"left"},
+		{header:'${text("考核部门")}', name:'office.officeName', index:'a.plan_id', width:150, align:"left"},
 		{header:'${text("更新时间")}', name:'updateDate', index:'a.update_date', width:150, align:"center"},
 		{header:'${text("操作")}', name:'actions', width:120, sortable:false, title:false, formatter: function(val, obj, row, act){
 			var actions = [];

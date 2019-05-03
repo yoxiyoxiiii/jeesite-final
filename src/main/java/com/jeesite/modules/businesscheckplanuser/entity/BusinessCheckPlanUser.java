@@ -25,18 +25,18 @@ import com.jeesite.common.mybatis.mapper.query.QueryType;
  */
 @Table(name="business_check_plan_user", alias="a", columns={
 		@Column(name="id", attrName="id", label="id", isPK=true),
-		@Column(name="user_id", attrName="user.userCode", label="被考核的人"),
+//		@Column(name="user_id", attrName="user.userCode", label="被考核的人"),
 		@Column(name="plan_user_name", attrName="planUserName", label="考核名单名称"),
 		@Column(name="department_id", attrName="office.officeCode", label="被考核的人"),
-		@Column(name="post_id", attrName="post.postCode", label="被考核的人"),
+//		@Column(name="post_id", attrName="post.postCode", label="被考核的人"),
 		@Column(name="plan_id", attrName="businessCheckPlan.id", label="考核计划"),
 		@Column(name="create_date", attrName="createDate", label="创建时间", isUpdate=false, isQuery=false),
 		@Column(name="update_date", attrName="updateDate", label="更新时间", isQuery=false),
 	},
 		joinTable = {
-		@JoinTable(type = JoinTable.Type.LEFT_JOIN, entity = User.class, alias = "user",
-				on = "user.user_code = a.user_id", attrName = "user",
-				columns = {@Column(includeEntity = User.class)}),
+//		@JoinTable(type = JoinTable.Type.LEFT_JOIN, entity = User.class, alias = "user",
+//				on = "user.user_code = a.user_id", attrName = "user",
+//				columns = {@Column(includeEntity = User.class)}),
 		@JoinTable(type = JoinTable.Type.LEFT_JOIN, entity = BusinessCheckPlan.class, alias = "businessCheckPlan",
 				on = "businessCheckPlan.id = a.plan_id", attrName = "businessCheckPlan",
 				columns = {@Column(includeEntity = BusinessCheckPlan.class)}),
@@ -44,20 +44,26 @@ import com.jeesite.common.mybatis.mapper.query.QueryType;
 		@JoinTable(type = JoinTable.Type.LEFT_JOIN, entity = Office.class, alias = "office",
 				on = "office.office_code = a.department_id", attrName = "office",
 				columns = {@Column(includeEntity = Office.class)}),
-		@JoinTable(type = JoinTable.Type.LEFT_JOIN, entity = Post.class, alias = "post",
-				on = "post.post_code = a.post_id", attrName = "post",
-				columns = {@Column(includeEntity = Post.class)}),
+//		@JoinTable(type = JoinTable.Type.LEFT_JOIN, entity = Post.class, alias = "post",
+//				on = "post.post_code = a.post_id", attrName = "post",
+//				columns = {@Column(includeEntity = Post.class)}),
 		},
 		orderBy="a.update_date DESC"
 )
-@Data
+
 public class BusinessCheckPlanUser extends DataEntity<BusinessCheckPlanUser> {
 	
 	private static final long serialVersionUID = 1L;
-	private User user;		// 被考核的人
+//	private User user;		// 被考核的人
+	@Getter
+	@Setter
 	private Office office;		// 被考核的部门
-	private Post post;		// 被考核的岗位
+//	private Post post;		// 被考核的岗位
+	@Getter
+	@Setter
 	private BusinessCheckPlan businessCheckPlan;		// 考核计划
+	@Getter
+	@Setter
 	private String planUserName; //考核名单名称
 	
 	public BusinessCheckPlanUser() {
