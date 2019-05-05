@@ -39,29 +39,34 @@ public class SendMsgJob implements Job {
     @Override
     public void execute(JobExecutionContext context) throws JobExecutionException {
         System.out.println("ssssssssssssssssssss");
-        JobDataMap jobDataMap = context.getJobDetail().getJobDataMap();
-        BusinessTarget businessTarget = (BusinessTarget)jobDataMap.get("businessTarget");
-        BusinessCheckPlan businessCheckPlan = (BusinessCheckPlan)jobDataMap.get("businessCheckPlan");
-
-        String businessCheckPlanId = businessCheckPlan.getId();
-        String businessTargetId = businessTarget.getId();
-        //数据采集项
-        List<BusinessTargetDataItem> businessTargetDataItemList = businessTargetDataItemService.findByBusinessTargetId(businessTargetId);
-        List<BusinessCheckPlanUser> businessCheckPlanUserList = businessCheckPlanUserService.findByBusinessCheckPlanId(businessCheckPlanId);
-
-        businessCheckPlanUserList.forEach(businessCheckPlanUser -> {
-            BusinessPlanUserTask businessPlanUserTask = new BusinessPlanUserTask();
-            businessPlanUserTask.setBusinessTarget(businessTarget);
-            User user = new User();
-            user.setId(businessCheckPlanUser.getId());
-            businessPlanUserTask.setUser(user);
-            businessPlanUserTask.setTaskDescription(businessTarget.getTargetName() +"数据采集任务");
-            businessPlanUserTaskService.save(businessPlanUserTask);
-
-            //消息推送
-            msgPush(businessPlanUserTask);
-
-        });
+        PcMsgContent msgContent  =  new  PcMsgContent();
+        msgContent.setTitle("任务提醒");
+        msgContent.setContent("任务生成");
+        msgContent.addButton("办理",  "/a/demo/demoCustomer/form?id=1120518619533426688");
+        //  即时推送消息
+        MsgPushUtils.push(msgContent,  "BizKey",  "BizType",  "system");
+//        JobDataMap jobDataMap = context.getJobDetail().getJobDataMap();
+//        BusinessTarget businessTarget = (BusinessTarget)jobDataMap.get("businessTarget");
+//        BusinessCheckPlan businessCheckPlan = (BusinessCheckPlan)jobDataMap.get("businessCheckPlan");
+//
+//        String businessCheckPlanId = businessCheckPlan.getId();
+//        String businessTargetId = businessTarget.getId();
+//        //数据采集项
+//        List<BusinessTargetDataItem> businessTargetDataItemList = businessTargetDataItemService.findByBusinessTargetId(businessTargetId);
+//        List<BusinessCheckPlanUser> businessCheckPlanUserList = businessCheckPlanUserService.findByBusinessCheckPlanId(businessCheckPlanId);
+//        businessCheckPlanUserList.forEach(businessCheckPlanUser -> {
+//            BusinessPlanUserTask businessPlanUserTask = new BusinessPlanUserTask();
+//            businessPlanUserTask.setBusinessTarget(businessTarget);
+//            User user = new User();
+//            user.setId(businessCheckPlanUser.getId());
+//            businessPlanUserTask.setUser(user);
+//            businessPlanUserTask.setTaskDescription(businessTarget.getTargetName() +"数据采集任务");
+//            businessPlanUserTaskService.save(businessPlanUserTask);
+//
+//            //消息推送
+//            msgPush(businessPlanUserTask);
+//
+//        });
     }
 
     /**

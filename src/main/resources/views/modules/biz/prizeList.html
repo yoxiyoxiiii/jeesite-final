@@ -1,0 +1,154 @@
+<% layout('/layouts/default.html', {title: '奖扣记录管理', libs: ['dataGrid']}){ %>
+<div class="main-content">
+	<div class="box box-main">
+		<div class="box-header">
+			<div class="box-title">
+				<i class="fa fa-list-alt"></i> ${text('奖扣记录管理')}
+			</div>
+			<div class="box-tools pull-right">
+				<a href="#" class="btn btn-default" id="btnSearch" title="${text('查询')}"><i class="fa fa-filter"></i> ${text('查询')}</a>
+				<% if(hasPermi('biz:prize:edit')){ %>
+					<a href="${ctx}/biz/prize/form" class="btn btn-default btnTool" title="${text('新增奖扣记录')}"><i class="fa fa-plus"></i> ${text('新增')}</a>
+				<% } %>
+			</div>
+		</div>
+		<div class="box-body">
+			<#form:form id="searchForm" model="${prize}" action="${ctx}/biz/prize/listData" method="post" class="form-inline hide"
+					data-page-no="${parameter.pageNo}" data-page-size="${parameter.pageSize}" data-order-by="${parameter.orderBy}">
+				<div class="form-group">
+					<label class="control-label">${text('主体单位')}：</label>
+					<div class="control-inline width-120" >
+						<#form:treeselect id="deptId" title="${text('机构选择')}"
+							path="deptId" labelPath="" 
+							url="${ctx}/sys/office/treeData" allowClear="true"/>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="control-label">${text('参与单位')}：</label>
+					<div class="control-inline width-120" >
+						<#form:treeselect id="deptJoinId" title="${text('机构选择')}"
+							path="deptJoinId" labelPath="" 
+							url="${ctx}/sys/office/treeData" allowClear="true"/>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="control-label">${text('奖扣指标ID')}：</label>
+					<div class="control-inline width-120">
+						<#form:select path="prizeLibId" dictType="" blankOption="true" class="form-control"/>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="control-label">${text('获奖时间')}：</label>
+					<div class="control-inline">
+						<#form:input path="prizeDate" readonly="true" maxlength="20" class="form-control Wdate-datetime"
+							dataFormat="datetime" onclick="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm',isShowClear:false});"/>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="control-label">${text('情况说明')}：</label>
+					<div class="control-inline">
+						<#form:input path="evidence" maxlength="500" class="form-control width-120"/>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="control-label">${text('奖扣结果')}：</label>
+					<div class="control-inline">
+						<#form:input path="score" class="form-control width-120"/>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="control-label">${text('状态')}：</label>
+					<div class="control-inline width-120">
+						<#form:select path="status" dictType="sys_search_status" blankOption="true" class="form-control"/>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="control-label">${text('扩展字段1值')}：</label>
+					<div class="control-inline">
+						<#form:input path="extend1Value" maxlength="64" class="form-control width-120"/>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="control-label">${text('扩展字段2值')}：</label>
+					<div class="control-inline">
+						<#form:input path="extend2Value" maxlength="64" class="form-control width-120"/>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="control-label">${text('扩展字段3值')}：</label>
+					<div class="control-inline">
+						<#form:input path="extend3Value" maxlength="64" class="form-control width-120"/>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="control-label">${text('扩展字段4值')}：</label>
+					<div class="control-inline">
+						<#form:input path="extend4Value" maxlength="64" class="form-control width-120"/>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="control-label">${text('扩展字段5值')}：</label>
+					<div class="control-inline">
+						<#form:input path="extend5Value" maxlength="64" class="form-control width-120"/>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="control-label">${text('扩展字段6值')}：</label>
+					<div class="control-inline">
+						<#form:input path="extend6Value" maxlength="64" class="form-control width-120"/>
+					</div>
+				</div>
+				<div class="form-group">
+					<button type="submit" class="btn btn-primary btn-sm">${text('查询')}</button>
+					<button type="reset" class="btn btn-default btn-sm">${text('重置')}</button>
+				</div>
+			</#form:form>
+			<table id="dataGrid"></table>
+			<div id="dataGridPage"></div>
+		</div>
+	</div>
+</div>
+<% } %>
+<script>
+// 初始化DataGrid对象
+$('#dataGrid').dataGrid({
+	searchForm: $("#searchForm"),
+	columnModel: [
+		{header:'${text("主体单位")}', name:'office.officeName', index:'office.office_code', width:150, align:"left", frozen:true, formatter: function(val, obj, row, act){
+			return '<a href="${ctx}/biz/prize/form?id='+row.id+'" class="btnList" data-title="${text("编辑奖扣记录")}">'+(val||row.id)+'</a>';
+		}},
+		{header:'${text("参与单位")}', name:'officeJoin.officeName', index:'officeJoin.office_code', width:150, align:"center"},
+		{header:'${text("奖扣指标ID")}', name:'prizeLib.name', index:'prizeLib.name', width:150, align:"center", formatter: function(val, obj, row, act){
+			return js.getDictLabel(${@DictUtils.getDictListJson('')}, val, '${text("未知")}', true);
+		}},
+		{header:'${text("获奖时间")}', name:'prizeDate', index:'a.prize_date', width:150, align:"center"},
+		{header:'${text("奖扣结果")}', name:'score', index:'a.score', width:150, align:"right", formatter: function(val, obj, row, act){
+			return js.formatNumber(val, 2, false, ''); // 数值类型格式化 (原始数值, 小数位数, 是否千分位, 默认值，金额情况下设置0.00);
+		}},
+		{header:'${text("扩展字段1值")}', name:'extend1Value', index:'a.extend1_value', width:150, align:"left"},
+		{header:'${text("扩展字段2值")}', name:'extend2Value', index:'a.extend2_value', width:150, align:"left"},
+		{header:'${text("扩展字段3值")}', name:'extend3Value', index:'a.extend3_value', width:150, align:"left"},
+		{header:'${text("扩展字段4值")}', name:'extend4Value', index:'a.extend4_value', width:150, align:"left"},
+		{header:'${text("扩展字段5值")}', name:'extend5Value', index:'a.extend5_value', width:150, align:"left"},
+		{header:'${text("扩展字段6值")}', name:'extend6Value', index:'a.extend6_value', width:150, align:"left"},
+		{header:'${text("操作")}', name:'actions', width:120, sortable:false, title:false, formatter: function(val, obj, row, act){
+			var actions = [];
+			<% if(hasPermi('biz:prize:edit')){ %>
+				actions.push('<a href="${ctx}/biz/prize/form?id='+row.id+'" class="btnList" title="${text("编辑奖扣记录")}"><i class="fa fa-pencil"></i></a>&nbsp;');
+				if (row.status == Global.STATUS_NORMAL){
+					actions.push('<a href="${ctx}/biz/prize/disable?id='+row.id+'" class="btnList" title="${text("停用奖扣记录")}" data-confirm="${text("确认要停用该奖扣记录吗？")}"><i class="glyphicon glyphicon-ban-circle"></i></a>&nbsp;');
+				}
+				if (row.status == Global.STATUS_DISABLE){
+					actions.push('<a href="${ctx}/biz/prize/enable?id='+row.id+'" class="btnList" title="${text("启用奖扣记录")}" data-confirm="${text("确认要启用该奖扣记录吗？")}"><i class="glyphicon glyphicon-ok-circle"></i></a>&nbsp;');
+				}
+				actions.push('<a href="${ctx}/biz/prize/delete?id='+row.id+'" class="btnList" title="${text("删除奖扣记录")}" data-confirm="${text("确认要删除该奖扣记录吗？")}"><i class="fa fa-trash-o"></i></a>&nbsp;');
+			<% } %>
+			return actions.join('');
+		}}
+	],
+	// 加载成功后执行事件
+	ajaxSuccess: function(data){
+		
+	}
+});
+</script>

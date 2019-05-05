@@ -40,19 +40,19 @@ server:
 jdbc: 
   
   # Mysql 数据库配置
-  type: mysql
-  driver: com.mysql.jdbc.Driver
-  url: jdbc:mysql://47.244.133.160:3306/jeesite?useSSL=false&useUnicode=true&characterEncoding=utf-8&zeroDateTimeBehavior=convertToNull
-  username: root
-  password: Root123@123
-  testSql: SELECT 1
+#  type: mysql
+#  driver: com.mysql.jdbc.Driver
+#  url: jdbc:mysql://47.244.133.160:3306/jeesite?useSSL=false&useUnicode=true&characterEncoding=utf-8&zeroDateTimeBehavior=convertToNull
+#  username: root
+#  password: Root123@123
+#  testSql: SELECT 1
 
-#    type: mysql
-#    driver: com.mysql.jdbc.Driver
-#    url: jdbc:mysql:///jeesite?useSSL=false&useUnicode=true&characterEncoding=utf-8&zeroDateTimeBehavior=convertToNull
-#    username: root
-#    password:
-#    testSql: SELECT 1
+    type: mysql
+    driver: com.mysql.jdbc.Driver
+    url: jdbc:mysql:///jeesite?useSSL=false&useUnicode=true&characterEncoding=utf-8&zeroDateTimeBehavior=convertToNull
+    username: root
+    password: 123456
+    testSql: SELECT 1
 
 #  # Oracle 数据库配置
 #  type: oracle

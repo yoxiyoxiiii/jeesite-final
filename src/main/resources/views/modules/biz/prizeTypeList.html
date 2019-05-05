@@ -1,0 +1,100 @@
+<% layout('/layouts/default.html', {title: '奖扣类型管理', libs: ['dataGrid']}){ %>
+<div class="main-content">
+	<div class="box box-main">
+		<div class="box-header">
+			<div class="box-title">
+				<i class="fa fa-list-alt"></i> ${text('奖扣类型管理')}
+			</div>
+			<div class="box-tools pull-right">
+				<a href="#" class="btn btn-default" id="btnSearch" title="${text('查询')}"><i class="fa fa-filter"></i> ${text('查询')}</a>
+				<% if(hasPermi('biz:prizeType:edit')){ %>
+					<a href="${ctx}/biz/prizeType/form" class="btn btn-default btnTool" title="${text('新增奖扣类型')}"><i class="fa fa-plus"></i> ${text('新增')}</a>
+				<% } %>
+			</div>
+		</div>
+		<div class="box-body">
+			<#form:form id="searchForm" model="${prizeType}" action="${ctx}/biz/prizeType/listData" method="post" class="form-inline hide"
+					data-page-no="${parameter.pageNo}" data-page-size="${parameter.pageSize}" data-order-by="${parameter.orderBy}">
+				<div class="form-group">
+					<label class="control-label">${text('名称')}：</label>
+					<div class="control-inline">
+						<#form:input path="name" maxlength="200" class="form-control width-120"/>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="control-label">${text('类型')}：</label>
+					<div class="control-inline width-120">
+						<#form:select path="isAdd" dictType="prize_is_add" blankOption="true" class="form-control"/>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="control-label">${text('加分控制')}：</label>
+					<div class="control-inline">
+						<#form:input path="limit" class="form-control width-120"/>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="control-label">${text('奖扣标准说明')}：</label>
+					<div class="control-inline">
+						<#form:input path="ruleRemark" maxlength="500" class="form-control width-120"/>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="control-label">${text('牵头部门')}：</label>
+					<div class="control-inline width-120" >
+						<#form:treeselect id="led" title="${text('机构选择')}"
+							path="led" labelPath="" 
+							url="${ctx}/sys/office/treeData" allowClear="true"/>
+					</div>
+				</div>
+				<div class="form-group">
+					<button type="submit" class="btn btn-primary btn-sm">${text('查询')}</button>
+					<button type="reset" class="btn btn-default btn-sm">${text('重置')}</button>
+				</div>
+			</#form:form>
+			<table id="dataGrid"></table>
+			<div id="dataGridPage"></div>
+		</div>
+	</div>
+</div>
+<% } %>
+<script>
+// 初始化DataGrid对象
+$('#dataGrid').dataGrid({
+	searchForm: $("#searchForm"),
+	columnModel: [
+		{header:'${text("名称")}', name:'name', index:'a.name', width:150, align:"left", frozen:true, formatter: function(val, obj, row, act){
+			return '<a href="${ctx}/biz/prizeType/form?id='+row.id+'" class="btnList" data-title="${text("编辑奖扣类型")}">'+(val||row.id)+'</a>';
+		}},
+		{header:'${text("类型")}', name:'isAdd', index:'a.is_add', width:150, align:"center", formatter: function(val, obj, row, act){
+			return js.getDictLabel(${@DictUtils.getDictListJson('prize_is_add')}, val, '${text("未知")}', true);
+		}},
+		{header:'${text("加分控制")}', name:'limit', index:'a.limit', width:150, align:"right", formatter: function(val, obj, row, act){
+			return js.formatNumber(val, 2, false, ''); // 数值类型格式化 (原始数值, 小数位数, 是否千分位, 默认值，金额情况下设置0.00);
+		}},
+		{header:'${text("奖扣标准说明")}', name:'ruleRemark', index:'a.rule_remark', width:150, align:"left"},
+		{header:'${text("牵头部门")}', name:'', index:'a.led', width:150, align:"center"},
+		{header:'${text("状态")}', name:'status', index:'a.status', width:150, align:"center", formatter: function(val, obj, row, act){
+			return js.getDictLabel(${@DictUtils.getDictListJson('sys_search_status')}, val, '${text("未知")}', true);
+		}},
+		{header:'${text("操作")}', name:'actions', width:120, sortable:false, title:false, formatter: function(val, obj, row, act){
+			var actions = [];
+			<% if(hasPermi('biz:prizeType:edit')){ %>
+				actions.push('<a href="${ctx}/biz/prizeType/form?id='+row.id+'" class="btnList" title="${text("编辑奖扣类型")}"><i class="fa fa-pencil"></i></a>&nbsp;');
+				if (row.status == Global.STATUS_NORMAL){
+					actions.push('<a href="${ctx}/biz/prizeType/disable?id='+row.id+'" class="btnList" title="${text("停用奖扣类型")}" data-confirm="${text("确认要停用该奖扣类型吗？")}"><i class="glyphicon glyphicon-ban-circle"></i></a>&nbsp;');
+				}
+				if (row.status == Global.STATUS_DISABLE){
+					actions.push('<a href="${ctx}/biz/prizeType/enable?id='+row.id+'" class="btnList" title="${text("启用奖扣类型")}" data-confirm="${text("确认要启用该奖扣类型吗？")}"><i class="glyphicon glyphicon-ok-circle"></i></a>&nbsp;');
+				}
+				actions.push('<a href="${ctx}/biz/prizeType/delete?id='+row.id+'" class="btnList" title="${text("删除奖扣类型")}" data-confirm="${text("确认要删除该奖扣类型吗？")}"><i class="fa fa-trash-o"></i></a>&nbsp;');
+			<% } %>
+			return actions.join('');
+		}}
+	],
+	// 加载成功后执行事件
+	ajaxSuccess: function(data){
+		
+	}
+});
+</script>
