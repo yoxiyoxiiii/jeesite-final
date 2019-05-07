@@ -1,30 +1,453 @@
-<% layout('/layouts/default.html', {title: '目标绩效考核系统', libs: ['dataGrid']}){ %>
+<!DOCTYPE html>
+<html lang="en-US" class="no-js">
 
-<div class="box-header">
-	<div class="box-title">
-		<i class="fa fa-list-alt"></i> ${text('首页信息')}
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>${site.title}</title>
+
+	<meta name="description" content="绵阳市公安局目标绩效考核系统">
+	<link rel="stylesheet" id="dashicons-css" href="/js/static/modules/frontcms/dashicons.min.css" type="text/css" media="all">
+	<link rel="stylesheet" id="obfx-module-pub-css-menu-icons-0-css" href="/js/static/modules/frontcms/font-awesome.min.css" type="text/css"
+		  media="all">
+	<link rel="stylesheet" id="contact-form-7-css" href="/js/static/modules/frontcms/styles.css" type="text/css" media="all">
+	<link rel="stylesheet" id="edd-styles-css" href="/js/static/modules/frontcms/edd.min.css" type="text/css" media="all">
+	<link rel="stylesheet" id="woocommerce-layout-css" href="/js/static/modules/frontcms/woocommerce-layout.css" type="text/css" media="all">
+	<link rel="stylesheet" id="woocommerce-smallscreen-css" href="/js/static/modules/frontcms/woocommerce-smallscreen.css" type="text/css"
+		  media="only screen and (max-width: 768px)">
+	<link rel="stylesheet" id="woocommerce-general-css" href="/js/static/modules/frontcms/woocommerce.css" type="text/css" media="all">
+	<link rel="stylesheet" id="megamenu-css" href="/js/static/modules/frontcms/style.css" type="text/css" media="all">
+	<link rel="stylesheet" id="parallax-one-fonts-css" href="/js/static/modules/frontcms/sanye.css" type="text/css" media="all">
+	<link rel="stylesheet" id="parallax-one-bootstrap-style-css" href="/js/static/modules/frontcms/bootstrap.min.css" type="text/css"
+		  media="all">
+	<link rel="stylesheet" id="parallax-one-font-awesome-css" href="/js/static/modules/frontcms/font-awesome.min(1).css" type="text/css"
+		  media="all">
+	<link rel="stylesheet" id="parallax-one-style-css" href="/js/static/modules/frontcms/style(1).css" type="text/css" media="all">
+	<link rel="stylesheet" id="scss-css" href="/js/static/modules/frontcms/sccss.css" type="text/css" media="all">
+	<link rel="stylesheet" id="sib-front-css-css" href="/js/static/modules/frontcms/mailin-front.css" type="text/css" media="all">
+	<link type="text/css" href="/js/static/modules/frontcms/optanon.css" rel="stylesheet">
+
+	<script src="https://cdn.bootcss.com/jquery/1.9.1/jquery.min.js"></script>
+</head>
+
+<body class="home blog mega-menu-primary" dir="ltr" rlt="1">
+<div id="mobilebgfix">
+	<div class="mobile-bg-fix-img-wrap">
+		<div class="mobile-bg-fix-img"></div>
 	</div>
-	<div class="box-tools pull-right">
-		<a href="#" class="btn btn-default" id="btnSearch" title="${text('查询')}"><i class="fa fa-filter"></i> ${text('查询')}</a>
-		${isIndex}
+	<div class="mobile-bg-fix-whole-site">
+		<a class="skip-link screen-reader-text" href="#content">Skip to content</a>
+		<div class="preloader" style="display: none;">
+			<div class="status" style="display: none;">&nbsp;</div>
+		</div>
+		<header id="masthead" role="banner" data-stellar-background-ratio="0.5"
+				class="header header-style-one site-header" style="opacity: 1;">
+			<div class="overlay-layer-nav sticky-navigation-open" style="min-height: 70px;">
+				<div class="navbar navbar-inverse bs-docs-nav navbar-fixed-top sticky-navigation appear-on-scroll">
+					<div class="container">
+						<div class="navbar-header">
+							<button title="Toggle Menu" type="button" class="navbar-toggle menu-toggle" id="menu-toggle"
+									data-toggle="collapse" data-target="#menu-primary">
+								<span class="screen-reader-text">Toggle navigation</span>
+								<span class="icon-bar"></span>
+								<span class="icon-bar"></span>
+								<span class="icon-bar"></span>
+							</button>
+							<a href="#" class="navbar-brand">
+								<img src="/js/static/modules/frontcms/logo.png" alt="Parallax One" class="lazyloading " data-was-processed="true">
+								<span class="dark-text">绵阳市公安局目标绩效考核系统</span>
+							</a>
+						</div>
+						<div aria-label="Primary Menu" id="menu-primary" class="navbar-collapse collapse">
+							<div id="site-header-menu" class="site-header-menu">
+								<nav id="site-navigation" class="main-navigation" role="navigation">
+									<div id="mega-menu-wrap-primary" class="mega-menu-wrap">
+										<div class="mega-menu-toggle" tabindex="0">
+											<div
+													class="mega-toggle-block mega-menu-toggle-block mega-toggle-block-right mega-toggle-block-1"
+													id="mega-toggle-block-1"></div>
+										</div>
+										<ul id="mega-menu-primary" class="mega-menu mega-menu-horizontal" data-event="hover_intent"
+											data-effect="disabled" data-effect-speed="200" data-effect-mobile="disabled"
+											data-effect-speed-mobile="200" data-second-click="close" data-document-click="collapse"
+											data-vertical-behaviour="standard" data-breakpoint="600" data-unbind="true">
+											<li
+													class="mega-menu-item mega-menu-item-type-custom mega-menu-item-object-custom mega-current-menu-item mega-current_page_item mega-menu-item-home mega-align-bottom-left mega-menu-flyout mega-menu-item-6159"
+													id="mega-menu-item-6159">
+												<a class="mega-menu-link" href="#team" tabindex="0">工作动态</a>
+											</li>
+											<li
+													class="mega-menu-item mega-menu-item-type-custom mega-menu-item-object-custom mega-current-menu-item mega-current_page_item mega-menu-item-home mega-align-bottom-left mega-menu-flyout mega-menu-item-6158"
+													id="mega-menu-item-6158">
+												<a class="mega-menu-link" href="#story" tabindex="0">绩效报告</a>
+											</li>
+
+											<li
+													class="mega-menu-item mega-menu-item-type-custom mega-menu-item-object-custom mega-current-menu-item mega-current_page_item mega-menu-item-home mega-align-bottom-left mega-menu-flyout mega-menu-item-6160"
+													id="mega-menu-item-6160">
+												<a class="mega-menu-link" href="#latestnews" tabindex="0">重要文件</a>
+											</li>
+											<li
+													class="mega-menu-item mega-menu-item-type-post_type mega-menu-item-object-page mega-align-bottom-left mega-menu-flyout mega-menu-item-6163"
+													id="mega-menu-item-6163">
+												<a class="mega-menu-link" href="http://localhost:8980/js/a/login" tabindex="0"><i class="fa fa-user-circle-o"></i>
+													登录</a>
+											</li>
+											<!-- <li class="mega-menu-item mega-menu-item-type-post_type mega-menu-item-object-page mega-align-bottom-left mega-menu-flyout mega-menu-item-6164"
+                                                                        id="mega-menu-item-6164">
+                                                                        <a class="mega-menu-link" href="#latestnews" tabindex="0">研发案例</a>
+                                                                    </li>
+                                                                    <li class="mega-menu-item mega-menu-item-type-post_type mega-menu-item-object-page mega-align-bottom-left mega-menu-flyout mega-menu-item-6165"
+                                                                        id="mega-menu-item-6165">
+                                                                        <a class="mega-menu-link" href="#contactinfo" tabindex="0">联系我们</a>
+                                                                    </li> -->
+										</ul>
+									</div>
+								</nav>
+							</div>
+						</div>
+					</div>
+				</div>
+				<ul id="parallax_move"
+					style="width: 100%;  position: absolute; transform: translate3d(0px, 0px, 0px); transform-style: preserve-3d; backface-visibility: hidden;">
+					<li class="layer layer1" data-depth="0.10"
+						style="background-image: url(/js/static/modules/frontcms/background1.jpg); height: 873px; transform: translate3d(-2.79318px, 0.6984px, 0px); transform-style: preserve-3d; backface-visibility: hidden; position: relative; display: block; left: 0px; top: 0px;">
+					</li>
+					<li class="layer layer2" data-depth="0.20"
+						style="background-image: url(); height: 873px; transform: translate3d(-5.58635px, 1.3968px, 0px); transform-style: preserve-3d; backface-visibility: hidden; position: absolute; display: block; left: 0px; top: 0px;">
+					</li>
+				</ul>
+				<div class="overlay-layer-wrap">
+					<div class="container overlay-layer" id="parallax_header" style="padding-top: -50px;">
+						<script type="text/javascript"
+								src="http://echarts.baidu.com/gallery/vendors/echarts/echarts.min.js"></script>
+						<div class="row" style="height: 500px;">
+							<!--省厅考核指标-->
+							<div id="container" style="height: 100%"></div>
+							<!-- <script type="text/javascript">
+                                                var dom = document.getElementById("container");
+                                                var myChart = echarts.init(dom);
+                                                var app = {};
+                                                option = null;
+                                                option = {
+                                                    // title: {
+                                                    //     text: '绵阳市公安局2019年业务工作指标总体完成情况',
+                                                    //     textStyle: {
+                                                    //         color: 'rgba(255,255,255,1)', //标题颜色
+                                                    //         fontSize: 18,
+                                                    //         lineHeight: 20,
+                                                    //     },
+                                                    //     // 标题的位置，此时放在图的底边
+                                                    //     left: 'center',
+                                                    //     top: 'bottom',
+            
+                                                    // },
+                                                    tooltip: {
+                                                        confine: true,
+                                                        enterable: true,
+                                                    },
+                                                    legend: {
+                                                        data: ['省厅下达任务', '当前完成情况']
+                                                    },
+                                                    radar: {
+                                                        shape: 'circle',
+                                                        splitNumber: 5,                                            
+                                                        name: {
+                                                            textStyle: {
+                                                                color: '#fff',
+                                                                backgroundColor: '#999',
+                                                                borderRadius: 3,
+                                                                padding: [5, 8]
+                                                           }
+                                                        }, 
+                                                                                                 
+                                                        indicator: [
+                                                           { name: '刑侦工作', max: 6500},
+                                                           { name: '经侦工作', max: 16000},
+                                                           { name: '网安工作', max: 30000},
+                                                           { name: '禁毒工作', max: 38000},
+                                                           { name: '监管工作', max: 52000},
+                                                           { name: '出入境工作', max: 25000}
+                                                        ],
+                                                        splitArea : {
+                                                            show : true,
+                                                            areaStyle : {
+                                                                color: 'rgba(255,255,255,0.5)', // 图表背景的颜色
+                                                            },
+                                                        },
+                                                        splitLine : {
+                                                            show : true,
+                                                            lineStyle : {
+                                                                width : 1,
+                                                                color : 'rgba(255,255,255,1)', // 设置网格的颜色
+                                                            },
+                                                        },
+                                                    },
+                                                    series: [{
+                                                        name: '预算 vs 开销（Budget vs spending）',
+                                                        type: 'radar',
+                                                        // areaStyle: {normal: {}},
+                                                        axisLabel: {
+                                                            show: true,
+                                                            fontSize: 12,
+                                                            color: '#838D9E',
+                                                            showMaxLabel: false,
+                                                            showMinLabel: true, 
+                                                        }, 
+                                                        symbol: 'circle', // 拐点的样式，还可以取值'rect','angle'等
+                                                        symbolSize: 8, // 拐点的大小
+            
+                                                        areaStyle: {
+                                                            normal: {
+                                                                width: 1,
+                                                                opacity: 0.6,
+                                                            },
+                                                        }, 
+                                                        itemStyle: {normal: {areaStyle: {opacity: 0.6, type: 'default'}}},
+                                                        data : [
+                                                            {
+                                                                value : [4300, 10000, 28000, 35000, 50000, 19000],
+                                                                name : '预算分配（Allocated Budget）'
+                                                            },
+                                                             {
+                                                                value : [5000, 14000, 28000, 31000, 42000, 21000],
+                                                                name : '实际开销（Actual Spending）'
+                                                            }
+                                                        ]
+                                                    }]
+                                                };;
+                                                if (option && typeof option === "object") {
+                                                    myChart.setOption(option, true);
+                                                }
+                                                       </script> -->
+
+							<!--雷达图树图-->
+							<script type="text/javascript">
+                  var dom = document.getElementById("container");
+                  var myChart = echarts.init(dom);
+                  var app = {};
+                  option = null;
+                  myChart.showLoading();
+                  $.get('/js/static/modules/frontcms/flare.json', function (data) {
+                    myChart.hideLoading();
+                    myChart.setOption(option = {
+                      tooltip: {
+                        trigger: 'item',
+                        triggerOn: 'mousemove'
+                      },
+                      textStyle: {
+                          decoration: 'none',                         
+                          fontFamily2: '微软雅黑',
+                          fontSize: 14,
+                          fontStyle: 'normal',
+                          fontWeight: 'normal'
+                          
+                      },
+                      series: [
+                        {
+                          type: 'tree',                          
+                          data: [data],
+                          layout: 'radial',
+                          // top: '20%',
+                          // left: '60%',
+                          // bottom: '22%',
+                          // right: '18%',
+                          // symbol: 'emptyDiamond',
+                          symbolSize: function(val){
+                                    var baseS = 10;
+                                    if( val != undefined){
+                                      var addS = parseInt(val/1000);
+                                      if( addS<1 ){addS=1};
+                                      if(addS>6){addS=6}; 
+                                    }else{
+                                      addS=0;
+                                    }                                                                      
+                                    
+                                    return baseS+addS;
+                            },
+                          // label: {
+                          //   normal: {
+                          //     position: 'left',
+                          //     verticalAlign: 'middle',
+                          //     align: 'right'
+                          //   }
+                          // },
+
+                          // leaves: {
+                          //   label: {
+                          //     normal: {
+                          //       position: 'right',
+                          //       verticalAlign: 'middle',
+                          //       align: 'left'
+                          //     }
+                          //   }
+                          // },
+                          label: {
+                            normal: {
+                                position: 'center',
+                                color: '#ffffff',
+                                fontSize: 14
+                            }
+                          },
+                          tooltip : {             // Series config.
+                              trigger: 'item',
+                              backgroundColor: 'red',
+                              formatter: "{b}：80%<br/>目标任务:{d} <br/> 当前完成:{c}"               
+                          },
+                          axisLabel: {
+                                                show: true,
+                                                fontSize: 12,
+                                                color: '#838D9E',
+                                                showMaxLabel: false,
+                                                showMinLabel: true, 
+                                            }, 
+                          expandAndCollapse: true,
+                          animationDuration: 550,
+                          animationDurationUpdate: 1500
+                        }
+                      ]
+                    });
+                  });;
+                  if (option && typeof option === "object") {
+                    myChart.setOption(option, true);
+                  }
+                </script>
+						</div>
+						<div class="row text-center">
+							<h2 style="color:white;">绵阳市公安局2019年业务工作指标总体完成情况</h2>
+						</div>
+					</div>
+				</div>
+			</div>
+		</header>
+		<div itemprop="" id="content" class="content-warp" role="main">
+			<section class="team" id="team" role="region" aria-label="Team">
+				<div class="section-overlay-layer">
+					<div class="container">
+						<div class="section-header">
+							<h2 class="dark-text"><a href="/js/f/list-A1000.html"><span class="title_zh">工作动态</span></a></h2>
+							<div class="colored-line"></div>
+							<div class="sub-heading">Dynamical</div>
+						</div>
+						<div class="row team-member-wrap">
+
+							<div class="row newsdongtai text-left">
+
+								<div class="container">
+									<div class="row">
+										<% for(var article in artDynamical){ %>
+										<div class="col-md-6">
+											<h3>
+												<i class="fa fa-gg"></i>
+												<a href="/js/f/view-${article.category}-${article.id}.html">${article.title}</a>
+											</h3>
+											<p>${article.description}</p>
+										</div>
+										<% } %>
+									</div>
+								</div>
+
+
+							</div>
+
+						</div>
+					</div>
+				</div>
+			</section>
+
+			<section class="services" id="story" role="region" aria-label="Services">
+				<div class="section-overlay-layer">
+					<div class="container">
+						<div class="section-header">
+							<h2 class="dark-text">绩效报告</h2>
+							<div class="colored-line"></div>
+							<div class="sub-heading">Performance Reporting of Mianyang Police Security Bureau.</div>
+						</div>
+						<div id="our_services_wrap" class="services-wrap
+our_services_wrap_piterest parallax_one_grid parallax_one_grid_gwMYELECzw">
+							<% for(var article in artReport){ %>
+							<div class="parallax_one_grid_col_3 parallax_one_grid_column_1 parallax_one_grid_first ">
+								<div class="service-box" parallax_onegrid-attr="this-0">
+									<div class="single-service border-bottom-hover">
+										<div class="service-icon colored-text">
+											<span class="fa fa-braille"></span>
+										</div>
+										<h3 class="colored-text">${article.title}</h3>
+										<p>${article.description}</p>
+									</div>
+								</div>
+							</div>
+
+							<% } %>
+							</div>
+					</div>
+				</div>
+			</section>
+
+			<section class="brief timeline" id="latestnews" role="region" aria-label="Latest blog posts">
+				<div class="section-overlay-layer">
+					<div class="container">
+						<div class="row">
+							<div class="col-md-12 timeline-text text-center">
+								<h2 class="dark-text">重要文件</h2>
+								<div class="colored-line"></div>
+								<div class="sub-heading">Target performance indicators</div>
+							</div>
+							<div class="row">
+
+								<% for(var article in artIndicator){ %>
+								<div class="col-sm-6 col-md-4 col-lg-3 ">
+									<div class="thumbnail" style="height: 336px;">
+										<a href="/js/f/110" title=" " target="_blank"
+										>
+
+										</a>
+										<div class="caption">
+											<h3>
+												<a href="/js/f/110" title=" " target="_blank">${article.title}</a>
+											</h3>
+											<p>${article.description}</p>
+										</div>
+									</div>
+								</div>
+								<% } %>
+							</div>
+						</div>
+					</div>
+				</div>
+			</section>
+
+
+		</div>
+		<footer id="footer" class="footer grey-bg">
+			${site.copyright}
+		</footer>
 	</div>
-	<div>${site.siteName}</div>
-	<div>${site.title}</div>
-	<div>${site.copyright}</div>
-	<div>${site.domain}</div>
-	<div>${site.categoryList}</div>
-
-	<ul>
-
-<!--    ${zhibiao}-->
-
-
-	</ul>
-
-	<#form:validcode name="validCode" isRequired="true" isRemote="true" />
 </div>
 
-<% } %>
+<link rel="stylesheet" id="intergeo-frontend-css" href="/js/static/modules/frontcms/frontend.css" type="text/css" media="all">
+<script type="text/javascript">
+    /* <![CDATA[ */
+    var wpcf7 = {
+      "apiSettings": {
+        "root": "https:\/\/demo.themeisle.com\/parallax-one\/wp-json\/contact-form-7\/v1",
+        "namespace": "contact-form-7\/v1"
+      },
+      "recaptcha": {
+        "messages": {
+          "empty": "Please verify that you are not a robot."
+        }
+      },
+      "cached": "1"
+    }; /* ]]> */
+  </script>
+<script type="text/javascript" src="/js/static/modules/frontcms/bootstrap.min.js"></script>
+<script type="text/javascript" src="/js/static/modules/frontcms/custom.home.js"></script>
+<style type="text/css">
+    .overlay-layer-wrap {
+      background: rgba(0, 0, 0, .7)
+    }
+  </style>
+</body>
 
-
-
+</html>

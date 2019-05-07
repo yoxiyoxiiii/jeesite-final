@@ -1,0 +1,113 @@
+{
+    "name": "2019",
+    "children": [
+        {
+            "name": "刑侦工作",
+            "children": [
+                {
+                    "name": "五类侵财犯罪起诉数",
+                    "value": 4116
+                },
+                {
+                    "name": "侵财犯罪重刑率(%)",
+                    "value": 4116
+                },
+                {
+                    "name": "九类涉恶犯罪起诉数",
+                    "value": 4116
+                },
+                {
+                    "name": "涉枪犯罪起诉数(人)",
+                    "value": 4116
+                },
+                {
+                    "name": "年前追逃数",
+                    "value": 4116
+                },
+                {
+                    "name": "起诉恶势力犯罪集团",
+                    "value": 4116
+                },
+                {
+                    "name": "起诉非法制造、买卖等枪支",
+                    "value": 4116,
+                    "symbol":  "image://static/modules/frontcms/green.png"
+                }
+            ]
+        },
+        {
+            "name": "经侦工作",
+            "children": [
+                {
+                    "name": "移送起诉经济犯罪数",
+                    "value": 2105
+                },
+                {
+                    "name": "云端主战被公安部采用监测",
+                    "value": 1316
+                }
+            ]
+        },
+        {
+            "name": "网安工作",
+            "children": [
+                {
+                    "name": "侦破部省督涉网目标案件或发起全国、省集群作战数",
+                    "children": [
+                        {
+                            "name": "部",
+                            "value": 2105
+                        },
+                        {
+                            "name": "省",
+                            "value": 1316
+                        }
+                    ],
+                    "value": 8833,
+                    "symbol":  "image://static/modules/frontcms/green.png"
+                }
+            ]
+        },
+        {
+            "name": "禁毒工作",
+            "children": [
+                {
+                    "name": "吸毒人员查处数(人) ",
+                    "value": 8833,
+                    "symbol":  "image://static/modules/frontcms/red.png"
+                },
+                {
+                    "name": "毒品刑事案件起诉数",
+                    "value": 8833
+                },
+                {
+                    "name": "打击毒品犯罪效能值",
+                    "value": 8833
+                },
+                {
+                    "name": "侦破部省目标案积分",
+                    "children": [
+                        {
+                            "name": "部",
+                            "value": 2105,
+                            "symbol":  "image://static/modules/frontcms/red.png"
+                        },
+                        {
+                            "name": "省",
+                            "value": 1316
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "监管工作",
+            "value": 8833,
+            "symbol":  "image://static/modules/frontcms/green.png"
+        },
+        {
+            "name": "出入境工作",
+            "value": 8833
+        }
+    ]
+}

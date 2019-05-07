@@ -20,9 +20,9 @@ public class QuartzDataSourceConfig {
     @QuartzDataSource
     public DataSource quartzDataSource() {
         DruidDataSource druidDataSource = new DruidDataSource();
-        druidDataSource.setUrl("jdbc:mysql:///jeesite?useSSL=false&useUnicode=true&characterEncoding=utf-8&zeroDateTimeBehavior=convertToNull");
+        druidDataSource.setUrl("jdbc:mysql://47.244.133.160:3306/jeesite?useSSL=false&useUnicode=true&characterEncoding=utf-8&zeroDateTimeBehavior=convertToNull");
         druidDataSource.setUsername("root");
-        druidDataSource.setPassword("123456");
+        druidDataSource.setPassword("Root123@123");
         return druidDataSource;
     }
 }

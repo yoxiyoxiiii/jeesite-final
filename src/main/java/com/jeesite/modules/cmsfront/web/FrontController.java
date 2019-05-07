@@ -37,80 +37,137 @@ import com.jeesite.modules.sys.utils.ValidCodeUtils;
 
 /**
  * 网站Controller
+ *
  * @author 三片叶子
  * @version 2018-12-05
  */
 @Controller
 @RequestMapping(value = "${frontPath}")
-public class FrontController extends BaseController{
+public class FrontController extends BaseController {
 
-	@Autowired
-	private CategoryService categoryService;
-	@Autowired
-	private ArticleService articleService;
-	@Autowired
-	private CommentService commentService;
-	
-	/**
-	 * 主站首页
-	 */
-	@RequestMapping
-	public String index(Model model) {
-		Site site = CmsUtils.getSite(Site.MAIN_SITE_CODE);
-//		model.addAttribute("site", site);
-//		model.addAttribute("isIndex", true);
-//		model.addAttribute("zhibiao","考核指标");
-		//添加首页文章信息
-		List<Article> articleList = CmsUtils.getArticleList(site.getSiteCode(), "A0001",  5,"");
-		model.addAttribute("articleList", articleList);
-		return "modules/cmsfront/themes/"+site.getTheme()+"/frontIndex";
+    @Autowired
+    private CategoryService categoryService;
+    @Autowired
+    private ArticleService articleService;
+    @Autowired
+    private CommentService commentService;
+
+    /**
+     * 主站首页
+     */
+    @RequestMapping
+    public String index(Model model) {
+        Site site = CmsUtils.getSite(Site.MAIN_SITE_CODE);
+        model.addAttribute("site", site);
+        model.addAttribute("isIndex", true);
+        model.addAttribute("zhibiao", "考核指标");
+        //添加首页文章信息
+        List<Article> artDynamical = CmsUtils.getArticleList(site.getSiteCode(), "A1000", 6, "");
+        model.addAttribute("artDynamical", artDynamical);
+        List<Article> artReport = CmsUtils.getArticleList(site.getSiteCode(), "A1001", 3, "");
+        model.addAttribute("artReport", artReport);
+        List<Article> artIndicator = CmsUtils.getArticleList(site.getSiteCode(), "A1002", 8, "");
+        model.addAttribute("artIndicator", artIndicator);
+        return "modules/cmsfront/themes/" + site.getTheme() + "/frontIndex";
 //		return REDIRECT + frontPath + "/index-" + Site.MAIN_SITE_CODE + ".html";
-	}
-	
-	/**
-	 * 站点首页
-	 */
-	@RequestMapping(value = {"index-{siteCode}", "index-{siteCode}.html"})
-	public String index(@PathVariable String siteCode, Model model) {
-		
-		// 如果是主站，获取主站信息并进入主页
-		if (Site.isMainSite(siteCode)){
+    }
+
+    /**
+     * 站点首页
+     */
+    @RequestMapping(value = {"index-{siteCode}", "index-{siteCode}.html"})
+    public String index(@PathVariable String siteCode, Model model) {
+
+        // 如果是主站，获取主站信息并进入主页
+        if (Site.isMainSite(siteCode)) {
 //			return "redirect:" + Global.getFrontPath();
-			Site site = CmsUtils.getSite(Site.MAIN_SITE_CODE);
-//			model.addAttribute("site", site);
-//			model.addAttribute("isIndex", true);
-			model.addAttribute("zhibiao","考核指标");
-			return "modules/cmsfront/themes/"+site.getTheme()+"/frontIndex";
-		}
-		
-		// 不是主站，则获取子站点信息
-		Site site = CmsUtils.getSite(siteCode);
-		model.addAttribute("site", site);
-		
-		// 子站有独立页面，则显示独立页面
-		if (StringUtils.isNotBlank(site.getCustomIndexView())){
-			model.addAttribute("isIndex", true);
-			return "modules/cmsfront/themes/"+site.getTheme()+"/"+site.getCustomIndexView();
-		}
-		
-		// 否则显示子站第一个栏目
-		List<Category> mainNavList = CmsUtils.getMainNavList(siteCode);
-		if (mainNavList.size() > 0){
-			String firstCategoryCode = CmsUtils.getMainNavList(siteCode).get(0).getId();
-			return REDIRECT + frontPath + "/list-"+firstCategoryCode+".html";
-		}
-		
-		// 站点中无栏目，则显示栏目分类空白页
-		else{
-			return "modules/cmsfront/themes/"+site.getTheme()+"/"+Category.DEFAULT_TEMPLATE+"Category";
-		}
-	}
-	
-	/**
-	 * 内容列表
-	 */
-//	@RequestMapping(value = {"list-{categoryCode}", "list-{categoryCode}.html"})
-//	public String list(@PathVariable String categoryCode,
+            Site site = CmsUtils.getSite(Site.MAIN_SITE_CODE);
+            model.addAttribute("site", site);
+            model.addAttribute("isIndex", true);
+            model.addAttribute("zhibiao", "考核指标");
+            return "modules/cmsfront/themes/" + site.getTheme() + "/frontIndex";
+        }
+
+        // 不是主站，则获取子站点信息
+        Site site = CmsUtils.getSite(siteCode);
+        model.addAttribute("site", site);
+
+        // 子站有独立页面，则显示独立页面
+        if (StringUtils.isNotBlank(site.getCustomIndexView())) {
+            model.addAttribute("isIndex", true);
+            return "modules/cmsfront/themes/" + site.getTheme() + "/" + site.getCustomIndexView();
+        }
+
+        // 否则显示子站第一个栏目
+        List<Category> mainNavList = CmsUtils.getMainNavList(siteCode);
+        if (mainNavList.size() > 0) {
+            String firstCategoryCode = CmsUtils.getMainNavList(siteCode).get(0).getId();
+            return REDIRECT + frontPath + "/list-" + firstCategoryCode + ".html";
+        }
+
+        // 站点中无栏目，则显示栏目分类空白页
+        else {
+            return "modules/cmsfront/themes/" + site.getTheme() + "/" + Category.DEFAULT_TEMPLATE + "Category";
+        }
+    }
+
+    /**
+     * 内容列表
+     */
+    @RequestMapping(value = {"list-{categoryCode}", "list-{categoryCode}.html"})
+    public String list(@PathVariable String categoryCode,
+                       @RequestParam(required = false, defaultValue = "1") Integer pageNo,
+                       @RequestParam(required = false, defaultValue = "30") Integer pageSize,
+                       Model model, HttpServletRequest request) {
+
+        // 获取栏目信息
+        Category category = CmsUtils.getCategory(categoryCode);
+        if (category == null || !Category.STATUS_NORMAL.equals(category.getStatus())) {
+            Site site = CmsUtils.getSite(Site.MAIN_SITE_CODE);
+            model.addAttribute("site", site);
+            return "error/404";
+        }
+
+        // 获取站点信息
+        Site site = CmsUtils.getSite(category.getSite().getId());
+        model.addAttribute("site", site);
+
+        // 当前栏目的子栏目列表
+        List<Category> categoryList = null;
+
+        // 如果有子节点，则查询子栏目列表
+        if (!category.getIsTreeLeaf()) {
+            Category categoryParam = new Category();
+            categoryParam.setSite(new Site(site.getSiteCode()));
+            categoryParam.setParentCode(category.getId());
+            categoryList = categoryService.findList(categoryParam);
+            model.addAttribute("categoryList", categoryList);
+        } else {
+            categoryList = ListUtils.newArrayList();
+        }
+
+        List<Article> articles = CmsUtils.getArticleList(site.getSiteCode(), categoryCode, 20, "");
+        model.addAttribute("articles", articles);
+
+        Page<Article> page = new Page<Article>(pageNo, pageSize);
+        page = articleService.findPage(page, new Article(category), false);
+        model.addAttribute("page", page);
+
+        // 将数据信息传递到视图
+        model.addAttribute("category", category);
+        CmsUtils.addViewConfigAttribute(model, category);
+        String view = Category.DEFAULT_TEMPLATE;
+        if (StringUtils.isNotBlank(category.getCustomListView())) {
+            view = category.getCustomListView();
+        }
+        return "modules/cmsfront/themes/" + site.getTheme() + "/" + view;
+    }
+
+    /**
+     * 内容列表（通过url自定义视图）
+     */
+//	@RequestMapping(value = {"listc-{categoryCode}-{customView}", "listc-{categoryCode}-{customView}.html"})
+//	public String listCustom(@PathVariable String categoryCode, @PathVariable String customView,
 //			@RequestParam(required=false, defaultValue="1") Integer pageNo,
 //			@RequestParam(required=false, defaultValue="30") Integer pageSize,
 //			Model model, HttpServletRequest request) {
@@ -124,198 +181,100 @@ public class FrontController extends BaseController{
 //		}
 //
 //		// 获取站点信息
-//		Site site = CmsUtils.getSite(category.getSite().getId());
+//        Site site = CmsUtils.getSite(category.getSite().getId());
 //		model.addAttribute("site", site);
 //
-//		// 当前栏目展现方式为：2：简介类栏目，栏目第一条内容
-//		if("2".equals(category.getShowModes())){
-//			return view(categoryCode, null, model, request);
-//		}
-//
-//		// 当前展现方式为：0：默认，或者，1：栏目列表
-//		else{
-//
-//			// 当前栏目的子栏目列表
-//			List<Category> categoryList = null;
-//
-//			// 如果有子节点，则查询子栏目列表
-//			if (!category.getIsTreeLeaf()){
-//				Category categoryParam = new Category();
-//				categoryParam.setSite(new Site(site.getSiteCode()));
-//				categoryParam.setParentCode(category.getId());
-//				categoryList = categoryService.findList(categoryParam);
-//				model.addAttribute("categoryList", categoryList);
-//			}else{
-//				categoryList = ListUtils.newArrayList();
-//			}
-//
-//			// 当前栏目展现方式为：1 、无子栏目或公共模型，显示栏目内容列表；0：无子栏目或一个子栏目，显示栏目内容列表
-//			if("1".equals(category.getShowModes()) || categoryList.size() <= 1){
-//
-//				// 有子栏目并展现方式为1，则获取第一个子栏目；无子栏目，则获取同级分类列表。
-//				if(categoryList.size()>0){
-//					category = categoryList.get(0);
-//				}
-//
-////				// 没有子栏目列表，则再获取一次当前级别的栏目列表
-////				else{
-//////					if (category.getIsRoot()){
-//////						categoryList.add(category);
-//////					}else{
-//////						categoryList = categoryService.findListByParentCode(category.getParentCode(), category.getSite().getId());
-////						categoryList = CmsUtils.getCategoryList(category.getSite().getSiteCode(), category.getParentCode(), -1, null);
-//////					}
-////					model.addAttribute("categoryList", categoryList);
-////				}
-//
-//				// 如果第一个子栏目为简介类栏目，则获取该栏目第一篇文章并展现
-//				if ("2".equals(category.getShowModes())){
-//					return view(category.getCategoryCode(), null, model, request);
-//				}
-//
-//				// 否则，获取内容列表信息
-//				else{
-//					// 文章模型
-//					if ("article".equals(category.getModule())){
-//						Page<Article> page = new Page<Article>(pageNo, pageSize);
-//						page = articleService.findPage(page, new Article(category), false);
-//						model.addAttribute("page", page);
-//					}
-//				}
-//
-//				// 将数据信息传递到视图
-//				model.addAttribute("category", category);
-//	            CmsUtils.addViewConfigAttribute(model, category);
-//	            String view = Category.DEFAULT_TEMPLATE;
-//	        	if (StringUtils.isNotBlank(category.getCustomListView())){
-//	        		view = category.getCustomListView();
-//	        	}
-//				return "modules/cmsfront/themes/"+site.getTheme()+"/"+view;
-//			}
-//
-//			// 当前栏目展现方式为：0：默认时，有子栏目：显示子栏目列表
-//			else{
-//				model.addAttribute("category", category);
-//	            CmsUtils.addViewConfigAttribute(model, category);
-//	            String view = Category.DEFAULT_TEMPLATE+"Category";
-//	        	if (StringUtils.isNotBlank(category.getCustomListView())){
-//	        		view = category.getCustomListView();
-//	        	}
-//				return "modules/cmsfront/themes/"+site.getTheme()+"/"+view;
-//			}
-//		}
+//		// 将数据信息传递到视图
+//		model.addAttribute("category", category);
+//        CmsUtils.addViewConfigAttribute(model, category);
+//		return "modules/cmsfront/themes/"+site.getTheme()+"/"+Category.DEFAULT_TEMPLATE+customView;
 //	}
 
-	/**
-	 * 内容列表（通过url自定义视图）
-	 */
-	@RequestMapping(value = {"listc-{categoryCode}-{customView}", "listc-{categoryCode}-{customView}.html"})
-	public String listCustom(@PathVariable String categoryCode, @PathVariable String customView, 
-			@RequestParam(required=false, defaultValue="1") Integer pageNo,
-			@RequestParam(required=false, defaultValue="30") Integer pageSize,
-			Model model, HttpServletRequest request) {
-		
-		// 获取栏目信息
-		Category category = CmsUtils.getCategory(categoryCode);
-		if (category == null || !Category.STATUS_NORMAL.equals(category.getStatus())){
-			Site site = CmsUtils.getSite(Site.MAIN_SITE_CODE);
-			model.addAttribute("site", site);
-			return "error/404";
-		}
-		
-		// 获取站点信息
-        Site site = CmsUtils.getSite(category.getSite().getId());
-		model.addAttribute("site", site);
+    /**
+     * 显示内容
+     */
+    @RequestMapping(value = {"view-{categoryCode}-{contentId}", "view-{categoryCode}-{contentId}.html"})
+    public String view(@PathVariable String categoryCode, @PathVariable String contentId, Model model, HttpServletRequest request) {
 
-		// 将数据信息传递到视图
-		model.addAttribute("category", category);
-        CmsUtils.addViewConfigAttribute(model, category);
-		return "modules/cmsfront/themes/"+site.getTheme()+"/"+Category.DEFAULT_TEMPLATE+customView;
-	}
+        // 获取栏目信息
+        Category category = CmsUtils.getCategory(categoryCode);
+        if (category == null || !Category.STATUS_NORMAL.equals(category.getStatus())) {
+            Site site = CmsUtils.getSite(Site.MAIN_SITE_CODE);
+            model.addAttribute("site", site);
+            return "error/404";
+        }
 
-	/**
-	 * 显示内容
-	 */
-//	@RequestMapping(value = {"view-{categoryCode}-{contentId}", "view-{categoryCode}-{contentId}.html"})
-//	public String view(@PathVariable String categoryCode, @PathVariable String contentId, Model model, HttpServletRequest request) {
-//
-//		// 获取栏目信息
-//		Category category = CmsUtils.getCategory(categoryCode);
-//		if (category == null || !Category.STATUS_NORMAL.equals(category.getStatus())){
-//			Site site = CmsUtils.getSite(Site.MAIN_SITE_CODE);
-//			model.addAttribute("site", site);
-//			return "error/404";
-//		}
-//
-//		// 文章模型
-//		if ("article".equals(category.getModule())){
-//
-////			// 获取当前级别的栏目列表
-////			List<Category> categoryList = Lists.newArrayList();
-//////			if (category.getIsRoot()){
-//////				categoryList.add(category);
-//////			}else{
-//////				categoryList = categoryService.findListByParentCode(category.getParentCode(), category.getSite().getId());
-////				categoryList = CmsUtils.getCategoryList(category.getSite().getSiteCode(), category.getParentCode(), -1, null);
-//////			}
-////			model.addAttribute("categoryList", categoryList);
-//
-//			// 获取文章
-//			Article article = null;
-//			// 设置内容ID，则获取文章内容
-//			if (StringUtils.isNotBlank(contentId)){
-//				article = articleService.get(new Article(contentId));
-//			}
-//
-//			// 如果没有设置内容ID则获取栏目里的第一篇文章
-//			else{
-//				Page<Article> page = new Page<Article>(1, 1, -1);
-//				Article entity = new Article(category);
+        // 文章模型
+        if ("article".equals(category.getModuleType())) {
+
+//			// 获取当前级别的栏目列表
+//			List<Category> categoryList = Lists.newArrayList();
+////			if (category.getIsRoot()){
+////				categoryList.add(category);
+////			}else{
+////				categoryList = categoryService.findListByParentCode(category.getParentCode(), category.getSite().getId());
+//				categoryList = CmsUtils.getCategoryList(category.getSite().getSiteCode(), category.getParentCode(), -1, null);
+////			}
+//			model.addAttribute("categoryList", categoryList);
+
+            // 获取文章
+            Article article = null;
+            // 设置内容ID，则获取文章内容
+            if (StringUtils.isNotBlank(contentId)) {
+                article = articleService.get(new Article(contentId));
+            }
+
+            // 如果没有设置内容ID则获取栏目里的第一篇文章
+            else {
+                Page<Article> page = new Page<Article>(1, 1, -1);
+                Article entity = new Article(category);
 //				page = articleService.findPage(page, entity, false);
-//				if (page.getList().size()>0){
-//					article = page.getList().get(0);
-//					article.setArticleData(articleService.get(new ArticleData(article.getId())));
-//				}
-//			}
-//
-//			// 如果没有取到文章，则抛到404页面
-//			if (article == null || !Article.STATUS_NORMAL.equals(article.getStatus())){
-//				return "error/404";
-//			}
-//
-//			// 文章阅读次数+1
+                entity.setPage(page);
+                page = articleService.findPage(entity);
+                if (page.getList().size() > 0) {
+                    article = page.getList().get(0);
+                    article.setArticleData(articleService.get(new ArticleData(article.getId())));
+                }
+            }
+
+            // 如果没有取到文章，则抛到404页面
+            if (article == null || !Article.STATUS_NORMAL.equals(article.getStatus())) {
+                return "error/404";
+            }
+
+            // 文章阅读次数+1
 //			articleService.updateHitsAddOne(contentId);
-//
-//			// 如果设置了外部链接，则跳转到指定链接
-//			if (StringUtils.isNotBlank(article.getHref())){
-//				if (article.getHref().startsWith(request.getContextPath())){
-//					article.setHref(article.getHref().replaceFirst(request.getContextPath(), ""));
-//				}
-//				return "redirect:"+article.getHref();
-//			}
-//
-//			model.addAttribute("article", article);
-//
-//			// 获取文章归属栏目的全信息
-//			article.setCategory(CmsUtils.getCategory(article.getCategory().getId()));
-//			model.addAttribute("category", article.getCategory());
-//
-//			// 获取栏目所在站点全信息
-//            Site site = CmsUtils.getSite(category.getSite().getId());
-//            model.addAttribute("site", site);
-//
+
+            // 如果设置了外部链接，则跳转到指定链接
+            if (StringUtils.isNotBlank(article.getHref())) {
+                if (article.getHref().startsWith(request.getContextPath())) {
+                    article.setHref(article.getHref().replaceFirst(request.getContextPath(), ""));
+                }
+                return "redirect:" + article.getHref();
+            }
+
+            model.addAttribute("article", article);
+
+            // 获取文章归属栏目的全信息
+            article.setCategory(CmsUtils.getCategory(article.getCategory().getId()));
+            model.addAttribute("category", article.getCategory());
+
+            // 获取栏目所在站点全信息
+            Site site = CmsUtils.getSite(category.getSite().getId());
+            model.addAttribute("site", site);
+
 //            // 获取推荐文章列表
 //			List<Object[]> relationList = articleService.findByIds(article.getArticleData().getRelation());
 //			model.addAttribute("relationList", relationList);
-//
-//			// 将数据信息传递到视图
-//            CmsUtils.addViewConfigAttribute(model, article.getCategory());
-//            CmsUtils.addViewConfigAttribute(model, article.getViewConfig());
-//            return "modules/cmsfront/themes/"+site.getTheme()+"/"+CmsUtils.getArticleView(article);
-//		}
-//		return "error/404";
-//	}
-//
+
+            // 将数据信息传递到视图
+            CmsUtils.addViewConfigAttribute(model, article.getCategory());
+            CmsUtils.addViewConfigAttribute(model, article.getViewConfig());
+            return "modules/cmsfront/themes/" + site.getTheme() + "/" + CmsUtils.getArticleView(article);
+        }
+        return "error/404";
+    }
+
 //	/**
 //	 * 内容评论
 //	 */
@@ -361,15 +320,15 @@ public class FrontController extends BaseController{
 //			return "{result:2, message:'验证码不能为空。'}";
 //		}
 //	}
-	
-	/**
-	 * 站点地图
-	 */
-	@RequestMapping(value = {"map-{siteCode}", "map-{siteCode}.html"})
-	public String map(@PathVariable String siteCode, Model model) {
-		Site site = CmsUtils.getSite(siteCode);
-		model.addAttribute("site", site);
-		return "modules/cmsfront/themes/"+site.getTheme()+"/frontMap";
-	}
-	
+
+    /**
+     * 站点地图
+     */
+    @RequestMapping(value = {"map-{siteCode}", "map-{siteCode}.html"})
+    public String map(@PathVariable String siteCode, Model model) {
+        Site site = CmsUtils.getSite(siteCode);
+        model.addAttribute("site", site);
+        return "modules/cmsfront/themes/" + site.getTheme() + "/frontMap";
+    }
+
 }

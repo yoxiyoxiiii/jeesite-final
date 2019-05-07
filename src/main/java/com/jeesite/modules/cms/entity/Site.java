@@ -137,7 +137,8 @@ public class Site extends DataEntity<Site> {
 
 	@Length(min = 0, max = 500, message = "主题长度不能超过 500 个字符")
 	public String getTheme() {
-		return theme;
+//		return theme;
+		return "basic";
 	}
 
 	public void setTheme(String theme) {
