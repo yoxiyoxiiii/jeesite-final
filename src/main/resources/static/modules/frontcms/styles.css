@@ -113,3 +113,9 @@ div.wpcf7 input[type="file"]:disabled {
 	font-size:14px;
 }
 
+.home, .content{
+    font-family: "微软雅黑","宋体";
+}
+.content{
+font-size:16px;
+}

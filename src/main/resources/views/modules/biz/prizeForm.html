@@ -47,7 +47,7 @@
 							<div class="col-sm-8">
 								<#form:listselect id="prizeLibIdListselect" title="选择奖扣指标"
 								url="${ctx}/biz/prizeLib/listSelect" allowClear="false"
-								path="prizeLib.id"  labelPath="prizeLib.id" value= "id" checkbox="false" itemCode="id" itemName="ruleRemark"/>
+								path="prizeLib.id"  labelPath="prizeLib.ruleRemark" value= "id" checkbox="false" itemCode="id" itemName="ruleRemark"/>
 							</div>
 						</div>
 					</div>
@@ -57,7 +57,7 @@
 								<span class="required ">*</span> ${text('获奖时间')}：<i class="fa icon-question hide"></i></label>
 							<div class="col-sm-8">
 								<#form:input path="prizeDate" readonly="true" maxlength="20" class="form-control Wdate required"
-									dataFormat="datetime" onclick="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm',isShowClear:false});"/>
+									dataFormat="datetime" onclick="WdatePicker({dateFmt:'yyyy-MM-dd',isShowClear:false});"/>
 							</div>
 						</div>
 					</div>
@@ -95,7 +95,7 @@
 						</div>
 					</div>
 				</div>
-				<div class="row">
+				<!--<div class="row">
 					<div class="col-xs-6">
 						<div class="form-group">
 							<label class="control-label col-sm-4" title="">
@@ -154,7 +154,7 @@
 							</div>
 						</div>
 					</div>
-				</div>
+				</div>-->
 				<div class="row">
 					<div class="col-xs-12">
 						<div class="form-group">

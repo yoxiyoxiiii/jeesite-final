@@ -149,9 +149,9 @@ public class FrontController extends BaseController {
         List<Article> articles = CmsUtils.getArticleList(site.getSiteCode(), categoryCode, 20, "");
         model.addAttribute("articles", articles);
 
-        Page<Article> page = new Page<Article>(pageNo, pageSize);
-        page = articleService.findPage(page, new Article(category), false);
-        model.addAttribute("page", page);
+//        Page<Article> page = new Page<Article>(pageNo, pageSize);
+//        page = articleService.findPage(page, new Article(category), false);
+//        model.addAttribute("page", page);
 
         // 将数据信息传递到视图
         model.addAttribute("category", category);
