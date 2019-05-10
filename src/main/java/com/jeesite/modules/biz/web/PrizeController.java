@@ -6,6 +6,8 @@ package com.jeesite.modules.biz.web;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.jeesite.modules.sys.entity.Office;
+import com.jeesite.modules.sys.service.OfficeService;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -22,6 +24,8 @@ import com.jeesite.common.web.BaseController;
 import com.jeesite.modules.biz.entity.Prize;
 import com.jeesite.modules.biz.service.PrizeService;
 
+import java.util.List;
+
 /**
  * 奖扣记录Controller
  * @author sanye
@@ -33,7 +37,8 @@ public class PrizeController extends BaseController {
 
 	@Autowired
 	private PrizeService prizeService;
-	
+	@Autowired
+	private OfficeService officeService;
 	/**
 	 * 获取数据
 	 */
@@ -61,6 +66,29 @@ public class PrizeController extends BaseController {
 	public Page<Prize> listData(Prize prize, HttpServletRequest request, HttpServletResponse response) {
 		prize.setPage(new Page<>(request, response));
 		Page<Prize> page = prizeService.findPage(prize);
+		List<Prize> list = page.getList();
+		for(int i=0; i< list.size(); i++) {
+			Office office = list.get(i).getOfficeJoin();
+			String officeNames = "";
+			String[] codes = office.getOfficeCode().split(",");
+			for(String code:codes){
+				Office tOffice = new Office();
+				tOffice.setOfficeCode(code);
+				tOffice = officeService.get(tOffice);
+				if(tOffice != null) {
+					officeNames += tOffice.getOfficeName() + ",";
+				}
+			}
+			if(officeNames.length()> 2){
+				officeNames = officeNames.substring(0,officeNames.length()-1);
+			}
+			//组合名称显示
+			office.setOfficeCode(officeNames);
+			Prize temp = list.get(i);
+			temp.setOfficeJoin(office);
+			list.set(i, temp);
+		}
+		page.setList(list);
 		return page;
 	}
 
@@ -81,6 +109,9 @@ public class PrizeController extends BaseController {
 	@PostMapping(value = "save")
 	@ResponseBody
 	public String save(@Validated Prize prize) {
+//	    Office office = new Office();
+//	    office.setOfficeCode("SY0001");
+//		prize.setOfficeJoin(office);
 		prizeService.save(prize);
 		return renderResult(Global.TRUE, text("保存奖扣记录成功！"));
 	}
@@ -119,5 +150,22 @@ public class PrizeController extends BaseController {
 		prizeService.delete(prize);
 		return renderResult(Global.TRUE, text("删除奖扣记录成功！"));
 	}
-	
+
+
+    /**
+     * 停用奖扣记录
+     */
+   /* @RequiresPermissions("biz:prize:edit")
+    @RequestMapping(value = "officejoin")
+    @ResponseBody
+    public String showJoin(Prize prize) {
+        Office officeCode = prize.getOfficeJoin();
+        String codes = officeCode.getOfficeCode();
+        String officeName = "";
+        for (String retval: codes.split(",")){
+            Office officeTemp =  officeService.get(retval);
+            officeName += "<li>" + officeTemp.getOfficeCode() + "</li>";
+        }
+        return renderResult(Global.TRUE, text("停用奖扣记录成功"));
+    }*/
 }

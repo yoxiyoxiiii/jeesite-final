@@ -167,7 +167,7 @@ public class Prize extends DataEntity<Prize> {
 //	public void setAuditDate(Date auditDate) {
 //		this.auditDate = auditDate;
 //	}
-	
+
 	@Length(min=0, max=64, message="扩展字段1值长度不能超过 64 个字符")
 	public String getExtend1Value() {
 		return extend1Value;

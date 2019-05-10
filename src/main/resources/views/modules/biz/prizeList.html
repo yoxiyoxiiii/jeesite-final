@@ -118,10 +118,7 @@ $('#dataGrid').dataGrid({
 			return '<a href="${ctx}/biz/prize/form?id='+row.id+'" class="btnList" data-title="${text("编辑奖扣记录")}">'+(val||row.id)+'</a>';
 		}},
 		{header:'${text("奖扣指标")}', name:'prizeLib.ruleRemark', index:'a.id', width:300, align:"left"},
-		{header:'${text("参与单位")}', name:'officeJoin.officeName', index:'a.id', width:150, align:"left",formatter: function(val, obj, row, act){
-			console.log(val);
-			return '点击试一下';
-		}},
+		{header:'${text("参与单位")}', name:'officeJoin.officeCode', index:'a.id', width:150, align:"left"},
 		{header:'${text("获奖时间")}', name:'prizeDate', index:'a.prize_date', width:150, align:"center",formatter: function(val, obj, row, act){
 			return js.formatDate(new Date(val),'yyyy-MM-dd');
 		}},

@@ -32,7 +32,7 @@
 								<span class="required hide">*</span> ${text('参与单位')}：<i class="fa icon-question hide"></i></label>
 							<div class="col-sm-8">
 								<#form:treeselect id="deptJoinId" title="${text('机构选择')}"
-									path="officeJoin.officeName" labelPath="officeJoin.officeName"
+									path="officeJoin.officeCode" labelPath="officeJoin.officeName"
 									url="${ctx}/sys/office/treeData"
 									class="" allowClear="true" checkbox="true"/>
 							</div>
