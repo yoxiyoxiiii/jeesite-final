@@ -16,9 +16,12 @@
 			<#form:form id="searchForm" model="${businessTarget2}" action="${ctx}/businesstarget2/businessTarget2/listData" method="post" class="form-inline hide"
 					data-page-no="${parameter.pageNo}" data-page-size="${parameter.pageSize}" data-order-by="${parameter.orderBy}">
 				<div class="form-group">
-					<label class="control-label">${text('指标名称')}：</label>
-					<div class="control-inline">
-						<#form:input path="targetName" maxlength="255" class="form-control width-120"/>
+					<label class="control-label">${text('指标项')}：</label>
+					<div class="control-inline col-sm-8">
+						<#form:treeselect  id="targetType" title="${text('指标项')}"
+						path="businessTargetType.targetTypeCode" labelPath="businessTargetType.targetTypeName"
+						url="${ctx}/businesstargettypetree/businessTargetTypeTree/treeData?ctrlPermi=2"
+						class="" allowClear="true" canSelectRoot="true" canSelectParent="true"/>
 					</div>
 				</div>
 				<div class="form-group">
@@ -88,7 +91,11 @@ $('#dataGrid').dataGrid({
 		{header:'${text("指标名称")}', name:'targetName', index:'a.target_name', width:150, align:"left", frozen:true, formatter: function(val, obj, row, act){
 			return '<a href="${ctx}/businesstarget2/businessTarget2/form?id='+row.id+'" class="btnList" data-title="${text("编辑指标")}">'+(val||row.id)+'</a>';
 }},
-		{header:'${text("分类")}', name:'targetTypes.typeName', index:'targetTypes.type_name', width:150, align:"left"},
+		{header:'${text("分类")}', name:'businessTargetType.targetTypeName', index:'targetTypes.type_name', width:150, align:"left"},
+		{header:'${text("指标内容及细则")}', name:'targetContent', index:'a.target_content', width:150, align:"left"},
+		{header:'${text("设定分值")}', name:'targetScore', index:'a.target_score', width:150, align:"left"},
+		{header:'${text("权重")}', name:'targetWeigth', index:'a.target_weigth', width:150, align:"left"},
+
 		{header:'${text("目标考核周期")}', name:'targetCheckCycle', index:'a.target_check_cycle', width:150, align:"left",  formatter: function(val, obj, row, act){
 				return js.getDictLabel(${@DictUtils.getDictListJson('target_check_cycle')}, val, '${text("未知")}', true);}
 		},

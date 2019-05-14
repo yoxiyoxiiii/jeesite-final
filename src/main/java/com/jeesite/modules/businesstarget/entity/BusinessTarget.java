@@ -59,7 +59,11 @@ public class BusinessTarget extends DataEntity<BusinessTarget> {
 	private Office executeDepartments;		// 执行部门
 	private Office jointWorkDepartments;		// 协同部门
 	private String targetResultExpression;		// 目标结果计算公式
-	
+	private String targetContent;		// 考核内容，考核细则
+	private Integer targetScore;		// 分值
+	private Integer targetWeigth;		// 权重
+
+
 	public BusinessTarget() {
 		this(null);
 	}

@@ -13,8 +13,10 @@ import com.jeesite.common.mapper.JsonMapper;
 import com.jeesite.modules.businesstarget.entity.BusinessTarget;
 import com.jeesite.modules.businesstargettype.entity.BusinessTargetType;
 import com.jeesite.modules.businesstargettype.service.BusinessTargetTypeService;
+import com.jeesite.modules.businesstargettypetree.entity.BusinessTargetTypeTree;
 import com.jeesite.modules.sys.entity.Office;
 import com.jeesite.modules.sys.service.OfficeService;
+import com.jeesite.modules.test.entity.TestTree;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -61,12 +63,23 @@ public class BusinessTarget2Controller extends BaseController {
 	public BusinessTarget2 get(String id, boolean isNewRecord) {
 		return businessTarget2Service.get(id, isNewRecord);
 	}
-	
+
+
 	/**
 	 * 查询列表
 	 */
 	@RequiresPermissions("businesstarget2:businessTarget2:view")
-	@RequestMapping(value = {"list", ""})
+	@RequestMapping(value = {"treeList", ""})
+	public String treeList(BusinessTarget2 businessTarget2, Model model) {
+		model.addAttribute("businessTarget2", businessTarget2);
+		return "modules/businesstarget2/businessTreeList";
+	}
+
+	/**
+	 * 查询列表
+	 */
+	@RequiresPermissions("businesstarget2:businessTarget2:view")
+	@RequestMapping(value = {"list"})
 	public String list(BusinessTarget2 businessTarget2, Model model) {
 		model.addAttribute("businessTarget2", businessTarget2);
 		return "modules/businesstarget2/businessTarget2List";

@@ -55,7 +55,7 @@ public class BusinessTargetController extends BaseController {
 	private BusinessTargetTypeService targetTypeService;
 
 
-	
+
 	/**
 	 * 获取数据
 	 */
@@ -63,7 +63,7 @@ public class BusinessTargetController extends BaseController {
 	public BusinessTarget get(String id, boolean isNewRecord) {
 		return businessTargetService.get(id, isNewRecord);
 	}
-	
+
 	/**
 	 * 查询列表
 	 */
@@ -73,7 +73,7 @@ public class BusinessTargetController extends BaseController {
 		model.addAttribute("businessTarget", businessTarget);
 		return "modules/businesstarget/businessTargetList";
 	}
-	
+
 	/**
 	 * 查询列表数据
 	 */
@@ -154,7 +154,7 @@ public class BusinessTargetController extends BaseController {
 		businessTargetService.save(businessTarget);
 		return renderResult(Global.TRUE, text("保存指标成功！"));
 	}
-	
+
 	/**
 	 * 删除指标
 	 */
@@ -176,5 +176,5 @@ public class BusinessTargetController extends BaseController {
 		model.addAttribute("businessTarget", businessTarget);
 		return "modules/businesstarget/listSelect";
 	}
-	
+
 }

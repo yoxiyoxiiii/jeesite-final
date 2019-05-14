@@ -53,7 +53,7 @@ public class TestTreeController extends BaseController {
 	@RequestMapping(value = {"list", ""})
 	public String list(TestTree testTree, Model model) {
 		model.addAttribute("testTree", testTree);
-		return "modules/test/testTreeList";
+		return "modules/test/empUserIndex";
 	}
 	
 	/**

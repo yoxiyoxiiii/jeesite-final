@@ -1,6 +1,8 @@
 package com.jeesite.modules.businessjob;
 
 import com.alibaba.druid.pool.DruidDataSource;
+import lombok.Data;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.quartz.QuartzDataSource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -13,16 +15,24 @@ import javax.sql.DataSource;
  * 公用数据源会产生数据表被锁，事务异常回滚，导致job 信息无法从数据库中获取
  * springboot2.0 + 官方文档说明
  */
+
 @Configuration
 public class QuartzDataSourceConfig {
+
+    @Value("${jdbc.url}")
+    private String url;
+    @Value("${jdbc.username}")
+    private String username;
+    @Value("${jdbc.password}")
+    private String password;
 
     @Bean
     @QuartzDataSource
     public DataSource quartzDataSource() {
         DruidDataSource druidDataSource = new DruidDataSource();
-        druidDataSource.setUrl("jdbc:mysql://47.244.133.160:3306/jeesite?useSSL=false&useUnicode=true&characterEncoding=utf-8&zeroDateTimeBehavior=convertToNull");
-        druidDataSource.setUsername("root");
-        druidDataSource.setPassword("Root123@123");
+        druidDataSource.setUrl(url);
+        druidDataSource.setUsername(username);
+        druidDataSource.setPassword(password);
         return druidDataSource;
     }
 }

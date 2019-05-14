@@ -17,9 +17,12 @@
 					<div class="col-xs-6">
 						<div class="form-group">
 							<label class="control-label col-sm-4" title="">
-								<span class="required hide">*</span> ${text('指标名称')}：<i class="fa icon-question hide"></i></label>
+								<span class="required hide">*</span> ${text('指标项')}：<i class="fa icon-question hide"></i></label>
 							<div class="col-sm-8">
-								<#form:input path="targetName" maxlength="255" class="form-control"/>
+								<#form:treeselect   model="${businessTargetType}" id="targetType" title="${text('指标项')}"
+								path="businessTargetType.id" labelPath="businessTargetType.typeName"
+								url="${ctx}/businesstargettypetree/businessTargetTypeTree/treeData?excludeCode=${businessTargetType.id}&ctrlPermi=2"
+								class="" allowClear="true" canSelectRoot="true" canSelectParent="true"/>
 							</div>
 						</div>
 					</div>

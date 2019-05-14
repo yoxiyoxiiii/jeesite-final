@@ -82,18 +82,21 @@ $('#dataGrid').dataGrid({
 		{header:'${text("指标名称")}', name:'targetName', index:'a.target_name', width:150, align:"left", frozen:true, formatter: function(val, obj, row, act){
 			return '<a href="${ctx}/businesstarget/businessTarget/form?id='+row.id+'" class="btnList" data-title="${text("编辑指标")}">'+(val||row.id)+'</a>';
 		}},
-		{header:'${text("分类")}', name:'targetTypes.typeName', index:'targetTypes.type_name', width:150, align:"left"},
+		{header:'${text("指标内容及细则")}', name:'targetContent', index:'a.target_content', width:150, align:"left"},
+		{header:'${text("设定分值")}', name:'targetScore', index:'a.target_score', width:150, align:"left"},
+		{header:'${text("权重")}', name:'targetWeigth', index:'a.target_weigth', width:150, align:"left"},
+		{header:'${text("目标执行部门")}', name:'executeDepartments.officeName', index:'a.target_execute_dep_id', width:150, align:"left"},
+		// {header:'${text("分类")}', name:'targetTypes.typeName', index:'targetTypes.type_name', width:150, align:"left"},
 		{header:'${text("目标考核周期")}', name:'targetCheckCycle', index:'a.target_check_cycle', width:150, align:"left",  formatter: function(val, obj, row, act){
 				return js.getDictLabel(${@DictUtils.getDictListJson('target_check_cycle')}, val, '${text("未知")}', true);}
 		 },
-		{header:'${text("考核依据")}', name:'targetCheckBasic', index:'a.target_check_basic', width:150, align:"left"},
 		{header:'${text("指标属性")}', name:'targetAttribute', index:'a.target_attribute', width:150, align:"center", formatter: function(val, obj, row, act){
 			return js.getDictLabel(${@DictUtils.getDictListJson('target_belong_type')}, val, '${text("未知")}', true);
 		}},
-		{header:'${text("目标执行部门")}', name:'executeDepartments.officeName', index:'a.target_execute_dep_id', width:150, align:"left"},
-		{header:'${text("协同部门")}', name:'jointWorkDepartments.officeName', index:'a.target_join_dep_id', width:150, align:"left"},
+
+		// {header:'${text("协同部门")}', name:'jointWorkDepartments.officeName', index:'a.target_join_dep_id', width:150, align:"left"},
 		//{header:'${text("目标结果计算公式")}', name:'targetResultExpression', index:'a.target_result_expression', width:150, align:"left"},
-		{header:'${text("更改时间")}', name:'updateDate', index:'a.update_date', width:150, align:"center"},
+		// {header:'${text("更改时间")}', name:'updateDate', index:'a.update_date', width:150, align:"center"},
 		{header:'${text("操作")}', name:'actions', width:120, sortable:false, title:false, formatter: function(val, obj, row, act){
 			var actions = [];
 			<% if(hasPermi('businesstarget:businessTarget:edit')){ %>
