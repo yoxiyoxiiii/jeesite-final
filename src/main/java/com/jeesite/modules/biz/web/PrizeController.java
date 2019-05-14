@@ -6,6 +6,8 @@ package com.jeesite.modules.biz.web;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.jeesite.modules.biz.entity.PrizeLib;
+import com.jeesite.modules.biz.entity.PrizeType;
 import com.jeesite.modules.sys.entity.Office;
 import com.jeesite.modules.sys.service.OfficeService;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
@@ -39,6 +41,14 @@ public class PrizeController extends BaseController {
 	private PrizeService prizeService;
 	@Autowired
 	private OfficeService officeService;
+
+	@RequiresPermissions("biz:prize:view")
+	@RequestMapping(value = { "index", "" })
+	public String index() {
+		//CmsUtils.getSite(Site.MAIN_SITE_CODE); // 用于初始化站点数据
+		return "modules/biz/prizeIndex";
+	}
+
 	/**
 	 * 获取数据
 	 */
@@ -64,6 +74,12 @@ public class PrizeController extends BaseController {
 	@RequestMapping(value = "listData")
 	@ResponseBody
 	public Page<Prize> listData(Prize prize, HttpServletRequest request, HttpServletResponse response) {
+//		String id = request.getParameter("prizeLib.id2");
+//		PrizeType pt = new PrizeType();
+//		pt.setId(id);
+//		PrizeLib pb = new PrizeLib();
+//		pb.setPrizeType(pt);
+//		prize.setPrizeLib(pb);
 		prize.setPage(new Page<>(request, response));
 		Page<Prize> page = prizeService.findPage(prize);
 		List<Prize> list = page.getList();

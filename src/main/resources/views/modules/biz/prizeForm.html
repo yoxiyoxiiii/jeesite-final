@@ -12,32 +12,30 @@
 		<#form:form id="inputForm" model="${prize}" action="${ctx}/biz/prize/save" method="post" class="form-horizontal">
 			<div class="box-body">
 				<div class="form-unit">${text('基本信息')}</div>
-				<#form:hidden path="id"/>
+				<#form:hidden path="id" />
 				<div class="row">
 					<div class="col-xs-6">
 						<div class="form-group">
 							<label class="control-label col-sm-4" title="">
 								<span class="required ">*</span> ${text('主体单位')}：<i class="fa icon-question hide"></i></label>
 							<div class="col-sm-8">
-								<#form:treeselect id="deptId" title="${text('机构选择')}"
-									path="office.officeCode" labelPath="office.officeName"
-									url="${ctx}/sys/office/treeData"
-									class=" required" allowClear="true"/>
+								<#form:treeselect id="deptId" title="${text('机构选择')}" path="office.officeCode"
+									labelPath="office.officeName" url="${ctx}/sys/office/treeData" class=" required" allowClear="true" />
 							</div>
 						</div>
 					</div>
 					<div class="col-xs-6">
-						<div class="form-group">
-							<label class="control-label col-sm-4" title="">
-								<span class="required hide">*</span> ${text('参与单位')}：<i class="fa icon-question hide"></i></label>
-							<div class="col-sm-8">
-								<#form:treeselect id="deptJoinId" title="${text('机构选择')}"
-									path="officeJoin.officeCode" labelPath="officeJoin.officeName"
-									url="${ctx}/sys/office/treeData"
-									class="" allowClear="true" checkbox="true"/>
+							<div class="form-group">
+								<label class="control-label col-sm-4" title="">
+									<span class="required hide">*</span> ${text('参与单位')}：<i class="fa icon-question hide"></i></label>
+								<div class="col-sm-8">
+									<#form:treeselect id="deptJoinId" title="${text('机构选择')}"
+										path="officeJoin.officeCode" labelPath="officeJoin.officeName"
+										url="${ctx}/sys/office/treeData"
+										class="" allowClear="true" checkbox="true"/>
+								</div>
 							</div>
 						</div>
-					</div>
 				</div>
 				<div class="row">
 					<div class="col-xs-6">
@@ -45,9 +43,9 @@
 							<label class="control-label col-sm-4" title="">
 								<span class="required ">*</span> ${text('奖扣指标')}：<i class="fa icon-question hide"></i></label>
 							<div class="col-sm-8">
-								<#form:listselect id="prizeLibIdListselect" title="选择奖扣指标"
-								url="${ctx}/biz/prizeLib/listSelect" allowClear="false"
-								path="prizeLib.id"  labelPath="prizeLib.ruleRemark" value= "id" checkbox="false" itemCode="id" itemName="ruleRemark"/>
+								<#form:listselect id="prizeLibIdListselect" title="选择奖扣指标" url="${ctx}/biz/prizeLib/listSelect"
+									allowClear="false" path="prizeLib.id" labelPath="prizeLib.ruleRemark" value="id" checkbox="false"
+									itemCode="id" itemName="ruleRemark" />
 							</div>
 						</div>
 					</div>
@@ -57,7 +55,7 @@
 								<span class="required ">*</span> ${text('获奖时间')}：<i class="fa icon-question hide"></i></label>
 							<div class="col-sm-8">
 								<#form:input path="prizeDate" readonly="true" maxlength="20" class="form-control Wdate required"
-									dataFormat="datetime" onclick="WdatePicker({dateFmt:'yyyy-MM-dd',isShowClear:false});"/>
+									dataFormat="datetime" onclick="WdatePicker({dateFmt:'yyyy-MM-dd',isShowClear:false});" />
 							</div>
 						</div>
 					</div>
@@ -68,7 +66,7 @@
 							<label class="control-label col-sm-2" title="">
 								<span class="required ">*</span> ${text('情况说明')}：<i class="fa icon-question hide"></i></label>
 							<div class="col-sm-10">
-								<#form:input path="evidence" maxlength="500" class="form-control required"/>
+								<#form:input path="evidence" maxlength="500" class="form-control required" />
 							</div>
 						</div>
 					</div>
@@ -79,7 +77,7 @@
 							<label class="control-label col-sm-4" title="">
 								<span class="required hide">*</span> ${text('奖扣结果')}：<i class="fa icon-question hide"></i></label>
 							<div class="col-sm-8">
-								<#form:input path="score" class="form-control number"/>
+								<#form:input path="score" class="form-control number" />
 							</div>
 						</div>
 					</div>
@@ -90,78 +88,76 @@
 							<label class="control-label col-sm-2" title="">
 								<span class="required hide">*</span> ${text('备注信息')}：<i class="fa icon-question hide"></i></label>
 							<div class="col-sm-10">
-								<#form:textarea path="remarks" rows="4" maxlength="500" class="form-control"/>
+								<#form:textarea path="remarks" rows="4" maxlength="500" class="form-control" />
 							</div>
 						</div>
 					</div>
 				</div>
-				<!--<div class="row">
-					<div class="col-xs-6">
+				<div class="form-unit extendTitle">采集数据项</div>
+				<div class="row extend">
+					<div class="col-xs-6 hide">
 						<div class="form-group">
 							<label class="control-label col-sm-4" title="">
 								<span class="required hide">*</span> ${text('扩展字段1值')}：<i class="fa icon-question hide"></i></label>
 							<div class="col-sm-8">
-								<#form:input path="extend1Value" maxlength="64" class="form-control"/>
+								<#form:input path="extend1Value" maxlength="64" class="form-control" />
 							</div>
 						</div>
 					</div>
-					<div class="col-xs-6">
+					<div class="col-xs-6 hide">
 						<div class="form-group">
 							<label class="control-label col-sm-4" title="">
 								<span class="required hide">*</span> ${text('扩展字段2值')}：<i class="fa icon-question hide"></i></label>
 							<div class="col-sm-8">
-								<#form:input path="extend2Value" maxlength="64" class="form-control"/>
+								<#form:input path="extend2Value" maxlength="64" class="form-control" />
 							</div>
 						</div>
 					</div>
-				</div>
-				<div class="row">
-					<div class="col-xs-6">
+					<div class="col-xs-6 hide">
 						<div class="form-group">
 							<label class="control-label col-sm-4" title="">
 								<span class="required hide">*</span> ${text('扩展字段3值')}：<i class="fa icon-question hide"></i></label>
 							<div class="col-sm-8">
-								<#form:input path="extend3Value" maxlength="64" class="form-control"/>
+								<#form:input path="extend3Value" maxlength="64" class="form-control" />
 							</div>
 						</div>
 					</div>
-					<div class="col-xs-6">
+					<div class="col-xs-6 hide">
 						<div class="form-group">
 							<label class="control-label col-sm-4" title="">
 								<span class="required hide">*</span> ${text('扩展字段4值')}：<i class="fa icon-question hide"></i></label>
 							<div class="col-sm-8">
-								<#form:input path="extend4Value" maxlength="64" class="form-control"/>
+								<#form:input path="extend4Value" maxlength="64" class="form-control" />
 							</div>
 						</div>
 					</div>
-				</div>
-				<div class="row">
-					<div class="col-xs-6">
+					<div class="col-xs-6 hide">
 						<div class="form-group">
 							<label class="control-label col-sm-4" title="">
 								<span class="required hide">*</span> ${text('扩展字段5值')}：<i class="fa icon-question hide"></i></label>
 							<div class="col-sm-8">
-								<#form:input path="extend5Value" maxlength="64" class="form-control"/>
+								<#form:input path="extend5Value" maxlength="64" class="form-control" />
 							</div>
 						</div>
 					</div>
-					<div class="col-xs-6">
+					<div class="col-xs-6 hide">
 						<div class="form-group">
 							<label class="control-label col-sm-4" title="">
 								<span class="required hide">*</span> ${text('扩展字段6值')}：<i class="fa icon-question hide"></i></label>
 							<div class="col-sm-8">
-								<#form:input path="extend6Value" maxlength="64" class="form-control"/>
+								<#form:input path="extend6Value" maxlength="64" class="form-control" />
 							</div>
 						</div>
 					</div>
-				</div>-->
+				</div>
+				<div class="form-unit">奖扣相关文书</div>
 				<div class="row">
 					<div class="col-xs-12">
 						<div class="form-group">
 							<label class="control-label col-sm-2">${text('附件上传')}：</label>
 							<div class="col-sm-10">
-								<#form:fileupload id="uploadFile" bizKey="${prize.id}" bizType="prize_file"
-									uploadType="all" class="" readonly="false"/>
+								<#form:fileupload id="uploadFile" bizKey="${prize.id}" bizType="prize_file" uploadType="all" class=""
+									readonly="false" />
 							</div>
 						</div>
 					</div>
@@ -171,9 +167,10 @@
 				<div class="row">
 					<div class="col-sm-offset-2 col-sm-10">
 						<% if (hasPermi('biz:prize:edit')){ %>
-							<button type="submit" class="btn btn-sm btn-primary" id="btnSubmit"><i class="fa fa-check"></i> ${text('保 存')}</button>&nbsp;
+						<button type="submit" class="btn btn-sm btn-primary" id="btnSubmit"><i class="fa fa-check"></i> ${text('保存')}</button>&nbsp;
 						<% } %>
-						<button type="button" class="btn btn-sm btn-default" id="btnCancel" onclick="js.closeCurrentTabPage()"><i class="fa fa-reply-all"></i> ${text('关 闭')}</button>
+						<button type="button" class="btn btn-sm btn-default" id="btnCancel" onclick="js.closeCurrentTabPage()"><i
+								class="fa fa-reply-all"></i> ${text('关 闭')}</button>
 					</div>
 				</div>
 			</div>
@@ -182,16 +179,124 @@
 </div>
 <% } %>
 <script>
-$("#inputForm").validate({
-	submitHandler: function(form){
-		js.ajaxSubmitForm($(form), function(data){
-			js.showMessage(data.message);
-			if(data.result == Global.TRUE){
-				js.closeCurrentTabPage(function(contentWindow){
-					contentWindow.page();
-				});
+	$("#inputForm").validate({
+		submitHandler: function (form) {
+			js.ajaxSubmitForm($(form), function (data) {
+				js.showMessage(data.message);
+				if (data.result == Global.TRUE) {
+					js.closeCurrentTabPage(function (contentWindow) {
+						contentWindow.page();
+					});
+				}
+			}, "json");
+		}
+	});
+
+	$(function () {
+		$(".extendTitle").hide();
+		if ($("#prizeLibIdListselectCode").val() != null && $("#prizeLibIdListselectCode").val() != "") {
+			//sanye:编辑时设置名字
+			cacheValues();
+			setExtendCol($("#prizeLibIdListselectCode").val());
+		}
+		$("#prizeLibIdListselectCode").change(function () {
+			//sanye: 动态加载扩展字段		
+			var selectLibID = $("#prizeLibIdListselectCode").val();
+			setExtendCol(selectLibID);
+		});
+
+		//sanye: 以下为测试脚本,需要清除
+		// js.closeCurrentTabPage(null);
+		//测试从字典获取数据
+		// alert( js.getDictLabel(${@DictUtils.getDictListJson('prize_commend_level')}, 0.1, '未知', true));
+		// alert( eval("${@DictUtils.getDictListJson('prize_commend_level')}"));
+
+		//动态加载select
+		// res是从后端返回的数据 	
+	});
+
+	var EXTEND_LENTH = 6;
+	var dicts = {
+		account_arr: ${@DictUtils.getDictListJson('prize_commend_level') },
+						}
+	var cacheVals = [];
+	function setExtendCol(selectLibID) {
+		$.get("${ctx}/biz/prizeLib/get?id=" + selectLibID, function (data, status) {
+			$(".extendTitle").hide();
+			for (i = 1; i <= EXTEND_LENTH; i++) {
+				//扩展字段名不为空才解析
+				if (eval("data.prizeLib.extend" + i + "Name") != "") {
+					var col = $(".extend").children().eq(i - 1);
+					col.removeClass("hide");
+					//sanye: 任有一项就显示标题
+					$(".extendTitle").show();
+					$(col).find("label").html(
+						"<span class='required hide' aria-required='true'>*</span> "
+						+ eval("data.prizeLib.extend" + i + "Name")
+						+ "：<i class='fa icon-question hide'></i>");
+
+
+					var currentVal = "";
+					if( cacheVals.length == EXTEND_LENTH){
+						currentVal = cacheVals[i-1];
+					}
+					//添加扩展属性					 
+					//sanye:动态解析控件格式
+					//sanye-todo:需要处理form回显
+					switch (eval("data.prizeLib.extend" + i + "Option")) {
+						case "string":
+						  var item = $(col).find("input");
+							if (item != null) {	
+								$(item).val(currentVal);
+							}
+							break;
+						case "number":
+							var item = $(col).find("input");
+							if (item != null) {								
+								$(item).attr("class", 'form-control number required');
+								$(item).attr("maxlength", '20');
+								$(item).val(currentVal);							
+							}						
+							break;
+						case "datetime":
+							var item = $(col).find("input");
+							if (item != null) {
+								$(item).attr("readonly", 'true');
+								$(item).attr("class", 'form-control Wdate required');
+								$(item).attr("maxlength", '20');
+								$(item).attr("onclick", "WdatePicker({dateFmt:'yyyy-MM-dd',isShowClear:false});");
+								$(item).val(currentVal);
+								// $(item).attr("aria-required");
+							}
+							break;
+						default:
+							//默认作为单选字典处理
+							var str = "<select id='extend" + i + "Value' name='extend" + i + "Value' class='selectpicker form-control required ' aria-required='true' tabindex='-1' aria-hidden='true'>";
+							for (var n = 0; n < dicts.account_arr.length; n++) {
+								var isSelect = "";
+								if(dicts.account_arr[n].dictValue == currentVal){
+									isSelect = " selected";
+								}
+								str += '<option value="' + dicts.account_arr[n].dictValue + '" '+ isSelect +'>' + dicts.account_arr[n].dictLabel + '</option>'
+							}
+							// str += "</select><span class='select2 select2-container select2-container--default' dir='ltr' style='width: 100%;'><span class='selection'><span class='select2-selection select2-selection--single' role='combobox' aria-haspopup='true' aria-expanded='false' tabindex='0' aria-labelledby='select2-isAdd-container'><span class='select2-selection__rendered' id='select2-isAdd-container' title='奖励'>加分项</span><span class='select2-selection__arrow' role='presentation'><b role='presentation'></b></span></span></span><span class='dropdown-wrapper' aria-hidden='true'></span></span>";
+							str += "</select>";	
+							var sel = $(col).find(".col-sm-8");
+							$(sel).html(str);
+							// $(".selectpicker").selectpicker('refresh');//动态刷新
+							break;
+					}
+
+
+				}
 			}
-		}, "json");
-    }
-});
+		});
+	}
+
+	function cacheValues(){
+		for(var i=0; i <EXTEND_LENTH; i++){
+			cacheVals[i] =	$("#extend"+ (i+1) +"Value").val();			
+		}
+	}
+
 </script>
