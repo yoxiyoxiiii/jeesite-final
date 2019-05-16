@@ -19,29 +19,31 @@
 					<label class="control-label">${text('主体单位')}：</label>
 					<div class="control-inline width-120" >
 						<#form:treeselect id="deptId" title="${text('机构选择')}"
-							path="deptId" labelPath="" 
+							path="office.officeCode" labelPath="office.officeName" 
 							url="${ctx}/sys/office/treeData" allowClear="true"/>
 					</div>
-				</div>
+				</div>				
 				<div class="form-group">
-					<label class="control-label">${text('参与单位')}：</label>
-					<div class="control-inline width-120" >
-						<#form:treeselect id="deptJoinId" title="${text('机构选择')}"
-							path="deptJoinId" labelPath="" 
-							url="${ctx}/sys/office/treeData" allowClear="true"/>
-					</div>
-				</div>
-				<div class="form-group">
-					<label class="control-label">${text('奖扣指标ID')}：</label>
+					<label class="control-label">${text('奖扣指标')}：</label>
 					<div class="control-inline width-120">
-						<#form:select path="prizeLibId" dictType="" blankOption="true" class="form-control"/>
+							<#form:listselect id="prizeLibIdListselect" title="选择奖扣指标" url="${ctx}/biz/prizeLib/listSelect"
+							allowClear="false" path="prizeLib.id" labelPath="prizeLib.ruleRemark" value="id" checkbox="false"
+							itemCode="id" itemName="ruleRemark" />
+
+							<#form:input id="prizeTypeId" path="prizeLib.prizeType.id" class="hide" />							
 					</div>
 				</div>
 				<div class="form-group">
 					<label class="control-label">${text('获奖时间')}：</label>
 					<div class="control-inline">
-						<#form:input path="prizeDate" readonly="true" maxlength="20" class="form-control Wdate-datetime"
-							dataFormat="datetime" onclick="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm',isShowClear:false});"/>
+							<!-- <#form:input path="prizeDate" readonly="true" maxlength="20" class="form-control Wdate required"
+							dataFormat="datetime" onclick="WdatePicker({dateFmt:'yyyy-MM-dd',isShowClear:false});" />	
+										 -->
+							<#form:input path="prizeDate_gte" readonly="true" maxlength="20" class="form-control Wdate-date"
+							 dataFormat="date" onclick="WdatePicker({dateFmt:'yyyy-MM-dd',isShowClear:false,onpicked:function(){prizeDate_lte.click()}});"/>
+							 &nbsp;--&nbsp;
+							<#form:input path="prizeDate_lte" readonly="true" maxlength="20" class="form-control Wdate-date"
+							dataFormat="date" onclick="WdatePicker({dateFmt:'yyyy-MM-dd',isShowClear:false});"/>
 					</div>
 				</div>
 				<div class="form-group">
@@ -50,7 +52,7 @@
 						<#form:input path="evidence" maxlength="500" class="form-control width-120"/>
 					</div>
 				</div>
-				<div class="form-group">
+				<!-- <div class="form-group">
 					<label class="control-label">${text('奖扣结果')}：</label>
 					<div class="control-inline">
 						<#form:input path="score" class="form-control width-120"/>
@@ -61,7 +63,7 @@
 					<div class="control-inline width-120">
 						<#form:select path="status" dictType="sys_search_status" blankOption="true" class="form-control"/>
 					</div>
-				</div>
+				</div> -->
 				<!--<div class="form-group">
 					<label class="control-label">${text('扩展字段1值')}：</label>
 					<div class="control-inline">

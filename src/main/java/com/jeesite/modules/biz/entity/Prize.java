@@ -221,5 +221,23 @@ public class Prize extends DataEntity<Prize> {
 	public void setExtend6Value(String extend6Value) {
 		this.extend6Value = extend6Value;
 	}
-	
+
+
+
+	public Date getPrizeDate_gte() {
+		return sqlMap.getWhere().getValue("prize_date", QueryType.GTE);
+	}
+
+	public void setPrizeDate_gte(Date prizeDate) {
+		sqlMap.getWhere().and("prize_date", QueryType.GTE, prizeDate);
+	}
+
+	public Date getPrizeDate_lte() {
+		return sqlMap.getWhere().getValue("prize_date", QueryType.LTE);
+	}
+
+	public void setPrizeDate_lte(Date prizeDate) {
+		sqlMap.getWhere().and("prize_date", QueryType.LTE, prizeDate);
+	}
+
 }

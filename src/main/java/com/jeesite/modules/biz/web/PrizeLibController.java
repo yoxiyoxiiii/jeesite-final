@@ -8,7 +8,6 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.jeesite.common.codec.EncodeUtils;
 import com.jeesite.common.mapper.JsonMapper;
-import com.jeesite.modules.biz.entity.PrizeType;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -126,4 +125,17 @@ public class PrizeLibController extends BaseController {
 		model.addAttribute("prizeLib", prizeLib);
 		return "modules/biz/prizeLiblistSelect";
 	}
+
+
+	/**
+	 * 获取数据
+	 */
+	@ModelAttribute
+	@ResponseBody
+	@RequestMapping({"get"})
+	public PrizeLib get(String id) {
+		return prizeLibService.get(id,false);
+	}
+
+
 }
