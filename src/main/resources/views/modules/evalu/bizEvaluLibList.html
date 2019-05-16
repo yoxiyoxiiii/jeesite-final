@@ -1,0 +1,75 @@
+<% layout('/layouts/default.html', {title: '民主测评明细树表管理', libs: ['dataGrid']}){ %>
+<div class="main-content">
+	<div class="box box-main">
+		<div class="box-header">
+			<div class="box-title">
+				<i class="fa fa-list-alt"></i> ${text('民主测评明细树表管理')}
+			</div>
+			<div class="box-tools pull-right">
+				<a href="#" class="btn btn-default" id="btnSearch" title="${text('查询')}"><i class="fa fa-filter"></i> ${text('查询')}</a>
+				<a href="#" class="btn btn-default" id="btnRefreshTree" title="${text('刷新')}"><i class="fa fa-refresh"></i> ${text('刷新')}</a>
+				<a href="#" class="btn btn-default" id="btnExpandTreeNode" title="${text('展开一级')}"><i class="fa fa-angle-double-down"></i> ${text('展开')}</a>
+				<a href="#" class="btn btn-default" id="btnCollapseTreeNode" title="${text('折叠全部')}"><i class="fa fa-angle-double-up"></i> ${text('折叠')}</a>
+				<% if(hasPermi('evalu:bizEvaluLib:edit')){ %>
+					<a href="${ctx}/evalu/bizEvaluLib/form" class="btn btn-default btnTool" title="${text('新增民主测评明细树表')}"><i class="fa fa-plus"></i> ${text('新增')}</a>
+				<% } %>
+			</div>
+		</div>
+		<div class="box-body">
+			<#form:form id="searchForm" model="${bizEvaluLib}" action="${ctx}/evalu/bizEvaluLib/listData" method="post" class="form-inline hide"
+					data-page-no="${parameter.pageNo}" data-page-size="${parameter.pageSize}" data-order-by="${parameter.orderBy}">
+				<div class="form-group">
+					<label class="control-label">${text('评测项')}：</label>
+					<div class="control-inline">
+						<#form:input path="treeName" maxlength="200" class="form-control width-120"/>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="control-label">${text('所属测评表')}：</label>
+					<div class="control-inline">
+						<#form:input path="evaluId" maxlength="64" class="form-control width-120"/>
+					</div>
+				</div>
+				<div class="form-group">
+					<button type="submit" class="btn btn-primary btn-sm">${text('查询')}</button>
+					<button type="reset" class="btn btn-default btn-sm">${text('重置')}</button>
+				</div>
+			</#form:form>
+			<table id="dataGrid"></table>
+		</div>
+	</div>
+</div>
+<% } %>
+<script>
+// 初始化DataGrid对象
+$('#dataGrid').dataGrid({
+	searchForm: $("#searchForm"),
+	columnModel: [
+		{header:'${text("评测项")}', name:'treeName', index:'a.tree_name', width:250, align:"left", frozen:true, formatter: function(val, obj, row, act){
+			return '( '+row.treeCode+' ) '+'<a href="${ctx}/evalu/bizEvaluLib/form?treeCode='+row.treeCode+'" class="btnList" data-title="${text("编辑民主测评明细树表")}">'+(val||row.id)+'</a>';
+		}},
+		{header:'${text("本级排序号")}', name:'treeSort', index:'a.tree_sort', width:150, align:"center"},
+		{header:'${text("分数权重")}', name:'score', index:'a.score', width:150, align:"right", formatter: function(val, obj, row, act){
+			return js.formatNumber(val, 2, false, ''); // 数值类型格式化 (原始数值, 小数位数, 是否千分位, 默认值，金额情况下设置0.00);
+		}},
+		{header:'${text("计分方式")}', name:'evalSelectType', index:'a.eval_select_type', width:150, align:"center", formatter: function(val, obj, row, act){
+			return js.getDictLabel(${@DictUtils.getDictListJson('eval_select_type')}, val, '${text("未知")}', true);
+		}},
+		{header:'${text("操作")}', name:'actions', width:120, sortable:false, title:false, formatter: function(val, obj, row, act){
+			var actions = [];
+			<% if(hasPermi('evalu:bizEvaluLib:edit')){ %>
+				actions.push('<a href="${ctx}/evalu/bizEvaluLib/form?treeCode='+row.treeCode+'" class="btnList" title="${text("编辑民主测评明细树表")}"><i class="fa fa-pencil"></i></a>&nbsp;');
+				actions.push('<a href="${ctx}/evalu/bizEvaluLib/delete?treeCode='+row.treeCode+'" class="btnList" title="${text("删除民主测评明细树表")}" data-confirm="${text("确认要删除该民主测评明细树表及所有子民主测评明细树表吗？")}" data-deltreenode="'+row.id+'"><i class="fa fa-trash-o"></i></a>&nbsp;');
+				actions.push('<a href="${ctx}/evalu/bizEvaluLib/form?parentCode='+row.id+'" class="btnList" title="${text("新增下级民主测评明细树表")}"><i class="fa fa-plus-square"></i></a>&nbsp;');
+			<% } %>
+			return actions.join('');
+		}}
+	],
+	treeGrid: true,			// 启用树结构表格
+	defaultExpandLevel: 0,	// 默认展开的层次
+	expandNodeClearPostData: 'treeName,evaluId,', // 展开节点清理请求参数数据（一般设置查询条件的字段属性，否则在查询后，不能展开子节点数据）	// 加载成功后执行事件
+	ajaxSuccess: function(data){
+		
+	}
+});
+</script>
