@@ -3,13 +3,13 @@
 	<div class="box box-main">
 		<div class="box-header with-border">
 			<div class="box-title">
-				<i class="fa fa-list-alt"></i> ${text(bizEvaluLib.isNewRecord ? '新增民主测评明细树表' : '编辑民主测评明细树表')}
+				<i class="fa fa-list-alt"></i> ${text(evaluLib.isNewRecord ? '新增民主测评明细树表' : '编辑民主测评明细树表')}
 			</div>
 			<div class="box-tools pull-right">
 				<button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
 			</div>
 		</div>
-		<#form:form id="inputForm" model="${bizEvaluLib}" action="${ctx}/evalu/bizEvaluLib/save" method="post" class="form-horizontal">
+		<#form:form id="inputForm" model="${evaluLib}" action="${ctx}/evalu/evaluLib/save" method="post" class="form-horizontal">
 			<div class="box-body">
 				<div class="form-unit">${text('基本信息')}</div>
 				<div class="row">
@@ -19,7 +19,7 @@
 							<div class="col-sm-8">
 								<#form:treeselect id="parent" title="${text('上级民主测评明细树表')}"
 									path="parent.id" labelPath="parent.treeName"
-									url="${ctx}/evalu/bizEvaluLib/treeData?excludeCode=${bizEvaluLib.id}"
+									url="${ctx}/evalu/evaluLib/treeData?excludeCode=${evaluLib.id}"
 									class="" allowClear="true" canSelectRoot="true" canSelectParent="true"/>
 							</div>
 						</div>
@@ -33,7 +33,7 @@
 							<div class="col-sm-8">
 
 								<#form:hidden path="isNewRecord"/>
-								<#form:input path="treeCode" maxlength="64" readonly="${!bizEvaluLib.isNewRecord}" class="form-control required abc"/>
+								<#form:input path="treeCode" maxlength="64" readonly="${!evaluLib.isNewRecord}" class="form-control required abc"/>
 							</div>
 						</div>
 					</div>
@@ -57,15 +57,6 @@
 							</div>
 						</div>
 					</div>
-					<div class="col-xs-6">
-						<div class="form-group">
-							<label class="control-label col-sm-4" title="">
-								<span class="required ">*</span> ${text('所属测评表')}：<i class="fa icon-question hide"></i></label>
-							<div class="col-sm-8">
-								<#form:input path="evaluId" maxlength="64" class="form-control required"/>
-							</div>
-						</div>
-					</div>
 				</div>
 				<div class="row">
 					<div class="col-xs-6">
@@ -74,6 +65,17 @@
 								<span class="required hide">*</span> ${text('分数权重')}：<i class="fa icon-question hide"></i></label>
 							<div class="col-sm-8">
 								<#form:input path="score" class="form-control number"/>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-xs-6">
+						<div class="form-group">
+							<label class="control-label col-sm-4" title="">
+								<span class="required ">*</span> ${text('分制')}：<i class="fa icon-question hide"></i></label>
+							<div class="col-sm-8">
+								<#form:select id="evalSelectType1"  path="evalSelectType" dictType="eval_select_type" class="form-control required"  onchange="categoryChg()" />
 							</div>
 						</div>
 					</div>
@@ -102,7 +104,8 @@
 			<div class="box-footer">
 				<div class="row">
 					<div class="col-sm-offset-2 col-sm-10">
-						<% if (hasPermi('evalu:bizEvaluLib:edit')){ %>
+						<#form:hidden path="evaluId"/>
+						<% if (hasPermi('evalu:evaluLib:edit')){ %>
 							<button type="submit" class="btn btn-sm btn-primary" id="btnSubmit"><i class="fa fa-check"></i> ${text('保 存')}</button>&nbsp;
 						<% } %>
 						<button type="button" class="btn btn-sm btn-default" id="btnCancel" onclick="js.closeCurrentTabPage()"><i class="fa fa-reply-all"></i> ${text('关 闭')}</button>
@@ -121,7 +124,7 @@ $("#inputForm").validate({
 			if(data.result == Global.TRUE){
 				js.closeCurrentTabPage(function(contentWindow){
 					contentWindow.$('#dataGrid').dataGrid('refreshTreeChildren',
-							$('#parentCode').val(), '${bizEvaluLib.id}');
+							$('#parentCode').val(), '${evaluLib.id}');
 				});
 			}
 		}, "json");
@@ -132,10 +135,67 @@ $("#inputForm").validate({
 function treeselectCallback(id, act, index, layero){
 	if (id == 'parent' && (act == 'ok' || act == 'clear')){
 		// 创建并初始化下一个节点信息，如：排序号、默认值
-		$.get('${ctx}/evalu/bizEvaluLib/createNextNode?parentCode='
+		$.get('${ctx}/evalu/evaluLib/createNextNode?parentCode='
 				+$('#parentCode').val(), function(data){
 			$('#treeSort').val(data.treeSort);
 		});
+	}
+}
+
+//sanye: 联动数据字典
+var purchaseTypeJson;
+$.ajax({
+	type:"POST",
+	url:"${ctx}/sys/dictData/treeData?dictType=eval_select_type",
+	dataType:"json",
+	success: function(json){
+		purchaseTypeJson = json;
+		var category = "";
+		var categorySelect = $("#evalSelectType1")[0];
+		categorySelect.options.length=0;
+
+		var type = "${evaluLib.evalSelectType}";
+		var typeSelect = $("#evalSelectType")[0];
+		typeSelect.options.length=0;
+
+        //如果编辑表单已选择值,反推一级选中
+        if( type != null && type != ""){
+        	var temp = type.split(',');
+        	if(temp.length == 2){
+				category = temp[0];
+				type = temp[1];
+        	}
+        }
+        if(category == ""){
+            //默认选择项
+        	category = json[0].value;
+        }
+
+		var categoryId = "";
+		for (var i of json) {
+			if (i.pId == "0") {
+				categorySelect.options.add(new Option(i.name, i.value, false, i.value == category));
+				if(i.value == category){
+					categoryId = i.id;
+				}
+			} else if (i.pId != "0"&& i.pId == categoryId ) {
+				typeSelect.options.add(new Option(i.name, i.value, false, i.value == type));
+			}
+		}
+	}
+});
+
+
+function categoryChg() {
+	var category = $('#evalSelectType1 option:selected').val();
+
+	var typeSelect = $("#evalSelectType")[0];
+	typeSelect.options.length=0;
+
+	for (var i of purchaseTypeJson) {
+		if (i.pid != "0" && i.value != category && i.value.indexOf(category) == 0 ){
+			typeSelect.options.add(new Option(i.name, i.value));
+		}
 	}
 }
 </script>

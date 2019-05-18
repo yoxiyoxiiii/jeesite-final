@@ -42,7 +42,12 @@
 			<artifactId>jeesite-module-swagger</artifactId>
 			<version>${project.parent.version}</version>
 		</dependency>
-		
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-devtools</artifactId>
+			<optional>true</optional>
+		</dependency>
+
 		<!-- Office在线预览 -->
 <!--		<dependency>-->
 <!--			<groupId>com.jeesite</groupId>-->
@@ -124,7 +129,14 @@
 					<jeeversion>6.0</jeeversion>
 				</configuration>
 			</plugin>
-			
+
+			<plugin>
+				<groupId>org.springframework.boot</groupId>
+				<artifactId>spring-boot-maven-plugin</artifactId>
+				<configuration>
+					<fork>true</fork>
+				</configuration>
+			</plugin>
 		</plugins>
 	</build>
 	

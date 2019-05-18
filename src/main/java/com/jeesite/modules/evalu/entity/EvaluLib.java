@@ -15,7 +15,7 @@ import com.jeesite.common.mybatis.mapper.query.QueryType;
 /**
  * 民主测评明细树表Entity
  * @author sanye
- * @version 2019-05-16
+ * @version 2019-05-17
  */
 @Table(name="biz_evalu_lib", alias="a", columns={
 		@Column(name="tree_code", attrName="treeCode", label="节点编码", isPK=true),
@@ -27,7 +27,7 @@ import com.jeesite.common.mybatis.mapper.query.QueryType;
 		@Column(includeEntity=DataEntity.class),
 	}, orderBy="a.tree_sorts, a.tree_code"
 )
-public class BizEvaluLib extends TreeEntity<BizEvaluLib> {
+public class EvaluLib extends TreeEntity<EvaluLib> {
 	
 	private static final long serialVersionUID = 1L;
 	private String treeCode;		// 节点编码
@@ -36,21 +36,21 @@ public class BizEvaluLib extends TreeEntity<BizEvaluLib> {
 	private Double score;		// 分数权重
 	private String evalSelectType;		// 计分方式
 	
-	public BizEvaluLib() {
+	public EvaluLib() {
 		this(null);
 	}
 
-	public BizEvaluLib(String id){
+	public EvaluLib(String id){
 		super(id);
 	}
 	
 	@Override
-	public BizEvaluLib getParent() {
+	public EvaluLib getParent() {
 		return parent;
 	}
 
 	@Override
-	public void setParent(BizEvaluLib parent) {
+	public void setParent(EvaluLib parent) {
 		this.parent = parent;
 	}
 	

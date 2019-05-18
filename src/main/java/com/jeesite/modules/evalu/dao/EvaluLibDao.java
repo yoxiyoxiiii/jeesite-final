@@ -5,14 +5,14 @@ package com.jeesite.modules.evalu.dao;
 
 import com.jeesite.common.dao.TreeDao;
 import com.jeesite.common.mybatis.annotation.MyBatisDao;
-import com.jeesite.modules.evalu.entity.BizEvaluLib;
+import com.jeesite.modules.evalu.entity.EvaluLib;
 
 /**
  * 民主测评明细树表DAO接口
  * @author sanye
- * @version 2019-05-16
+ * @version 2019-05-17
  */
 @MyBatisDao
-public interface BizEvaluLibDao extends TreeDao<BizEvaluLib> {
+public interface EvaluLibDao extends TreeDao<EvaluLib> {
 	
 }
