@@ -84,24 +84,4 @@ public class EvaluDataController extends BaseController {
 		evaluDataService.save(evaluData);
 		return renderResult(Global.TRUE, text("保存民主测评记录成功！"));
 	}
-
-
-
-	/**
-	 * 评测表单
-	 */
-	@RequestMapping(value = "reportTable")
-	public String reportTable(EvaluData evaluData, Model model) {
-		model.addAttribute("evaluData", evaluData);
-		return "modules/evalu/evaluDataTable";
-	}
-
-	/**
-	 * 对比评测表格
-	 */
-	@RequestMapping(value = "reportGrid")
-	public String reportGrid(EvaluData evaluData, Model model) {
-		model.addAttribute("evaluData", evaluData);
-		return "modules/evalu/evaluDataGrid";
-	}
 }

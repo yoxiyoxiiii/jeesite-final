@@ -25,6 +25,9 @@ import com.jeesite.common.web.BaseController;
 import com.jeesite.modules.evalu.entity.EvaluLib;
 import com.jeesite.modules.evalu.service.EvaluLibService;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
 /**
  * 民主测评明细树表Controller
  * @author sanye
@@ -193,5 +196,61 @@ public class EvaluLibController extends BaseController {
 		evaluLibService.fixTreeData();
 		return renderResult(Global.TRUE, "数据修复成功");
 	}
-	
+
+
+	/**
+	 * 独立评价表
+	 */
+	@RequestMapping(value = {"reportTable/{evaluId}", ""})
+	public String reportTable(@PathVariable String evaluId, EvaluLib evaluLib, Model model) {
+		Evalu evalu = evaluService.get(evaluId);
+		model.addAttribute("evaluLib", evaluLib);
+		model.addAttribute("evalu",evalu);
+		return "modules/evalu/evaluDataTable";
+	}
+
+	/**
+	 * 对比评测表格
+	 */
+	@RequestMapping(value = "reportGrid/{evaluId}")
+	public String reportGrid(@PathVariable String evaluId, EvaluLib evaluLib, Model model) {
+		Evalu evalu = evaluService.get(evaluId);
+		String columns = "";
+		model.addAttribute("evaluLib", evaluLib);
+		model.addAttribute("evalu",evalu);
+		model.addAttribute("columns",columns);
+		return "modules/evalu/evaluDataGrid";
+	}
+
+
+	/**
+	 * 查询列表数据
+	 */
+	/**
+	 * 查询列表数据
+	 */
+	@RequiresPermissions("evalu:evaluLib:view")
+	@RequestMapping(value = "listDataReport")
+	@ResponseBody
+	public List<EvaluLib> listDataReport(EvaluLib evaluLib, HttpServletRequest request, HttpServletResponse response) {
+		if (StringUtils.isBlank(evaluLib.getParentCode())) {
+			evaluLib.setParentCode(EvaluLib.ROOT_CODE);
+		}
+		if (StringUtils.isNotBlank(evaluLib.getTreeName())){
+			evaluLib.setParentCode(null);
+		}
+		if (StringUtils.isNotBlank(evaluLib.getEvaluId())){
+			evaluLib.setParentCode(null);
+		}
+		if (StringUtils.isNotBlank(evaluLib.getRemarks())){
+			evaluLib.setParentCode(null);
+		}
+		List<EvaluLib> list = evaluLibService.findList(evaluLib);
+
+		//获取部门信息
+		String deptId = request.getParameter("deptId");
+		//加载已有数据
+		return list;
+	}
+
 }

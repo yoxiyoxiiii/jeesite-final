@@ -1,7 +1,175 @@
 <% layout('/layouts/default.html', {title: '民主测评明细树表管理', libs: ['validate']}){ %>
+<style>
+
+	.box-body label{font-weight: normal;}
+	.box-body .row{padding-left:40px;}
+	.box-body .row>div{padding:10px 0; border-bottom: 1px dotted #eee;}
+</style>
 <div class="main-content">
 	<div class="box box-main">
-
-	</div>
+		<div class="box-header with-border">
+			<div class="box-title">
+				<i class="fa fa-list-alt"></i> ${evalu.title}- ${text('民主测评单')}(参评部门)
+			</div>
+			<div class="box-tools pull-right">
+				<button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
+			</div>
+		</div>
+		<#form:form id="inputForm" model="${evaluLib}" action="${ctx}/evalu/evaluLib/save" method="post" class="form-horizontal">
+		<div class="box-body">
+			<div class="form-unit">${text('基本信息')}</div>
+			<div class="row">
+				<div class="col-xs-12">
+					<div class="form-group">
+						<label class="col-sm-7">
+							${text('1')}：Spring Boot提高开发者的开发效率，无需手动重启SpringBoot应用。虽然平时开发web项目过程中.(3分)</label>
+						</label>
+						<div class="col-sm-5">
+							<#form:radio path="testRadio" dictType="eval_two_qualified" class="form-control" />
+						</div>
+					</div>
+				</div>
+				<div class="col-xs-12">
+					<div class="form-group">
+						<label class="col-sm-7">
+							${text('2')}：Spring Boot提供了一个名为spring-boot-devtools的模块来使应用支持热部署，提高开发者的开发效率，无需手动重启Spring
+							Boot应用。虽然平时开发web项目过程中.(3分)</label>
+						</label>
+						<div class="col-sm-5">
+							<#form:radio path="testRadio3" dictType="eval_three_good" class="form-control" />
+						</div>
+					</div>
+				</div>
+				<div class="col-xs-12">
+					<div class="form-group">
+						<label class="col-sm-7">
+							${text('3')}：提供了一个名为spring-boot-devtools的模块来使应用支持热部署，提高开发者的开发效率，无需手动重启Spring
+							Boot应用。虽然平时开发web项目过程中.(3分)</label>
+						</label>
+						<div class="col-sm-5">
+							<#form:radio path="testRadio2" dictType="eval_five_star" class="form-control" />
+						</div>
+					</div>
+				</div>
+				<div class="col-xs-12">
+					<div class="form-group">
+						<label class="col-sm-7">
+							${text('4')}：模块来使应用支持热部署，提高开发者的开发效率，无需手动重启Spring
+							Boot应用。虽然平时开发web项目过程中.(3分)</label>
+						</label>
+						<div class="col-sm-5">
+							<#form:radio path="testRadio1" dictType="eval_four_best" class="form-control" />
+						</div>
+					</div>
+				</div>
+				<div class="col-xs-12">
+					<div class="form-group">
+						<label class="col-sm-7">
+							${text('5')}：名为spring-boot-devtools的模块来使应用支持热部署，提高开发者的开发效率，无需手动重启Spring
+							Boot应用。虽然平时开发web项目过程中.(3分)</label>
+						</label>
+						<div class="col-sm-5">
+							<#form:input path="testInput5" maxlength="100" class="form-control"/>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="form-unit">${text('爱岗敬业')}</div>
+			<div class="row">
+				<div class="col-xs-12">
+					<div class="form-group">
+						<label class="col-sm-7">
+							${text('1')}：Spring Boot提高开发者的开发效率，无需手动重启SpringBoot应用。虽然平时开发web项目过程中.(3分)</label>
+						</label>
+						<div class="col-sm-5">
+							<#form:radio path="testRadio" dictType="eval_two_qualified" class="form-control" />
+						</div>
+					</div>
+				</div>
+				<div class="col-xs-12">
+					<div class="form-group">
+						<label class="col-sm-7">
+							${text('2')}：Spring Boot提供了一个名为spring-boot-devtools的模块来使应用支持热部署，提高开发者的开发效率，无需手动重启Spring
+							Boot应用。虽然平时开发web项目过程中.(3分)</label>
+						</label>
+						<div class="col-sm-5">
+							<#form:radio path="testRadio3" dictType="eval_three_good" class="form-control" />
+						</div>
+					</div>
+				</div>
+				<div class="col-xs-12">
+					<div class="form-group">
+						<label class="col-sm-7">
+							${text('3')}：提供了一个名为spring-boot-devtools的模块来使应用支持热部署，提高开发者的开发效率，无需手动重启Spring
+							Boot应用。虽然平时开发web项目过程中.(3分)</label>
+						</label>
+						<div class="col-sm-5">
+							<#form:radio path="testRadio2" dictType="eval_five_star" class="form-control" />
+						</div>
+					</div>
+				</div>
+				<div class="col-xs-12">
+					<div class="form-group">
+						<label class="col-sm-7">
+							${text('4')}：模块来使应用支持热部署，提高开发者的开发效率，无需手动重启Spring
+							Boot应用。虽然平时开发web项目过程中.(3分)</label>
+						</label>
+						<div class="col-sm-5">
+							<#form:radio path="testRadio1" dictType="eval_four_best" class="form-control" />
+						</div>
+					</div>
+				</div>
+				<div class="col-xs-12">
+					<div class="form-group">
+						<label class="col-sm-7">
+							${text('5')}：名为spring-boot-devtools的模块来使应用支持热部署，提高开发者的开发效率，无需手动重启Spring
+							Boot应用。虽然平时开发web项目过程中.(3分)</label>
+						</label>
+						<div class="col-sm-5">
+							<#form:input path="testInput5" maxlength="100" class="form-control"/>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="form-unit">${text('测评意见')}</div>
+			<div class="row">
+				<div class="col-xs-12">
+					<div class="form-group">
+						<label class="control-label col-sm-2" title="">
+							<span class="required hide">*</span> ${text('备注信息')}：<i class="fa icon-question hide"></i></label>
+						<div class="col-sm-10">
+							<#form:textarea path="remarks" rows="4" maxlength="500" class="form-control"/>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="box-footer">
+			<div class="row">
+				<div class="col-sm-offset-2 col-sm-10">
+					<% if (hasPermi('evalu:evaluData:edit')){ %>
+					<button type="submit" class="btn btn-sm btn-primary" id="btnSubmit"><i class="fa fa-check"></i> ${text('保 存')}</button>&nbsp;
+					<% } %>
+					<button type="button" class="btn btn-sm btn-default" id="btnCancel" onclick="js.closeCurrentTabPage()"><i class="fa fa-reply-all"></i> ${text('关 闭')}</button>
+				</div>
+			</div>
+		</div>
+	</#form:form>
+</div>
 </div>
 <% } %>
+
+<script>
+
+var purchaseTypeJson;
+$.ajax({
+	type:"POST",
+	url:"${ctx}/evalu/evaluLib/listDataReport?evaluId=${evalu.id}&deptId=11111",
+	dataType:"json",
+	success: function(json){
+
+	}
+});
+
+</script>
+
