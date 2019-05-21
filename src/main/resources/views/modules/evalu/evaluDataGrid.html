@@ -7,7 +7,7 @@
 			</div>
 		</div>
 		<div class="box-body">
-			<#form:form id="searchForm" model="${evaluLib}" action="${ctx}/evalu/evaluLib/listData" method="post" class="form-inline hide"
+			<#form:form id="searchForm" model="${evaluLib}" action="${ctx}/evalu/evaluLib/listDataReport" method="post" class="form-inline hide"
 			data-page-no="${parameter.pageNo}" data-page-size="${parameter.pageSize}" data-order-by="${parameter.orderBy}">
 			<div class="form-group">
 				<label class="control-label">评议部门：</label>
@@ -120,7 +120,7 @@ var groupHeaders = {};
 //动态列格式化
 function columnFormat(cols){
 	var formatCols = [];
-	formatCols.push({header:'评议部门', name:'depatId', frozen:true});
+	formatCols.push({header:'评议部门', name:'officeName', frozen:true});
 	//return [{header:'评议部门'},{header:'评议部门2'}];
 	
 	var maxLevel = 0;
@@ -160,7 +160,7 @@ function columnFormat(cols){
 	}
 	return formatCols;
 }
-//sanye todo:需要动态加载列
+//sanye 动态加载列
 function searchParent(cols, parentCode){
 	var nodeId = [];
 	var code = parentCode.split(",");
@@ -181,29 +181,56 @@ function searchParent(cols, parentCode){
 	});
 	return nodeId;
 }
+
 //加载列数据
 var libColumns = null;
 $.ajax({
 	type:"POST",
 	async: false,
-	url:"${ctx}/evalu/evaluLib/listData?evaluId=1129354199752642560",
+	url:"${ctx}/evalu/evaluLib/listData?evaluId=${evalu.id}",
 	dataType:"json",
 	success: function(json){
 		libColumns = json;
 	}});
 
-
 var columnModelJson = columnFormat(libColumns);
+
+//加载部门及数据
+function rowFormat(depats){
+	for(var n=0 ; n< depats.length; n++){
+		$(libColumns).each(function(index, col){
+			eval("depats[n]." + col.treeCode + "='" + col.evalSelectType +"';");
+			depats[n].formatter = function(val, obj, row, act){
+				return "ssss";
+				};
+		});
+	}	
+	return depats;
+}
+
+var depats = null;
+$.ajax({
+	type:"POST",
+	async: false,
+	url:"${ctx}/evalu/evalu/offices?inParam=SJ15,SJ14,SJ13",
+	dataType:"json",
+	success: function(json){
+		depats = json;
+}});
+var rowJson = rowFormat(depats);
+//渲染操作框
 
 
 // 初始化DataGrid对象
 $('#dataGrid').dataGrid({
-	searchForm: $("#searchForm"),
+	// searchForm: $("#searchForm"),
+	data: rowJson,
+    datatype: "local",
 	columnModel: columnModelJson,
 
 	frozenCols: true, 	// 启用冻结列，并在colModel中设置frozen:true
 	showRownum: true,	// 是否显示行号，默认true
-	showFooter: true,	// 是否显示底部合计行，数据载入详见 ajaxSuccess
+	showFooter: false,	// 是否显示底部合计行，数据载入详见 ajaxSuccess
 	
 	// 设置多级表头
 	groupHeaders: groupHeaders,
@@ -215,11 +242,11 @@ $('#dataGrid').dataGrid({
 		// showFooter: true, // 是否显示底部合计行
 		// 第 1 种方法：请求完成之后通过js设置，举例如下：
 		// 设置底部合计行数据（设置合计行）
-		$('#dataGrid').dataGrid("footerData", "set", {
-			"testInput" : "<center><em>合计：</em></center>",
-			"testTextarea" : "<em>" + data.count + "</em>个",
-			"id": "<em>￥900,000,000.00 &nbsp;</em>"
-		}, false);
+		// $('#dataGrid').dataGrid("footerData", "set", {
+		// 	"testInput" : "<center><em>合计：</em></center>",
+		// 	"testTextarea" : "<em>" + data.count + "</em>个",
+		// 	"id": "<em>￥900,000,000.00 &nbsp;</em>"
+		// }, false);
 		// 第 2 种方法：在返回结果集中设置 otherData属性，举例格式如下：
 		/* {"pageNo":1, "pageSize":30, "list":[返回结果集数据],
 			"otherData":{
@@ -236,5 +263,10 @@ $('#dataGrid').dataGrid({
     },
 });
 
-
+function colFormat(val, obj, row, act){
+	return 'dddddd<a href="#" class="btnList" onClick="evalu(\''+ row.id +'\')">'+val+'</a>';
+}
+function evalu(id){
+	console.log(id);
+}
 </script>

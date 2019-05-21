@@ -4,7 +4,11 @@
 package com.jeesite.modules.evalu.service;
 
 import java.util.List;
+import java.util.Map;
 
+import com.jeesite.common.collect.MapUtils;
+import com.jeesite.modules.sys.entity.Office;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -35,7 +39,6 @@ public class EvaluService extends CrudService<EvaluDao, Evalu> {
 	/**
 	 * 查询分页数据
 	 * @param evalu 查询条件
-	 * @param evalu.page 分页对象
 	 * @return
 	 */
 	@Override
@@ -72,5 +75,23 @@ public class EvaluService extends CrudService<EvaluDao, Evalu> {
 	public void delete(Evalu evalu) {
 		super.delete(evalu);
 	}
-	
+
+
+	public List<Office> findOfficeIn(Office office, String params) {
+		String[] inStrings = params.split(",");
+		Map<String, Object> ps = MapUtils.newHashMap();
+		ps.put("officeCode", inStrings);
+		List<Office> result = dao.findByIn(ps);
+		return result;
+
+		//		// 演示Map参数和返回值，支持分页
+		/*Page<Map<String, Object>> pageMap = new Page<>();
+		Map<String, Object> ps = MapUtils.newHashMap();
+		ps.put("officeCode", inStrings);
+		ps.put("page", pageMap);
+		pageMap.setList(dao.findListForMap(ps));
+		System.out.println(pageMap.getList());
+		System.out.println(pageMap.getCount());
+		return null;*/
+	}
 }

@@ -6,6 +6,7 @@ package com.jeesite.modules.evalu.web;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.jeesite.modules.sys.entity.Office;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -21,6 +22,8 @@ import com.jeesite.common.entity.Page;
 import com.jeesite.common.web.BaseController;
 import com.jeesite.modules.evalu.entity.Evalu;
 import com.jeesite.modules.evalu.service.EvaluService;
+
+import java.util.List;
 
 /**
  * 民主测评Controller
@@ -119,5 +122,16 @@ public class EvaluController extends BaseController {
 		evaluService.delete(evalu);
 		return renderResult(Global.TRUE, text("删除民主测评成功！"));
 	}
-	
+
+
+	/**
+	 * 获取单位列表
+	 */
+	@RequiresPermissions("evalu:evalu:edit")
+	@RequestMapping(value = "offices")
+	@ResponseBody
+	public List<Office> offices(Office office, String inParam) {
+		return evaluService.findOfficeIn(office, inParam);
+		//return renderResult(Global.TRUE, text("删除民主测评成功！"));
+	}
 }
