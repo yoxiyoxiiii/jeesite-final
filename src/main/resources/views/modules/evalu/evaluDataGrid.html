@@ -199,10 +199,7 @@ var columnModelJson = columnFormat(libColumns);
 function rowFormat(depats){
 	for(var n=0 ; n< depats.length; n++){
 		$(libColumns).each(function(index, col){
-			eval("depats[n]." + col.treeCode + "='" + col.evalSelectType +"';");
-			depats[n].formatter = function(val, obj, row, act){
-				return "ssss";
-				};
+			eval("depats[n]." + col.treeCode + "='" + col.evalSelectType +"';");			
 		});
 	}	
 	return depats;
@@ -263,8 +260,14 @@ $('#dataGrid').dataGrid({
     },
 });
 
+//动态绑定col事件
+$(libColumns).each(function(index, col){
+	$('#dataGrid').setColProp(col.treeCode,{formatter:colFormat});
+});
+$('#dataGrid').trigger('reloadGrid');
+
 function colFormat(val, obj, row, act){
-	return 'dddddd<a href="#" class="btnList" onClick="evalu(\''+ row.id +'\')">'+val+'</a>';
+	return 'dddddd<a class="btnList" onClick="evalu(\''+ row.id +'\')">'+val+'</a>';
 }
 function evalu(id){
 	console.log(id);
