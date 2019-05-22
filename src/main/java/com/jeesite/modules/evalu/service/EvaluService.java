@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.jeesite.common.collect.MapUtils;
+import com.jeesite.modules.evalu.entity.EvaluData;
 import com.jeesite.modules.sys.entity.Office;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
@@ -94,4 +95,16 @@ public class EvaluService extends CrudService<EvaluDao, Evalu> {
 		System.out.println(pageMap.getCount());
 		return null;*/
 	}
+
+	/**
+	 * 获取制定评议表中所有单位各项指标或特定部门各项指标值
+	 * @param params
+	 * @return
+	 */
+	public List<EvaluData> findGrid(String evaluId, String deptId) {
+		Map<String, Object> ps = MapUtils.newHashMap();
+		ps.put("evaluId", evaluId);
+		ps.put("deptId", deptId);
+		List<EvaluData> result = dao.findGrid(ps);
+		return result;
 }

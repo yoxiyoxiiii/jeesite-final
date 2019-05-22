@@ -195,11 +195,23 @@ $.ajax({
 
 var columnModelJson = columnFormat(libColumns);
 
+//加载测评数据记录
+var evaluData = null;
+$.ajax({
+	type:"POST",
+	async: false,
+	url:"${ctx}/evalu/evalu/evaluData?evaluId=${evalu.id}&deptId=",
+	dataType:"json",
+	success: function(json){
+		evaluData = json;
+	}});
+
 //加载部门及数据
 function rowFormat(depats){
 	for(var n=0 ; n< depats.length; n++){
 		$(libColumns).each(function(index, col){
-			eval("depats[n]." + col.treeCode + "='" + col.evalSelectType +"';");			
+			//todo:获取evaludata值			
+			eval("depats[n]." + col.treeCode + "=' ';");			
 		});
 	}	
 	return depats;
@@ -267,9 +279,16 @@ $(libColumns).each(function(index, col){
 $('#dataGrid').trigger('reloadGrid');
 
 function colFormat(val, obj, row, act){
-	return 'dddddd<a class="btnList" onClick="evalu(\''+ row.id +'\')">'+val+'</a>';
+	return '<div id="ev_'+ obj.irow +"_" + obj.pos 
+	+'" class="btnList col-md-12 " onClick="evalu(\''
+	+ val +'\',\''+ obj.colModel.header +'\',\''
+	+ row.officeName +'\',\''+  obj.irow +'\',\''+ obj.pos +'\')">'+ val +'</div>';
 }
-function evalu(id){
-	console.log(id);
+function evalu(val, header, officeName, irow, pos){
+
+	event.returnValue=false;
+	console.log(val);
+	console.log(officeName);
+	return false;
 }
 </script>

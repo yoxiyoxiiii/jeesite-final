@@ -6,6 +6,7 @@ package com.jeesite.modules.evalu.dao;
 import com.jeesite.common.dao.CrudDao;
 import com.jeesite.common.mybatis.annotation.MyBatisDao;
 import com.jeesite.modules.evalu.entity.Evalu;
+import com.jeesite.modules.evalu.entity.EvaluData;
 import com.jeesite.modules.sys.entity.Office;
 
 import java.util.List;
@@ -18,11 +19,9 @@ import java.util.Map;
  */
 @MyBatisDao
 public interface EvaluDao extends CrudDao<Evalu> {
-
-
-    /**
-     * 演示Map参数和返回值，支持分页
-     */
     public List<Office> findByIn(Map<String, Object> params);
     public List<Map<String, Object>> findListForMap(Map<String, Object> params);
+
+    //获取对比表单
+    public List<EvaluData> findGrid(Map<String, Object> params);
 }

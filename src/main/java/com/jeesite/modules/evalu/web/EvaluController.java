@@ -6,6 +6,7 @@ package com.jeesite.modules.evalu.web;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.jeesite.modules.evalu.entity.EvaluData;
 import com.jeesite.modules.sys.entity.Office;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -133,5 +134,15 @@ public class EvaluController extends BaseController {
 	public List<Office> offices(Office office, String inParam) {
 		return evaluService.findOfficeIn(office, inParam);
 		//return renderResult(Global.TRUE, text("删除民主测评成功！"));
+	}
+
+
+	/**
+	 * 获取单位列表
+	 */
+	@RequestMapping(value = "evaluData")
+	@ResponseBody
+	public List<EvaluData> offices(String evaluId, String deptId) {
+		return evaluService.findGrid(evaluId, deptId);
 	}
 }
