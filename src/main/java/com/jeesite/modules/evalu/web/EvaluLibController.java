@@ -3,6 +3,7 @@
  */
 package com.jeesite.modules.evalu.web;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -216,9 +217,14 @@ public class EvaluLibController extends BaseController {
 	public String reportGrid(@PathVariable String evaluId, EvaluLib evaluLib, Model model) {
 		Evalu evalu = evaluService.get(evaluId);
 		String columns = "";
+		List<String> temp = new ArrayList<>();
+		temp.add("david");
+		temp.add("sanye");
+		temp.add("screen");
 		model.addAttribute("evaluLib", evaluLib);
 		model.addAttribute("evalu",evalu);
 		model.addAttribute("columns",columns);
+		model.addAttribute("temp",temp);
 		return "modules/evalu/evaluDataGrid";
 	}
 

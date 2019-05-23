@@ -77,7 +77,6 @@ public class EvaluDataController extends BaseController {
 	/**
 	 * 保存民主测评记录
 	 */
-	@RequiresPermissions("evalu:evaluData:edit")
 	@PostMapping(value = "save")
 	@ResponseBody
 	public String save(@Validated EvaluData evaluData) {

@@ -26,9 +26,10 @@ import com.jeesite.modules.evalu.dao.EvaluDao;
 @Service
 @Transactional(readOnly=true)
 public class EvaluService extends CrudService<EvaluDao, Evalu> {
-	
+
 	/**
 	 * 获取单条数据
+	 *
 	 * @param evalu
 	 * @return
 	 */
@@ -36,9 +37,10 @@ public class EvaluService extends CrudService<EvaluDao, Evalu> {
 	public Evalu get(Evalu evalu) {
 		return super.get(evalu);
 	}
-	
+
 	/**
 	 * 查询分页数据
+	 *
 	 * @param evalu 查询条件
 	 * @return
 	 */
@@ -46,33 +48,36 @@ public class EvaluService extends CrudService<EvaluDao, Evalu> {
 	public Page<Evalu> findPage(Evalu evalu) {
 		return super.findPage(evalu);
 	}
-	
+
 	/**
 	 * 保存数据（插入或更新）
+	 *
 	 * @param evalu
 	 */
 	@Override
-	@Transactional(readOnly=false)
+	@Transactional(readOnly = false)
 	public void save(Evalu evalu) {
 		super.save(evalu);
 	}
-	
+
 	/**
 	 * 更新状态
+	 *
 	 * @param evalu
 	 */
 	@Override
-	@Transactional(readOnly=false)
+	@Transactional(readOnly = false)
 	public void updateStatus(Evalu evalu) {
 		super.updateStatus(evalu);
 	}
-	
+
 	/**
 	 * 删除数据
+	 *
 	 * @param evalu
 	 */
 	@Override
-	@Transactional(readOnly=false)
+	@Transactional(readOnly = false)
 	public void delete(Evalu evalu) {
 		super.delete(evalu);
 	}
@@ -98,7 +103,8 @@ public class EvaluService extends CrudService<EvaluDao, Evalu> {
 
 	/**
 	 * 获取制定评议表中所有单位各项指标或特定部门各项指标值
-	 * @param params
+	 *
+	 * @param evaluId
 	 * @return
 	 */
 	public List<EvaluData> findGrid(String evaluId, String deptId) {
@@ -107,4 +113,5 @@ public class EvaluService extends CrudService<EvaluDao, Evalu> {
 		ps.put("deptId", deptId);
 		List<EvaluData> result = dao.findGrid(ps);
 		return result;
+	}
 }
