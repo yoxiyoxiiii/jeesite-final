@@ -32,7 +32,7 @@ server:
   tomcat:
     uri-encoding: UTF-8
 
-    
+#debug: true
 #======================================#
 #========== Database sttings ==========#
 #======================================#
@@ -94,6 +94,12 @@ spring:
           threadPriority: 5
           threadsInheritContextClassLoaderOfInitializingThread: true
     job-store-type: jdbc
+  devtools:
+    restart:
+      enabled: true  #设置开启热部署
+  freemarker:
+      cache: false    #页面不加载缓存，修改即时生效
+
     #初始化表结构
 #    jdbc:
 #      initialize-schema: never
@@ -506,10 +512,5 @@ msg:
 #======================================#
 
 
-debug: true
 
-  devtools:
-    restart:
-      enabled: true  #设置开启热部署
-  freemarker:
-    cache: false    #页面不加载缓存，修改即时生效
+

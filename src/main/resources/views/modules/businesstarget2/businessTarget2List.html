@@ -93,10 +93,10 @@ $('#dataGrid').dataGrid({
          }},
 		// {header:'${text("分类")}', name:'businessTargetType.targetTypeName', index:'targetTypes.type_name', width:150, align:"left"},
 		// {header:'${text("指标内容及细则")}', name:'targetContent', index:'a.target_content', width:150, align:"left"},
-		{header:'${text("设定分值")}', name:'targetScore', index:'a.target_score', width:100, align:"left"},
+		{header:'${text("单位分值")}', name:'targetScore', index:'a.target_score', width:100, align:"left"},
 		{header:'${text("权重")}', name:'targetWeigth', index:'a.target_weigth', width:80, align:"left"},
 		{header:'${text("执行部门")}', name:'executeDepartments.officeName', index:'a.target_execute_dep_id', width:150, align:"left"},
-		{header:'${text("考核周期")}', name:'targetCheckCycle', index:'a.target_check_cycle', width:80, align:"left",  formatter: function(val, obj, row, act){
+		{header:'${text("考核周期")}', name:'targetCheckCycle', index:'a.target_check_cycle', width:100, align:"left",  formatter: function(val, obj, row, act){
 				return js.getDictLabel(${@DictUtils.getDictListJson('target_check_cycle')}, val, '${text("未知")}', true);}
 		},
 		// {header:'${text("考核依据")}', name:'targetCheckBasic', index:'a.target_check_basic', width:150, align:"left"},

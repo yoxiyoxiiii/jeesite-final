@@ -3,14 +3,16 @@
  */
 package com.jeesite.modules.businesstargettypetree.entity;
 
-import javax.validation.constraints.NotBlank;
-import org.hibernate.validator.constraints.Length;
-
 import com.jeesite.common.entity.DataEntity;
 import com.jeesite.common.entity.TreeEntity;
 import com.jeesite.common.mybatis.annotation.Column;
 import com.jeesite.common.mybatis.annotation.Table;
 import com.jeesite.common.mybatis.mapper.query.QueryType;
+import lombok.Getter;
+import lombok.Setter;
+import org.hibernate.validator.constraints.Length;
+
+import javax.validation.constraints.NotBlank;
 
 /**
  * 目标分类Entity
@@ -22,6 +24,7 @@ import com.jeesite.common.mybatis.mapper.query.QueryType;
 		@Column(includeEntity=TreeEntity.class),
 		@Column(name="target_type_name", attrName="targetTypeName", label="节点名称", queryType=QueryType.LIKE, isTreeName=true),
 		@Column(includeEntity=DataEntity.class),
+		@Column(name = "target_type_score", attrName = "targetTypeScore", label = "分值")
 	}, orderBy="a.tree_sorts, a.target_type_code"
 )
 public class BusinessTargetTypeTree extends TreeEntity<BusinessTargetTypeTree> {
@@ -29,6 +32,9 @@ public class BusinessTargetTypeTree extends TreeEntity<BusinessTargetTypeTree> {
 	private static final long serialVersionUID = 1L;
 	private String targetTypeCode;		// 节点编码
 	private String targetTypeName;		// 节点名称
+	@Setter
+	@Getter
+	private Integer targetTypeScore;    //分值
 	
 	public BusinessTargetTypeTree() {
 		this(null);

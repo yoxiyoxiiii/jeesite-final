@@ -1,9 +1,9 @@
-<% layout('/layouts/default.html', {title: '目标分类管理', libs: ['dataGrid']}){ %>
+<% layout('/layouts/default.html', {title: '指标项管理', libs: ['dataGrid']}){ %>
 <div class="main-content">
 	<div class="box box-main">
 		<div class="box-header">
 			<div class="box-title">
-				<i class="fa fa-list-alt"></i> ${text('目标分类管理')}
+				<i class="fa fa-list-alt"></i> ${text('指标项管理')}
 			</div>
 			<div class="box-tools pull-right">
 				<a href="#" class="btn btn-default" id="btnSearch" title="${text('查询')}"><i class="fa fa-filter"></i> ${text('查询')}</a>
@@ -56,6 +56,7 @@ $('#dataGrid').dataGrid({
 		}},
 		{header:'${text("本级排序号")}', name:'treeSort', index:'a.tree_sort', width:150, align:"center"},
 		{header:'${text("节点名称")}', name:'targetTypeName', index:'a.target_type_name', width:150, align:"left"},
+		{header:'${text("分值")}', name:'targetTypeScore', index:'a.target_type_score', width:150, align:"left"},
 		{header:'${text("状态")}', name:'status', index:'a.status', width:150, align:"center", formatter: function(val, obj, row, act){
 			return js.getDictLabel(${@DictUtils.getDictListJson('sys_search_status')}, val, '${text("未知")}', true);
 		}},

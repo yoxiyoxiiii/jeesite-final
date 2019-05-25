@@ -3,20 +3,20 @@
  */
 package com.jeesite.modules.businesstarget2.entity;
 
+import com.jeesite.common.collect.ListUtils;
+import com.jeesite.common.entity.DataEntity;
+import com.jeesite.common.mybatis.annotation.Column;
 import com.jeesite.common.mybatis.annotation.JoinTable;
-import com.jeesite.modules.businesstargettype.entity.BusinessTargetType;
+import com.jeesite.common.mybatis.annotation.Table;
+import com.jeesite.common.mybatis.mapper.query.QueryType;
 import com.jeesite.modules.businesstargettypetree.entity.BusinessTargetTypeTree;
 import com.jeesite.modules.sys.entity.Office;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.validator.constraints.Length;
-import java.util.List;
-import com.jeesite.common.collect.ListUtils;
 
-import com.jeesite.common.entity.DataEntity;
-import com.jeesite.common.mybatis.annotation.Column;
-import com.jeesite.common.mybatis.annotation.Table;
-import com.jeesite.common.mybatis.mapper.query.QueryType;
+import java.math.BigDecimal;
+import java.util.List;
 
 /**
  * 指标Entity
@@ -29,6 +29,11 @@ import com.jeesite.common.mybatis.mapper.query.QueryType;
 		@Column(name="target_type_id", attrName="businessTargetType.id", label="关联分类ID"),
 		@Column(name="target_check_cycle", attrName="targetCheckCycle", label="目标考核周期 周、半月、月、季度、半年、年 ，定时任务关联"),
 		@Column(name="target_check_basic", attrName="targetCheckBasic", label="考核依据"),
+		@Column(name="target_content", attrName="targetContent", label="考核细则"),
+		@Column(name="target_score", attrName="targetScore", label="分数"),
+//		@Column(name="target_max_score", attrName="targetMaxScore", label="最高得分"),
+		@Column(name="target_max", attrName="targetMax", label="最高标准"),
+		@Column(name="target_weigth", attrName="targetWeigth", label="权重"),
 		@Column(name="target_attribute", attrName="targetAttribute", label="指标属性 定性、定量"),
 		@Column(name="target_execute_dep_id", attrName="executeDepartments.officeCode", label="目标执行部门"),
 		@Column(name="target_join_dep_id", attrName="jointWorkDepartments.officeCode", label="协同部门"),
@@ -69,7 +74,13 @@ public class BusinessTarget2 extends DataEntity<BusinessTarget2> {
 	private String targetContent;		// 考核内容，考核细则
 	@Getter
 	@Setter
-	private Integer targetScore;		// 分值
+	private BigDecimal targetScore;		// 单位分值
+//	@Getter
+//	@Setter
+//	private BigDecimal targetMaxScore;		// 最高分值
+	@Getter
+	@Setter
+	private BigDecimal targetMax;		// 考核计划最高目标
 	@Getter
 	@Setter
 	private Integer targetWeigth;		// 权重
