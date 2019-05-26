@@ -4,11 +4,18 @@
 package com.jeesite.modules.evalu.web;
 
 import java.util.ArrayList;
+import java.util.Enumeration;
 import java.util.List;
 import java.util.Map;
 
 import com.jeesite.modules.evalu.entity.Evalu;
+import com.jeesite.modules.evalu.entity.EvaluData;
+import com.jeesite.modules.evalu.entity.EvaluOpinion;
+import com.jeesite.modules.evalu.service.EvaluDataService;
+import com.jeesite.modules.evalu.service.EvaluOpinionService;
 import com.jeesite.modules.evalu.service.EvaluService;
+import com.jeesite.modules.sys.entity.Office;
+import com.jeesite.modules.sys.service.OfficeService;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -42,6 +49,12 @@ public class EvaluLibController extends BaseController {
 	private EvaluLibService evaluLibService;
 	@Autowired
 	private EvaluService evaluService;
+	@Autowired
+	private OfficeService officeService;
+	@Autowired
+	private EvaluDataService evaluDataService;
+	@Autowired
+	private EvaluOpinionService evaluOpinionService;
 	/**
 	 * 获取数据
 	 */
@@ -202,11 +215,28 @@ public class EvaluLibController extends BaseController {
 	/**
 	 * 独立评价表
 	 */
-	@RequestMapping(value = {"reportTable/{evaluId}", ""})
-	public String reportTable(@PathVariable String evaluId, EvaluLib evaluLib, Model model) {
+	@RequestMapping(value = {"reportTable/{evaluId}/{depatId}", ""})
+	public String reportTable(@PathVariable String evaluId, @PathVariable String depatId, EvaluLib evaluLib, Model model) {
+		//todo:需要权限判断
 		Evalu evalu = evaluService.get(evaluId);
-		model.addAttribute("evaluLib", evaluLib);
+		evaluLib.setEvaluId(evaluId);
+		List<EvaluLib> listEvaluLib = this.listData(evaluLib);
+		for(int i=0; i<listEvaluLib.size(); i++){
+			EvaluLib lib = listEvaluLib.get(i);
+			if( listEvaluLib.get(i).getIsTreeLeaf()){
+				String temType[] = lib.getEvalSelectType().split(",");
+				listEvaluLib.get(i).setEvalSelectType(temType[temType.length-1]);
+			}
+		}
+
+		//评测数据
+
+		//测评单位
+		Office office = officeService.get(depatId);
+		model.addAttribute("listEvaluLib", listEvaluLib);
 		model.addAttribute("evalu",evalu);
+		model.addAttribute("user",UserUtils.getUser());
+		model.addAttribute("office", office);
 		return "modules/evalu/evaluDataTable";
 	}
 
@@ -216,15 +246,20 @@ public class EvaluLibController extends BaseController {
 	@RequestMapping(value = "reportGrid/{evaluId}")
 	public String reportGrid(@PathVariable String evaluId, EvaluLib evaluLib, Model model) {
 		Evalu evalu = evaluService.get(evaluId);
-		String columns = "";
-		List<String> temp = new ArrayList<>();
-		temp.add("david");
-		temp.add("sanye");
-		temp.add("screen");
+		evaluLib.setEvaluId(evaluId);
+		List<EvaluLib> listEvaluLib = this.listData(evaluLib);
+		for(int i=0; i<listEvaluLib.size(); i++){
+			EvaluLib lib = listEvaluLib.get(i);
+			if( listEvaluLib.get(i).getIsTreeLeaf()){
+				String temType[] = lib.getEvalSelectType().split(",");
+				listEvaluLib.get(i).setEvalSelectType(temType[temType.length-1]);
+			}
+		}
+
 		model.addAttribute("evaluLib", evaluLib);
+		model.addAttribute("listEvaluLib",listEvaluLib);
 		model.addAttribute("evalu",evalu);
-		model.addAttribute("columns",columns);
-		model.addAttribute("temp",temp);
+//		model.addAttribute("columns",columns);
 		return "modules/evalu/evaluDataGrid";
 	}
 
@@ -259,4 +294,35 @@ public class EvaluLibController extends BaseController {
 		return list;
 	}
 
+	/**
+	 * 保存民主测评明细树表
+	 */
+	@PostMapping(value = "saveData")
+	@ResponseBody
+	public String saveData(HttpServletRequest request, HttpServletResponse response) {
+		String deptId = request.getParameter("deptId");
+		String evaluId = request.getParameter("evaluId");
+		Enumeration pNames=request.getParameterNames();
+		while(pNames.hasMoreElements()){
+			String name=(String)pNames.nextElement();
+			String value=request.getParameter(name);
+			if( !name.equals("deptId") && !name.equals("remarks") && !name.equals("evaluId")){
+				EvaluData evaluData = new EvaluData();
+				evaluData.setDeptId(deptId);
+				evaluData.setEvaluLibId(name);
+				evaluData.setScore(value);
+				evaluDataService.save(evaluData);
+			}
+
+			if(name.equals("remarks")){
+				//保存评价意见
+				EvaluOpinion evaluOpinion = new EvaluOpinion();
+				evaluOpinion.setDeptId(deptId);
+				evaluOpinion.setEvaluId(evaluId);
+				evaluOpinion.setOpinion(value);
+				evaluOpinionService.save(evaluOpinion);
+			}
+		}
+		return renderResult(Global.TRUE, text("保存民主测评明细树表成功！"));
+	}
 }

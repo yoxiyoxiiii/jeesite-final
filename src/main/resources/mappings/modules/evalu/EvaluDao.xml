@@ -47,10 +47,10 @@
 	<select id="findGrid" resultType="EvaluData">
 		select * from biz_evalu_data a
 		where evalu_lib_id in (select tree_code from biz_evalu_lib where evalu_id = #{evaluId})
-		<where>
+
 			<if test="deptId != null and deptId != ''">
 				AND a.dept_id = #{deptId}
 			</if>
-		</where>
+
 	</select>
 </mapper>

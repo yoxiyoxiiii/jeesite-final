@@ -124,11 +124,13 @@
 					单位
 				</h4>
 			</div>
-			<div class="modal-body">
-				<#form:radio path="testRadio2" dictType="eval_five_star" class="form-control" />
-				<%for(col in temp ){%>
-					<li>${col}	</li>
-				<%}%>
+			<div class="modal-body span6">								
+				<%for(evaluLib in listEvaluLib ){%>
+					<%if(evaluLib.treeLeaf=="1"){%>	
+						<li>${evaluLib.treeCode} -- ${evaluLib.evalSelectType}</li>				
+					<#form:radio path="${evaluLib.treeCode}" dictType="${evaluLib.evalSelectType}" class="form-control" />					
+					<%}%>
+				<%}%>				
 			</div>
 			<div class="modal-footer">
 				<button type="button" class="btn btn-default" data-dismiss="modal">确定
@@ -236,8 +238,9 @@ $.ajax({
 function rowFormat(depats){
 	for(var n=0 ; n< depats.length; n++){
 		$(libColumns).each(function(index, col){
-			//todo:获取evaludata值			
-			eval("depats[n]." + col.treeCode + "=' ';");			
+			//todo:获取evaludata值
+			var score = valTranslate(depats[n].id, col.treeCode);			
+			eval("depats[n]." + col.treeCode + "= score;");			
 		});
 	}	
 	return depats;
@@ -266,7 +269,8 @@ $('#dataGrid').dataGrid({
 	frozenCols: true, 	// 启用冻结列，并在colModel中设置frozen:true
 	showRownum: true,	// 是否显示行号，默认true
 	showFooter: false,	// 是否显示底部合计行，数据载入详见 ajaxSuccess
-	
+	sortable: false,
+	viewsortcols:[false,'horizontal',false],
 	// 设置多级表头
 	groupHeaders: groupHeaders,
 	
@@ -306,9 +310,9 @@ $('#dataGrid').trigger('reloadGrid');
 
 function colFormat(val, obj, row, act){
 	var format =  '<div id="ev_'+ obj.irow +'_' + obj.pos
-	+ '" class="col-md-12 " onClick="evalu(\''
+	+ '" class="col-md-12 " style="height:100%;" onClick="evalu(\''
 	+ val +'\',\''+ obj.colModel.header +'\',\''
-	+ row.officeName +'\',\''+  obj.irow +'\',\''+ obj.pos +'\')">'
+	+ row.officeName +'\','+  obj.irow +','+ obj.pos +')">'
 	+ (val==" "?"&nbsp;":val)
 			+'</div>';
 	return format;
@@ -316,21 +320,31 @@ function colFormat(val, obj, row, act){
 
 var currentColum = null;
 function evalu(val, header, officeName, irow, pos){
-	console.log(val);
-	console.log(officeName);
 	$("#myModal #myModalLabel").text(officeName +  "_" + header);
 	$('#myModal').modal('show');
-	currentColum ={ irow: irow, pos: pos };
+	currentColum ={ irow: irow, pos: posTranslate(pos-1), posCol: pos };
+	$(".modal-body").children().hide();
+
+	//清空值, 显示当前列	
+	var evaluLib = libColumns[currentColum.pos-1].treeCode;
+	$(".modal-body").find("#" + evaluLib).find("input[type=radio]").removeAttr("checked");
+	$(".modal-body").find("#" + evaluLib + ">label>div").removeClass("checked");
+
+	$(".modal-body").find("#" + evaluLib).show();
 }
 
-$(function () { $('#myModal').on('hide.bs.modal', function () {
-	var temp =  $("input[name=testRadio2]").val();
-	saveEvaluData(temp);
+$(function () { $('#myModal').on('hide.bs.modal', function () {	
+	saveEvaluData();
 	})
 });
 
 
-function saveEvaluData(val){
+function saveEvaluData(){	
+	var evaluLib = libColumns[currentColum.pos-1].treeCode;	
+	var checkRadio = $(".modal-body").find("#" + evaluLib).find("input:checked");
+
+	var checkValue =  $(checkRadio).val();
+	var title = $(checkRadio).parent().parent().text();
 	//读取选择的值
 	var  deptId = depats[currentColum.irow-1].id;
 	var evaluLibId = libColumns[currentColum.pos-1].id;
@@ -338,7 +352,7 @@ function saveEvaluData(val){
 	$.ajax({
 		type:"POST",
 		url:"${ctx}/evalu/evaluData/save",
-		data: {evaluLibId:evaluLibId , deptId:deptId, score:val},
+		data: {evaluLibId:evaluLibId , deptId:deptId, score:checkValue},
 		dataType:"json",
 		success: function(json){
 			if(json.result == false){
@@ -346,5 +360,34 @@ function saveEvaluData(val){
 			}
 		}});
 	//回显Grid
+	if(title == null || title == ""){title = "&nbs;"}
+	$("#ev_"+ currentColum.irow +"_" + currentColum.posCol).text(title);
+
+}
+
+function posTranslate(pos){
+	var curentPos = 0;
+	for(var i=0; i< libColumns.length; i++){
+		if(pos == curentPos){
+			break;
+		}
+		if( libColumns[i].isTreeLeaf == "0"){
+			continue;
+		}else{
+			curentPos++;
+		}		
+	}
+	return i;
+}
+
+function valTranslate(deptId, evaluLibId){
+	var score = " ";
+	$(evaluData).each(function(index, item){
+		if( item.deptId == deptId && item.evaluLibId == evaluLibId){
+			score = item.score;
+			return score;
+		}
+	});	
+	return score;
 }
 </script>

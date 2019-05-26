@@ -10,7 +10,7 @@ import com.jeesite.modules.evalu.entity.EvaluData;
 /**
  * 民主测评记录DAO接口
  * @author sanye
- * @version 2019-05-16
+ * @version 2019-05-24
  */
 @MyBatisDao
 public interface EvaluDataDao extends CrudDao<EvaluData> {

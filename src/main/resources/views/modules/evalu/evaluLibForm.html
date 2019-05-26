@@ -175,6 +175,11 @@ $.ajax({
 		for (var i of json) {
 			if (i.pId == "0") {
 				categorySelect.options.add(new Option(i.name, i.value, false, i.value == category));
+				//缓存id{
+				if(categorySelect.options.length>0){
+					$(categorySelect.options[categorySelect.options.length -1]).attr("data-id", i.id);
+				}
+				
 				if(i.value == category){
 					categoryId = i.id;
 				}
@@ -187,13 +192,13 @@ $.ajax({
 
 
 function categoryChg() {
-	var category = $('#evalSelectType1 option:selected').val();
+	var category = $('#evalSelectType1 option:selected').attr("data-id");
 
 	var typeSelect = $("#evalSelectType")[0];
 	typeSelect.options.length=0;
 
 	for (var i of purchaseTypeJson) {
-		if (i.pid != "0" && i.value != category && i.value.indexOf(category) == 0 ){
+		if (i.pId != "0" && i.pId  == category ){
 			typeSelect.options.add(new Option(i.name, i.value));
 		}
 	}

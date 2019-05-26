@@ -16,7 +16,7 @@ import com.jeesite.modules.evalu.dao.EvaluDataDao;
 /**
  * 民主测评记录Service
  * @author sanye
- * @version 2019-05-16
+ * @version 2019-05-24
  */
 @Service
 @Transactional(readOnly=true)
@@ -50,6 +50,18 @@ public class EvaluDataService extends CrudService<EvaluDataDao, EvaluData> {
 	@Override
 	@Transactional(readOnly=false)
 	public void save(EvaluData evaluData) {
+
+		//联合主键判断新增\修改
+		EvaluData temp = new EvaluData();
+		temp.setEvaluLibId( evaluData.getEvaluLibId());
+		temp.setDeptId( evaluData.getDeptId());
+
+		EvaluData tempSearch = super.get(temp);
+		if( tempSearch == null ){
+			evaluData.setIsNewRecord(true);
+		}else{
+			evaluData.setIsNewRecord(false);
+		}
 		super.save(evaluData);
 	}
 	

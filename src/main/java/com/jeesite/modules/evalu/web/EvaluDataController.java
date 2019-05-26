@@ -25,7 +25,7 @@ import com.jeesite.modules.evalu.service.EvaluDataService;
 /**
  * 民主测评记录Controller
  * @author sanye
- * @version 2019-05-16
+ * @version 2019-05-24
  */
 @Controller
 @RequestMapping(value = "${adminPath}/evalu/evaluData")
@@ -38,8 +38,9 @@ public class EvaluDataController extends BaseController {
 	 * 获取数据
 	 */
 	@ModelAttribute
-	public EvaluData get(String id, boolean isNewRecord) {
-		return evaluDataService.get(id, isNewRecord);
+	public EvaluData get(String evaluLibId, String deptId, boolean isNewRecord) {
+		return evaluDataService.get(new Class<?>[]{String.class, String.class},
+				new Object[]{evaluLibId, deptId}, isNewRecord);
 	}
 	
 	/**
@@ -77,10 +78,23 @@ public class EvaluDataController extends BaseController {
 	/**
 	 * 保存民主测评记录
 	 */
+	@RequiresPermissions("evalu:evaluData:edit")
 	@PostMapping(value = "save")
 	@ResponseBody
 	public String save(@Validated EvaluData evaluData) {
 		evaluDataService.save(evaluData);
 		return renderResult(Global.TRUE, text("保存民主测评记录成功！"));
 	}
+	
+	/**
+	 * 删除民主测评记录
+	 */
+	@RequiresPermissions("evalu:evaluData:edit")
+	@RequestMapping(value = "delete")
+	@ResponseBody
+	public String delete(EvaluData evaluData) {
+		evaluDataService.delete(evaluData);
+		return renderResult(Global.TRUE, text("删除民主测评记录成功！"));
+	}
+	
 }

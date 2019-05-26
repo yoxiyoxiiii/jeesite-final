@@ -12,23 +12,40 @@
 		<#form:form id="inputForm" model="${evaluData}" action="${ctx}/evalu/evaluData/save" method="post" class="form-horizontal">
 			<div class="box-body">
 				<div class="form-unit">${text('基本信息')}</div>
-				<#form:hidden path="id"/>
 				<div class="row">
 					<div class="col-xs-6">
 						<div class="form-group">
 							<label class="control-label col-sm-4" title="">
-								<span class="required ">*</span> ${text('所属测评项')}：<i class="fa icon-question hide"></i></label>
+								<span class="required ">*</span> ${text('指标库')}：<i class="fa icon-question hide"></i></label>
 							<div class="col-sm-8">
-								<#form:input path="evaluLibId" maxlength="64" class="form-control required"/>
+								<#form:input path="evaluLibId" maxlength="1000" class="form-control required"/>
 							</div>
 						</div>
 					</div>
 					<div class="col-xs-6">
 						<div class="form-group">
 							<label class="control-label col-sm-4" title="">
-								<span class="required ">*</span> ${text('参评单位')}：<i class="fa icon-question hide"></i></label>
+								<span class="required ">*</span> ${text('部门')}：<i class="fa icon-question hide"></i></label>
 							<div class="col-sm-8">
-								<#form:input path="deptId" maxlength="500" class="form-control required"/>
+								<#form:input path="deptId" maxlength="1000" class="form-control required"/>
+							</div>
+						</div>
+					</div>
+					<div class="col-xs-6">
+						<div class="form-group">
+							<label class="control-label col-sm-4" title="">
+								<span class="required ">*</span> ${text('得分')}：<i class="fa icon-question hide"></i></label>
+							<div class="col-sm-8">
+								<#form:input path="score" maxlength="1000" class="form-control required"/>
+							</div>
+						</div>
+					</div>
+					<div class="col-xs-6">
+						<div class="form-group">
+							<label class="control-label col-sm-4" title="">
+								<span class="required hide">*</span> ${text('审批者')}：<i class="fa icon-question hide"></i></label>
+							<div class="col-sm-8">
+								<#form:input path="auditBy" maxlength="64" class="form-control"/>
 							</div>
 						</div>
 					</div>
@@ -37,9 +54,10 @@
 					<div class="col-xs-6">
 						<div class="form-group">
 							<label class="control-label col-sm-4" title="">
-								<span class="required ">*</span> ${text('得分')}：<i class="fa icon-question hide"></i></label>
+								<span class="required hide">*</span> ${text('审批时间')}：<i class="fa icon-question hide"></i></label>
 							<div class="col-sm-8">
-								<#form:radio path="score" dictType="" class="form-control required" />
+								<#form:input path="auditDate" readonly="true" maxlength="20" class="form-control Wdate"
+									dataFormat="datetime" onclick="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm',isShowClear:true});"/>
 							</div>
 						</div>
 					</div>
