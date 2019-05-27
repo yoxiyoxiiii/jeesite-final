@@ -45,7 +45,6 @@ public class EvaluOpinionController extends BaseController {
 	/**
 	 * 查询列表
 	 */
-	@RequiresPermissions("evalu:evaluOpinion:view")
 	@RequestMapping(value = {"list", ""})
 	public String list(EvaluOpinion evaluOpinion, Model model) {
 		model.addAttribute("evaluOpinion", evaluOpinion);
@@ -55,7 +54,6 @@ public class EvaluOpinionController extends BaseController {
 	/**
 	 * 查询列表数据
 	 */
-	@RequiresPermissions("evalu:evaluOpinion:view")
 	@RequestMapping(value = "listData")
 	@ResponseBody
 	public Page<EvaluOpinion> listData(EvaluOpinion evaluOpinion, HttpServletRequest request, HttpServletResponse response) {
@@ -67,7 +65,6 @@ public class EvaluOpinionController extends BaseController {
 	/**
 	 * 查看编辑表单
 	 */
-	@RequiresPermissions("evalu:evaluOpinion:view")
 	@RequestMapping(value = "form")
 	public String form(EvaluOpinion evaluOpinion, Model model) {
 		model.addAttribute("evaluOpinion", evaluOpinion);
@@ -77,7 +74,6 @@ public class EvaluOpinionController extends BaseController {
 	/**
 	 * 保存民主测评意见
 	 */
-	@RequiresPermissions("evalu:evaluOpinion:edit")
 	@PostMapping(value = "save")
 	@ResponseBody
 	public String save(@Validated EvaluOpinion evaluOpinion) {

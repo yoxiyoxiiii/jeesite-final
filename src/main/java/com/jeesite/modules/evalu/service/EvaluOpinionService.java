@@ -5,6 +5,7 @@ package com.jeesite.modules.evalu.service;
 
 import java.util.List;
 
+import com.jeesite.modules.evalu.entity.EvaluData;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -52,7 +53,29 @@ public class EvaluOpinionService extends CrudService<EvaluOpinionDao, EvaluOpini
 	public void save(EvaluOpinion evaluOpinion) {
 		super.save(evaluOpinion);
 	}
-	
+
+
+	/**
+	 * 保存民主测评意见
+	 */
+	@Transactional(readOnly=false)
+	public void saveOpinion(EvaluOpinion evaluOpinion, String evaluId, String depatId) {
+		//联合主键判断新增\修改
+		EvaluOpinion temp = new EvaluOpinion();
+		temp.setEvaluId(evaluId);
+		temp.setDeptId(depatId);
+//		temp.setPage(new Page<>(request, response));
+		EvaluOpinion tempSearch = dao.findOpinion(temp);
+		if( tempSearch == null ){
+			evaluOpinion.setIsNewRecord(true);
+		}else{
+			evaluOpinion.setIsNewRecord(false);
+			evaluOpinion.setId(tempSearch.getId());
+		}
+
+		super.save(evaluOpinion);
+	}
+
 	/**
 	 * 更新状态
 	 * @param evaluOpinion

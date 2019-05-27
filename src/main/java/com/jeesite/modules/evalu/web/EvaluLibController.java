@@ -320,7 +320,7 @@ public class EvaluLibController extends BaseController {
 				evaluOpinion.setDeptId(deptId);
 				evaluOpinion.setEvaluId(evaluId);
 				evaluOpinion.setOpinion(value);
-				evaluOpinionService.save(evaluOpinion);
+				evaluOpinionService.saveOpinion(evaluOpinion, evaluId, deptId);
 			}
 		}
 		return renderResult(Global.TRUE, text("保存民主测评明细树表成功！"));
