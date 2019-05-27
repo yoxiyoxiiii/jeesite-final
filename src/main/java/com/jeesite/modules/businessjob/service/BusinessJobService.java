@@ -3,10 +3,10 @@
  */
 package com.jeesite.modules.businessjob.service;
 
-import java.util.List;
-
-import com.jeesite.modules.businesscheckplan.entity.BusinessCheckPlan;
-import com.jeesite.modules.businesstarget.entity.BusinessTarget;
+import com.jeesite.common.entity.Page;
+import com.jeesite.common.service.CrudService;
+import com.jeesite.modules.businessjob.dao.BusinessJobDao;
+import com.jeesite.modules.businessjob.entity.BusinessJob;
 import org.quartz.JobDataMap;
 import org.quartz.SchedulerException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,10 +14,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.jeesite.common.entity.Page;
-import com.jeesite.common.service.CrudService;
-import com.jeesite.modules.businessjob.entity.BusinessJob;
-import com.jeesite.modules.businessjob.dao.BusinessJobDao;
+import java.util.List;
 
 /**
  * 定时任务Service
@@ -58,7 +55,7 @@ public class BusinessJobService extends CrudService<BusinessJobDao, BusinessJob>
 	 */
 	@Transactional(rollbackFor = Exception.class, propagation = Propagation.REQUIRED)
 	public void save(BusinessJob businessJob, JobDataMap jobDataMap) throws SchedulerException, ClassNotFoundException {
-		super.save(businessJob);
+			super.save(businessJob);
 		//添加任务到quartz
 		quartzService.addJob(businessJob.getJobName(),businessJob.getJobGroup(),businessJob.getCorn(),jobDataMap);
 	}
