@@ -102,7 +102,7 @@ public class EvaluService extends CrudService<EvaluDao, Evalu> {
 	}
 
 	/**
-	 * 获取制定评议表中所有单位各项指标或特定部门各项指标值
+	 * 获取制定测评表中所有单位各项指标或特定部门各项指标值
 	 *
 	 * @param evaluId
 	 * @return
@@ -112,6 +112,21 @@ public class EvaluService extends CrudService<EvaluDao, Evalu> {
 		ps.put("evaluId", evaluId);
 		ps.put("deptId", deptId);
 		List<EvaluData> result = dao.findGrid(ps);
+		return result;
+	}
+
+	/**
+	 * 测评报告
+	 * @param evaluId 测评ID
+	 * @param deptId  参评部门ID
+	 * @return
+	 */
+	public List<Map<String, Object>> findReport(String evaluId, String createBy, String deptId) {
+		Map<String, Object> ps = MapUtils.newHashMap();
+		ps.put("evaluId", evaluId);
+		ps.put("createBy", createBy);
+		ps.put("deptId", deptId);
+		List<Map<String, Object>> result = dao.findReport(ps);
 		return result;
 	}
 }

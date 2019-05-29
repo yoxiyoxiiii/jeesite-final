@@ -6,6 +6,7 @@ package com.jeesite.modules.evalu.service;
 import java.util.List;
 
 import com.jeesite.modules.evalu.entity.EvaluData;
+import com.jeesite.modules.sys.utils.UserUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -64,6 +65,7 @@ public class EvaluOpinionService extends CrudService<EvaluOpinionDao, EvaluOpini
 		EvaluOpinion temp = new EvaluOpinion();
 		temp.setEvaluId(evaluId);
 		temp.setDeptId(depatId);
+		temp.setCreateBy(UserUtils.getUser().getUserCode());
 //		temp.setPage(new Page<>(request, response));
 		EvaluOpinion tempSearch = dao.findOpinion(temp);
 		if( tempSearch == null ){

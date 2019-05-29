@@ -53,4 +53,20 @@
 			</if>
 
 	</select>
+
+	<!-- 演示Map参数和返回值，支持分页 -->
+	<select id="findReport" resultType="map">
+		SELECT * FROM js_sys_office a
+		<where>
+			<if test="officeCode != null and officeCode != ''">
+				AND a.office_code in
+				<foreach collection="officeCode" index="index" item="item" open="(" separator="," close=")">
+					#{item}
+				</foreach>
+			</if>
+		</where>
+		<if test="page != null and page.orderBy != null and page.orderBy != ''">
+			ORDER BY ${page.orderBy}
+		</if>
+	</select>
 </mapper>

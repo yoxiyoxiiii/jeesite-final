@@ -10,7 +10,7 @@
 			<#form:form id="searchForm" model="${evaluLib}" action="${ctx}/evalu/evaluLib/listDataReport" method="post" class="form-inline hide"
 			data-page-no="${parameter.pageNo}" data-page-size="${parameter.pageSize}" data-order-by="${parameter.orderBy}">
 			<div class="form-group">
-				<label class="control-label">评议部门：</label>
+				<label class="control-label">测评部门：</label>
 				<div class="control-inline">
 					<#form:input path="testInput" maxlength="200" class="form-control width-120"/>
 				</div>
@@ -148,8 +148,8 @@ var groupHeaders = {};
 //动态列格式化
 function columnFormat(cols){
 	var formatCols = [];
-	formatCols.push({header:'评议部门', name:'officeName', frozen:true});
-	//return [{header:'评议部门'},{header:'评议部门2'}];
+	formatCols.push({header:'测评部门', name:'officeName', frozen:true});
+	//return [{header:'测评部门'},{header:'测评部门2'}];
 	
 	var maxLevel = 0;
 	for(var i = 0 ; i < cols.length; i++){
@@ -298,7 +298,7 @@ $('#dataGrid').dataGrid({
 		
 	},
 	ajaxLoad: function(data){
-		columnModelJson.push({header:'评议部门'});
+		columnModelJson.push({header:'测评部门'});
     },
 });
 

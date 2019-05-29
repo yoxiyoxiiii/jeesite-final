@@ -1,0 +1,515 @@
+<% layout('/layouts/default.html', {title: '民主测评报告', libs: ['dataGrid']}){ %>
+<style>
+	body {
+		counter-reset: section;
+	}
+
+	.box-body label {
+		font-weight: normal;
+	}
+
+	.box-body .row {
+		padding-left: 40px;
+	}
+
+	.box-body .row>div {
+		padding: 10px 0;
+		border-bottom: 1px dotted #eee;
+	}
+
+	.title0 {
+		font-size: 16px;
+		counter-reset: subsection xxx;
+	}
+
+	.title0:before {
+		counter-increment: section;
+		content: "第"counter(section) "部分. ";
+	}
+
+	.title1 {
+		font-size: 14px;
+		padding-left: 2em;
+		counter-reset: subsubsection xxx;
+	}
+
+	.title1:before {
+		counter-increment: subsection;
+		content: counter(section) "."counter(subsection) " ";
+	}
+
+	.title2 {
+		padding-left: 4em;
+		counter-reset: xxx;
+	}
+
+	.title2:before {
+		counter-increment: subsubsection;
+		content: counter(section) "."counter(subsection) "."counter(subsubsection) " ";
+	}
+
+	.titleL:before {
+		counter-increment: xxx;
+		content: counter(xxx) " : ";
+		/*color: red;*/
+	}
+
+	/* .evaluindex:before {
+		counter-increment: subsubsubsection;
+		content: counter(subsubsubsection);
+	} */
+</style>
+<div class="main-content">
+	<div class="box box-main">
+		<div class="pad margin no-print">
+			<div class="callout callout-info" style="margin-bottom: 0!important;">
+				<h4><i class="fa fa-info"></i> Note:</h4>
+				This page has been enhanced for printing. Click the print button at the bottom of the invoice to test.
+			</div>
+		</div>
+		<section class="invoice">
+			<!-- title row -->
+			<div class="row">
+				<div class="col-xs-12">
+					<h2 class="page-header">
+						<i class="fa fa-lastfm-square"></i> ${evalu.title}
+						<small class="pull-right">结束时间: ${evalu.endTime, dateFormat="yyyy-MM-dd HH:mm"}</small>
+						<small class="span6">( ${text('民主测评报告')} )</small>
+					</h2>
+				</div>
+				<!-- /.col -->
+			</div>
+			<!-- info row -->
+			<div class="row">
+				<div class="col-md-4 col-sm-6 col-xs-12">
+					<div class="info-box bg-gray-light">
+						<span class="info-box-icon bg-yellow"><i class="fa fa-forumbee"></i></span>
+						<div class="info-box-content">
+							<span class="info-box-text">计划</span>
+							<span class="info-box-number">90 / 20</span>
+							<small>(参评部门/测评份数)</small>
+						</div>
+					</div>
+				</div>
+				<div class="col-md-4 col-sm-6 col-xs-12">
+					<div class="info-box bg-aqua">
+						<span class="info-box-icon"><i class="fa fa-sliders"></i></span>
+						<div class="info-box-content">
+							<span class="info-box-text">进度(已提交/未提交)</span>
+							<span class="info-box-number">180 , 20</span>
+
+							<div class="progress">
+								<div class="progress-bar" style="width: 90%"></div>
+							</div>
+							<span class="progress-description">
+								90% 已完成测评任务
+							</span>
+						</div>
+						<!-- /.info-box-content -->
+					</div>
+				</div>
+				<!-- fix for small devices only -->
+				<div class="clearfix visible-sm-block"></div>
+
+				<div class="col-md-4 col-sm-6 col-xs-12">
+					<div class="info-box bg-gray-light">
+						<span class="info-box-icon bg-green"><i class="fa fa-pagelines"></i></span>
+						<div class="info-box-content">
+							<span class="info-box-text">测评结果</span>
+							<span class="info-box-number">38 / 70 / 10</span>
+							<small>(优秀/合格/不合格/作废)</small>
+						</div>
+					</div>
+				</div>
+			</div>
+
+
+			<!-- Table row -->
+			<div class="row">
+				<div class="col-xs-6">
+					<table id="dataGrid"></table>
+					<div id="dataGridPage"></div>
+				</div>				
+			</div>
+			<!-- /.row -->
+
+			<div class="row">
+				<!-- accepted payments column -->
+				<div class="col-xs-6">
+					<p class="lead">Payment Methods:</p>
+					<img src="../../dist/img/credit/visa.png" alt="Visa">
+					<img src="../../dist/img/credit/mastercard.png" alt="Mastercard">
+					<img src="../../dist/img/credit/american-express.png" alt="American Express">
+					<img src="../../dist/img/credit/paypal2.png" alt="Paypal">
+					<p class="text-muted well well-sm no-shadow" style="margin-top: 10px;">
+						Etsy doostang zoodles disqus groupon greplin oooj voxy zoodles, weebly ning heekya handango
+						imeem plugg
+						dopplr jibjab, movity jajah plickers sifteo edmodo ifttt zimbra.
+					</p>
+				</div>
+				<!-- /.col -->
+				<div class="col-xs-6">
+					<p class="lead">Amount Due 2/22/2014</p>
+
+					<div class="table-responsive">
+						<table class="table">
+							<tbody>
+								<tr>
+									<th style="width:50%">Subtotal:</th>
+									<td>$250.30</td>
+								</tr>
+								<tr>
+									<th>Tax (9.3%)</th>
+									<td>$10.34</td>
+								</tr>
+								<tr>
+									<th>Shipping:</th>
+									<td>$5.80</td>
+								</tr>
+								<tr>
+									<th>Total:</th>
+									<td>$265.24</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+				</div>
+				<!-- /.col -->
+			</div>
+			<!-- /.row -->
+
+			<!-- this row will not appear when printing -->
+			<div class="row no-print">
+				<div class="col-xs-12">
+					<a href="invoice-print.html" target="_blank" class="btn btn-default"><i class="fa fa-print"></i>
+						Print</a>
+					<button type="button" class="btn btn-success pull-right"><i class="fa fa-credit-card"></i> Submit
+						Payment
+					</button>
+					<button type="button" class="btn btn-primary pull-right" style="margin-right: 5px;">
+						<i class="fa fa-download"></i> Generate PDF
+					</button>
+				</div>
+			</div>
+		</section>
+	</div>
+</div>
+<% } %>
+
+<script>
+
+		//仅提供四级树 todo:有待扩展到无限级
+		
+		var groupHeaders = {}; 
+		//动态列格式化
+		function columnFormat(cols){
+			var formatCols = [];
+			formatCols.push({header:'测评部门', name:'officeName', frozen:true});
+			//return [{header:'测评部门'},{header:'测评部门2'}];
+			
+			var maxLevel = 0;
+			for(var i = 0 ; i < cols.length; i++){
+				var item = cols[i];			
+				if(item.isTreeLeaf){
+					formatCols.push({header:item.treeName, name:item.treeCode});
+			
+					//上级节点的子节点数,递归加一
+					var nodeId = searchParent(cols, item.parentCodes);
+						$(nodeId).each(function(index, id){
+							if( cols[id].numberOfColumns == undefined){
+								cols[id].numberOfColumns = 0;
+							}
+							cols[id].numberOfColumns += 1;
+							//第一个叶子(累计子节点为1)节点时,
+							if(cols[id].numberOfColumns == 1){
+								cols[id].startColumnName = item.treeCode;
+							}
+						});
+		
+					//最高层次计算
+					maxLevel = (item.treeLevel > maxLevel)?item.treeLevel:maxLevel;			
+				}
+			}
+		
+			var numToEn = ["twoLevel","threeLevel","fourLevel","fiveLevel","sixLevel","sevenLevel","eightLevel","nineLevel","tenLevel"];
+			for(var i = 0 ; i < cols.length; i++){
+				var item = cols[i];			
+				if(!item.isTreeLeaf){
+					var lv = {startColumnName: item.startColumnName, numberOfColumns: item.numberOfColumns, titleText: item.treeName};
+					if( eval( "groupHeaders."+ numToEn[maxLevel - item.treeLevel-1]) == undefined ){
+						eval( "groupHeaders."+ numToEn[maxLevel - item.treeLevel-1] + "= new Array()") ;
+					}
+					eval( "groupHeaders."+ numToEn[maxLevel - item.treeLevel-1] +".push(lv)");
+				}
+			}
+			return formatCols;
+		}
+		//sanye 动态加载列
+		function searchParent(cols, parentCode){
+			var nodeId = [];
+			var code = parentCode.split(",");
+			//0,sss30,sss31,  处理0,和最后空
+			if(code.length > 0){
+				code.splice(0,1);
+			}
+			if(code.length > 2){
+				code.splice(code.length-1,1);	
+			}
+			$(cols).each(function(index, item){
+				if( item.isTreeLeaf == false){
+					if(item.treeLevel <= code.length 
+						&& item.treeCode == code[item.treeLevel]){
+							nodeId.push(index);
+					}
+				}
+			});
+			return nodeId;
+		}
+		
+		//加载列数据
+		var libColumns = null;
+		$.ajax({
+			type:"POST",
+			async: false,
+			url:"${ctx}/evalu/evaluLib/listData?evaluId=${evalu.id}",
+			dataType:"json",
+			success: function(json){
+				libColumns = json;
+			}});
+		
+		var columnModelJson = columnFormat(libColumns);
+		
+		//加载测评数据记录
+		var evaluData = null;
+		$.ajax({
+			type:"POST",
+			async: false,
+			url:"${ctx}/evalu/evalu/evaluData?evaluId=${evalu.id}&deptId=",
+			dataType:"json",
+			success: function(json){
+				evaluData = json;
+			}});
+		
+		//加载部门及数据
+		function rowFormat(depats){
+			for(var n=0 ; n< depats.length; n++){
+				$(libColumns).each(function(index, col){
+					//todo:获取evaludata值
+					var score = valTranslate(depats[n].id, col.treeCode);			
+					eval("depats[n]." + col.treeCode + "= score;");			
+				});
+			}	
+			return depats;
+		}
+		
+		var depats = null;
+		$.ajax({
+			type:"POST",
+			async: false,
+			url:"${ctx}/evalu/evalu/offices?inParam=SJ15,SJ14,SJ13",
+			dataType:"json",
+			success: function(json){
+				depats = json;
+		}});
+		var rowJson = rowFormat(depats);
+		//渲染操作框
+		
+		
+		// 初始化DataGrid对象
+		$('#dataGrid').dataGrid({
+			// searchForm: $("#searchForm"),
+			data: rowJson,
+			datatype: "local",
+			columnModel: columnModelJson,
+		
+			frozenCols: true, 	// 启用冻结列，并在colModel中设置frozen:true
+			showRownum: true,	// 是否显示行号，默认true
+			showFooter: false,	// 是否显示底部合计行，数据载入详见 ajaxSuccess
+			sortable: false,
+			viewsortcols:[false,'horizontal',false],
+			// 设置多级表头
+			groupHeaders: groupHeaders,
+			
+			// 加载成功后执行事件
+			ajaxSuccess: function(data){
+			},
+			ajaxLoad: function(data){
+				columnModelJson.push({header:'测评部门'});
+			},
+		});
+		
+		//动态绑定col事件
+		$(libColumns).each(function(index, col){
+			$('#dataGrid').setColProp(col.treeCode,{formatter:colFormat});
+		});
+		$('#dataGrid').trigger('reloadGrid');
+		
+		function colFormat(val, obj, row, act){
+			var format =  '<div id="ev_'+ obj.irow +'_' + obj.pos
+			+ '" class="col-md-12 " style="height:100%;" onClick="evalu(\''
+			+ val +'\',\''+ obj.colModel.header +'\',\''
+			+ row.officeName +'\','+  obj.irow +','+ obj.pos +')">'
+			+ (val==" "?"&nbsp;":val)
+					+'</div>';
+			return format;
+		}
+		
+		var currentColum = null;
+		function evalu(val, header, officeName, irow, pos){
+			$("#myModal #myModalLabel").text(officeName +  "_" + header);
+			$('#myModal').modal('show');
+			currentColum ={ irow: irow, pos: posTranslate(pos-1), posCol: pos };
+			$(".modal-body").children().hide();
+		
+			//清空值, 显示当前列	
+			var evaluLib = libColumns[currentColum.pos-1].treeCode;
+			$(".modal-body").find("#" + evaluLib).find("input[type=radio]").removeAttr("checked");
+			$(".modal-body").find("#" + evaluLib + ">label>div").removeClass("checked");
+		
+			$(".modal-body").find("#" + evaluLib).show();
+		}
+		
+		$(function () { $('#myModal').on('hide.bs.modal', function () {	
+			saveEvaluData();
+			})
+		});
+		
+		
+		function saveEvaluData(){	
+			var evaluLib = libColumns[currentColum.pos-1].treeCode;	
+			var checkRadio = $(".modal-body").find("#" + evaluLib).find("input:checked");
+		
+			var checkValue =  $(checkRadio).val();
+			var title = $(checkRadio).parent().parent().text();
+			//读取选择的值
+			var  deptId = depats[currentColum.irow-1].id;
+			var evaluLibId = libColumns[currentColum.pos-1].id;
+			//保存值
+			$.ajax({
+				type:"POST",
+				url:"${ctx}/evalu/evaluData/save",
+				data: {evaluLibId:evaluLibId , deptId:deptId, score:checkValue},
+				dataType:"json",
+				success: function(json){
+					if(json.result == false){
+						js.showErrorMessage(json.message);
+					}
+				}});
+			//回显Grid
+			if(title == null || title == ""){title = "&nbs;"}
+			$("#ev_"+ currentColum.irow +"_" + currentColum.posCol).text(title);
+		
+		}
+		
+		function posTranslate(pos){
+			var curentPos = 0;
+			for(var i=0; i< libColumns.length; i++){
+				if(pos == curentPos){
+					break;
+				}
+				if( libColumns[i].isTreeLeaf == "0"){
+					continue;
+				}else{
+					curentPos++;
+				}		
+			}
+			return i;
+		}
+		
+		function valTranslate(deptId, evaluLibId){
+			var score = " ";
+			$(evaluData).each(function(index, item){
+				if( item.deptId == deptId && item.evaluLibId == evaluLibId){
+					score = item.score;
+					return score;
+				}
+			});	
+			return score;
+		}
+		</script>
+
+<script>
+<%if (office != null) {%>
+	//回显数据
+	var purchaseTypeJson;
+		$.ajax({
+			type: "POST",
+			url: "${ctx}/evalu/evaluLib/listDataReport?evaluId=${evalu.id}&deptId=${office.officeCode}",
+			dataType: "json",
+			success: function (json) {
+			}
+		});
+
+		//加载测评数据记录
+		var evaluData = null;
+		$.ajax({
+			type: "POST",
+			async: false,
+			url: "${ctx}/evalu/evalu/evaluData?evaluId=${evalu.id}&deptId=${office.officeCode}",
+			dataType: "json",
+			success: function (json) {
+				evaluData = json;
+
+				//清空值, 显示当前列	
+				$(json).each(function (index, libData) {
+					var evaluLib = libData.evaluLibId;
+					$("#" + evaluLib).find("input[value=" + libData.score + "]").attr("checked", "checked");
+					// $("#" + evaluLib + ">label>div").addClass("checked");
+				});
+			}
+		});
+
+		//加载测评意见
+		$.ajax({
+			type: "POST",
+			async: false,
+			url: "${ctx}/evalu/evaluOpinion/listData?evaluId=${evalu.id}&deptId=${office.officeCode}",
+			dataType: "json",
+			success: function (json) {
+				//清空值, 显示当前列
+				if (json.count == 1) {
+					$("#remarks").val(json.list[0].opinion);
+				}
+			}
+		});
+
+		<%}%>
+</script>
+
+<script>
+// 初始化DataGrid对象
+$('#dataGrid').dataGrid({
+	data: rowJson,
+    datatype: "local",
+	columnModel: [
+		{header:'${text("参评部门")}', name:'title', index:'a.title', width:250, align:"left", formatter: function(val, obj, row, act){
+			return '<a href="${ctx}/evalu/evalu/form?id='+row.id+'" class="btnList" data-title="${text("查看部门详细得分")}">'+(val||row.id)+'</a>';
+		}},		
+		{header:'${text("有效回收评测表")}', name:'score', index:'a.score', width:150, align:"right", formatter: function(val, obj, row, act){
+			return js.formatNumber(val, 2, false, ''); // 按多行: 总分/有效评测份数;
+		}},
+		{header:'${text("总分")}', name:'hasOpinion', index:'a.has_opinion', width:150, align:"center", formatter: function(val, obj, row, act){
+			return js.getDictLabel(${@DictUtils.getDictListJson('sys_yes_no')}, val, '${text("未知")}', true);
+		}},
+		{header:'${text("平均分")}', name:'status', index:'a.status', width:150, align:"center", formatter: function(val, obj, row, act){
+			return js.getDictLabel(${@DictUtils.getDictListJson('sys_search_status')}, val, '${text("未知")}', true);
+		}},
+		{header:'${text("名次")}', name:'status', index:'a.status', width:150, align:"center", formatter: function(val, obj, row, act){
+			return js.getDictLabel(${@DictUtils.getDictListJson('sys_search_status')}, val, '${text("未知")}', true);
+		}},
+		{header:'${text("操作")}', name:'actions', width:120, sortable:false, title:false, formatter: function(val, obj, row, act){
+			var actions = [];
+			<% if(hasPermi('evalu:evalu:edit')){ %>
+				actions.push('<a href="${ctx}/evalu/evalu/form?id='+row.id+'" class="btnList" title="${text("查看评测意见")}"><i class="fa fa-pencil"></i></a>&nbsp;');
+				actions.push('<a href="${ctx}/evalu/evalu/delete?id='+row.id+'" class="btnList" title="${text("查看评测明细")}" data-confirm="${text("确认要删除该民主测评吗？")}"><i class="fa fa-trash-o"></i></a>&nbsp;');
+				actions.push('<a href="${ctx}/evalu/evaluLib/list/'+row.id+'" class="btnList" title="${text("测评项管理")}"><i class="fa fa-list-ol"></i></a>&nbsp;');	
+			<% } %>
+			return actions.join('');
+		}}
+	],
+	// 加载成功后执行事件
+	ajaxSuccess: function(data){
+		
+	}
+});
+</script>

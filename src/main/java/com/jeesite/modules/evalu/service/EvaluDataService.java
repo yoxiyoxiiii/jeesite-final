@@ -5,6 +5,7 @@ package com.jeesite.modules.evalu.service;
 
 import java.util.List;
 
+import com.jeesite.modules.sys.utils.UserUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -16,7 +17,7 @@ import com.jeesite.modules.evalu.dao.EvaluDataDao;
 /**
  * 民主测评记录Service
  * @author sanye
- * @version 2019-05-24
+ * @version 2019-05-30
  */
 @Service
 @Transactional(readOnly=true)
@@ -50,13 +51,13 @@ public class EvaluDataService extends CrudService<EvaluDataDao, EvaluData> {
 	@Override
 	@Transactional(readOnly=false)
 	public void save(EvaluData evaluData) {
-
 		//联合主键判断新增\修改
 		EvaluData temp = new EvaluData();
 		temp.setEvaluLibId( evaluData.getEvaluLibId());
 		temp.setDeptId( evaluData.getDeptId());
+		temp.setCreateBy(UserUtils.getUser().getUserCode());
 
-		EvaluData tempSearch = super.get(temp);
+		EvaluData tempSearch = dao.findIsNew(temp);
 		if( tempSearch == null ){
 			evaluData.setIsNewRecord(true);
 		}else{

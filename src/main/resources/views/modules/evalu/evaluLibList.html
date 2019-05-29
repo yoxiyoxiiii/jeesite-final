@@ -3,14 +3,14 @@
 	<div class="box box-main">
 		<div class="box-header">
 			<div class="box-title">
-				<i class="fa fa-list-alt"></i> ${evalu.title}- ${text('测评明细管理')}
+				<i class="fa fa-list-alt"></i> ${evalu.title}- ${text('测评明细管理')}(总分:${evalu.score})
 			</div>
 			<div class="box-tools pull-right">
 				<a href="#" class="btn btn-default" id="btnSearch" title="${text('查询')}"><i class="fa fa-filter"></i> ${text('查询')}</a>
 				<a href="#" class="btn btn-default" id="btnRefreshTree" title="${text('刷新')}"><i class="fa fa-refresh"></i> ${text('刷新')}</a>
 				<a href="#" class="btn btn-default" id="btnExpandTreeNode" title="${text('展开一级')}"><i class="fa fa-angle-double-down"></i> ${text('展开')}</a>
 				<a href="#" class="btn btn-default" id="btnCollapseTreeNode" title="${text('折叠全部')}"><i class="fa fa-angle-double-up"></i> ${text('折叠')}</a>
-				<a href="#" class="btn btn-default" id="btnUpdateSort" title="保存排序"><i class="fa fa-sort-amount-asc"></i> 保存排序</a>
+				<a href="#" class="btn btn-default" id="btnUpdateSort" title="保存分数和排序"><i class="fa fa-sort-amount-asc"></i> 保存</a>
 				<% if(hasPermi('evalu:evaluLib:edit')){ %>
 					<a href="${ctx}/evalu/evaluLib/form?evaluId=${evaluLib.evaluId}" class="btn btn-default btnTool" title="${text('新增民主测评明细树表')}"><i class="fa fa-plus"></i> ${text('新增')}</a>
 				<% } %>
@@ -53,7 +53,17 @@ $('#dataGrid').dataGrid({
 			return '( '+row.treeCode+' ) '+'<a href="${ctx}/evalu/evaluLib/form?treeCode='+row.treeCode+'" class="btnList" data-title="${text("编辑民主测评明细树表")}">'+(val||row.id)+'</a>';
 		}},
 		{header:'${text("分数权重")}', name:'score', index:'a.score', width:150, align:"right", formatter: function(val, obj, row, act){
-			return js.formatNumber(val, 2, false, ''); // 数值类型格式化 (原始数值, 小数位数, 是否千分位, 默认值，金额情况下设置0.00);
+			//return js.formatNumber(val, 2, false, ''); // 数值类型格式化 (原始数值, 小数位数, 是否千分位, 默认值，金额情况下设置0.00);
+			var html = [];
+			//html.push('<input type="hidden" name="ids" value="'+row.treeCode+'"/>');
+			var otherProps ="";
+			if(row.isTreeLeaf){
+				otherProps = ' onblur="ScoreCheck(\'' + val + '\', \''+ obj+'\',\''+ row + '\',\''+ act + '\')" ';
+			}else{
+				otherProps = ' disabled="disabled" ';
+			}
+			html.push('<input name="scores" type="text" value="'+row.score+'"'+ otherProps +' style="width:50px;height:19px;margin:0;padding:0;text-align:center;border:1px solid #ddd">');
+			return html.join('');
 		}},
 		{header:'${text("计分方式")}', name:'evalSelectType', index:'a.eval_select_type', width:150, align:"center", formatter: function(val, obj, row, act){
 			return js.getDictLabel(${@DictUtils.getDictListJson('eval_select_type')}, val, '${text("未知")}', true);
@@ -83,10 +93,25 @@ $('#dataGrid').dataGrid({
 	showFooter: true,
 	showRownum: true,
 	ajaxSuccess: function(data){
-		var total = 0;
+		var totalItem = 0;
+		var totalScore = 0;
+		$(data).each(function(index, d){
+			if( d.isTreeLeaf ){
+				totalItem ++;
+				if(d.score != null && d.score != ""){
+					totalScore += d.score;
+				}
+			}
+		});
+
+		//判断是否评分合理
+		var evaluScore = "${evalu.score}";
+		if( totalScore != parseInt(evaluScore)){
+			js.showMessage("各测评项分数和要求不符", "注意", "warning");
+		}
 		$('#dataGrid').dataGrid("footerData", "set", {
-			"treeName" : "<center><em>共计："+ data.count + "</em>评测项</center>",
-			"score": "各评测项总分:<em>￥"+ total +"</em>"
+			"score" : "<center><em>共计："+ totalItem + "</em> 评测项</center>",
+			"treeName": "各评测项总分:<em> "+ totalScore +" </em> 分"
 		}, false);
 	}
 });
@@ -100,5 +125,12 @@ $('#btnUpdateSort').click(function(){
 		}
 		js.showMessage(data.message);
 	}, "json");
+
+   //保存时分数不平衡提示信息
 });
+
+function ScoreCheck(val, obj, row, act){
+	//累加上级数据
+	alert(val);
+}
 </script>

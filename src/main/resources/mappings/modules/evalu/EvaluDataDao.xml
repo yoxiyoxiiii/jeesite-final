@@ -11,5 +11,9 @@
 		</where>
 		ORDER BY ${sqlMap.order.toSql()}
 	</select> -->
-	
+<!--	联合主键是否新增/修改-->
+	<select id="findIsNew" resultType="EvaluData">
+		select * from biz_evalu_data a
+		where evalu_lib_id = #{evaluLibId} AND a.dept_id = #{deptId} AND a.create_by = #{createBy}
+	</select>
 </mapper>

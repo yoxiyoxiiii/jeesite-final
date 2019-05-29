@@ -228,9 +228,7 @@ public class EvaluLibController extends BaseController {
 				listEvaluLib.get(i).setEvalSelectType(temType[temType.length-1]);
 			}
 		}
-
 		//评测数据
-
 		//测评单位
 		Office office = officeService.get(depatId);
 		model.addAttribute("listEvaluLib", listEvaluLib);
@@ -325,4 +323,61 @@ public class EvaluLibController extends BaseController {
 		}
 		return renderResult(Global.TRUE, text("保存民主测评明细树表成功！"));
 	}
+
+	/**
+	 * 评测项排序
+	 * @param ids
+	 * @param sorts
+	 * @return
+	 */
+	@RequestMapping({"updateTreeSort"})
+	@ResponseBody
+	public String updateTreeSort(Double[] scores,String[] ids, Integer[] sorts) {
+		for (int i = 0; i < ids.length; i ++) {
+			EvaluLib a = new EvaluLib(ids[i]);
+			a.setTreeSort(sorts[i]);
+			evaluLibService.updateTreeSort(a);
+		}
+		for (int i = 0; i < ids.length; i ++) {
+			EvaluLib a = new EvaluLib(ids[i]);
+			a.setScore(scores[i]);
+			evaluLibService.update(a);
+		}
+//		evaluLibService.fixTreeData();
+		return renderResult(Global.TRUE, text("保存测评项排序成功！"));
+	}
+
+
+
+
+	/**
+	 * 独立评价表
+	 */
+	@RequestMapping(value = {"report/{evaluId}/{depatId}", ""})
+	public String report(@PathVariable String evaluId, @PathVariable String depatId, EvaluLib evaluLib, Model model) {
+		//todo:需要权限判断
+		Evalu evalu = evaluService.get(evaluId);
+		evaluLib.setEvaluId(evaluId);
+		List<EvaluLib> listEvaluLib = this.listData(evaluLib);
+		for(int i=0; i<listEvaluLib.size(); i++){
+			EvaluLib lib = listEvaluLib.get(i);
+			if( listEvaluLib.get(i).getIsTreeLeaf()){
+				String temType[] = lib.getEvalSelectType().split(",");
+				listEvaluLib.get(i).setEvalSelectType(temType[temType.length-1]);
+			}
+		}
+		//评测数据
+		//测评单位, 前端在指定单位的情况下,关注各项测评指标
+		if( depatId != null  && depatId != "0"){
+			Office office = officeService.get(depatId);
+			model.addAttribute("office", office);
+		}
+
+		model.addAttribute("listEvaluLib", listEvaluLib);
+		model.addAttribute("evalu",evalu);
+		model.addAttribute("user",UserUtils.getUser());
+
+		return "modules/evalu/evaluDataReport";
+	}
+
 }

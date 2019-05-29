@@ -25,7 +25,7 @@ import com.jeesite.modules.evalu.service.EvaluDataService;
 /**
  * 民主测评记录Controller
  * @author sanye
- * @version 2019-05-24
+ * @version 2019-05-30
  */
 @Controller
 @RequestMapping(value = "${adminPath}/evalu/evaluData")
@@ -38,9 +38,9 @@ public class EvaluDataController extends BaseController {
 	 * 获取数据
 	 */
 	@ModelAttribute
-	public EvaluData get(String evaluLibId, String deptId, boolean isNewRecord) {
-		return evaluDataService.get(new Class<?>[]{String.class, String.class},
-				new Object[]{evaluLibId, deptId}, isNewRecord);
+	public EvaluData get(String evaluLibId, String deptId, String createBy, boolean isNewRecord) {
+		return evaluDataService.get(new Class<?>[]{String.class, String.class, String.class},
+				new Object[]{evaluLibId, deptId, createBy}, isNewRecord);
 	}
 	
 	/**

@@ -18,7 +18,7 @@ import com.jeesite.common.mybatis.mapper.query.QueryType;
 /**
  * 民主测评记录Entity
  * @author sanye
- * @version 2019-05-24
+ * @version 2019-05-30
  */
 @Table(name="biz_evalu_data", alias="a", columns={
 		@Column(name="evalu_lib_id", attrName="evaluLibId", label="所属测评项", isPK=true),
@@ -39,12 +39,13 @@ public class EvaluData extends DataEntity<EvaluData> {
 	private Date auditDate;		// 审批时间
 	
 	public EvaluData() {
-		this(null,null);
+		this(null,null,null);
 	}
 
-	public EvaluData(String evaluLibId, String deptId){
+	public EvaluData(String evaluLibId, String deptId, String createBy){
 		this.evaluLibId = evaluLibId;
 		this.deptId = deptId;
+		this.createBy = createBy;
 	}
 	
 	public String getEvaluLibId() {

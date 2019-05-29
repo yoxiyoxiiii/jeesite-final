@@ -25,6 +25,7 @@ import com.jeesite.modules.evalu.entity.Evalu;
 import com.jeesite.modules.evalu.service.EvaluService;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * 民主测评Controller
@@ -144,5 +145,14 @@ public class EvaluController extends BaseController {
 	@ResponseBody
 	public List<EvaluData> offices(String evaluId, String deptId) {
 		return evaluService.findGrid(evaluId, deptId);
+	}
+
+	/**
+	 * 获取单位列表
+	 */
+	@RequestMapping(value = "evaluReport")
+	@ResponseBody
+	public List<Map<String, Object>> evaluReport(String evaluId, String createBy, String deptId) {
+		return evaluService.findReport(evaluId, createBy, deptId);
 	}
 }
