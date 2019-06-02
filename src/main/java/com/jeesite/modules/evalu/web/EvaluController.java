@@ -8,6 +8,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.jeesite.modules.evalu.entity.EvaluData;
 import com.jeesite.modules.sys.entity.Office;
+import com.jeesite.modules.sys.utils.UserUtils;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -143,8 +144,11 @@ public class EvaluController extends BaseController {
 	 */
 	@RequestMapping(value = "evaluData")
 	@ResponseBody
-	public List<EvaluData> offices(String evaluId, String deptId) {
-		return evaluService.findGrid(evaluId, deptId);
+	public List<EvaluData> offices(String evaluId, String deptId, String createBy) {
+		if(createBy == null || createBy.equals("")  || createBy.equals("0")){
+			createBy = UserUtils.getUser().getUserCode();
+		}
+		return evaluService.findGrid(evaluId, deptId, createBy);
 	}
 
 	/**

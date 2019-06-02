@@ -105,14 +105,14 @@
   text-decoration: none;
 }
 .treeview-menu > li > a {
-  color: #555;
+  color: #888;
 }
 .treeview-menu > li.active > a,
 .treeview-menu > li > a:hover {
   color: #000;
 }
 .sidebar-form {
-  border-radius: 3px;
+  border-radius: 2px;
   border: 1px solid #d2d6de;
   margin: 10px 10px;
 }

@@ -16,6 +16,18 @@
 			<#form:form id="searchForm" model="${evaluData}" action="${ctx}/evalu/evaluData/listData" method="post" class="form-inline hide"
 					data-page-no="${parameter.pageNo}" data-page-size="${parameter.pageSize}" data-order-by="${parameter.orderBy}">
 				<div class="form-group">
+					<label class="control-label">${text('所属测评项')}：</label>
+					<div class="control-inline">
+						<#form:input path="evaluLibId" maxlength="64" class="form-control width-120"/>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="control-label">${text('参评单位')}：</label>
+					<div class="control-inline">
+						<#form:input path="deptId" maxlength="64" class="form-control width-120"/>
+					</div>
+				</div>
+				<div class="form-group">
 					<label class="control-label">${text('得分')}：</label>
 					<div class="control-inline">
 						<#form:input path="score" maxlength="1000" class="form-control width-120"/>
@@ -62,9 +74,11 @@
 $('#dataGrid').dataGrid({
 	searchForm: $("#searchForm"),
 	columnModel: [
-		{header:'${text("得分")}', name:'score', index:'a.score', width:150, align:"left", frozen:true, formatter: function(val, obj, row, act){
-			return '<a href="${ctx}/evalu/evaluData/form?evaluLibId='+row.evaluLibId+'&deptId='+row.deptId+'&createBy='+row.createBy+'" class="btnList" data-title="${text("编辑民主测评记录")}">'+(val||row.id)+'</a>';
+		{header:'${text("所属测评项")}', name:'evaluLibId', index:'a.evalu_lib_id', width:150, align:"left", frozen:true, formatter: function(val, obj, row, act){
+			return '<a href="${ctx}/evalu/evaluData/form?id='+row.id+'" class="btnList" data-title="${text("编辑民主测评记录")}">'+(val||row.id)+'</a>';
 		}},
+		{header:'${text("参评单位")}', name:'deptId', index:'a.dept_id', width:150, align:"left"},
+		{header:'${text("得分")}', name:'score', index:'a.score', width:150, align:"left"},
 		{header:'${text("状态")}', name:'status', index:'a.status', width:150, align:"center", formatter: function(val, obj, row, act){
 			return js.getDictLabel(${@DictUtils.getDictListJson('sys_search_status')}, val, '${text("未知")}', true);
 		}},
@@ -75,8 +89,8 @@ $('#dataGrid').dataGrid({
 		{header:'${text("操作")}', name:'actions', width:120, sortable:false, title:false, formatter: function(val, obj, row, act){
 			var actions = [];
 			<% if(hasPermi('evalu:evaluData:edit')){ %>
-				actions.push('<a href="${ctx}/evalu/evaluData/form?evaluLibId='+row.evaluLibId+'&deptId='+row.deptId+'&createBy='+row.createBy+'" class="btnList" title="${text("编辑民主测评记录")}"><i class="fa fa-pencil"></i></a>&nbsp;');
-				actions.push('<a href="${ctx}/evalu/evaluData/delete?evaluLibId='+row.evaluLibId+'&deptId='+row.deptId+'&createBy='+row.createBy+'" class="btnList" title="${text("删除民主测评记录")}" data-confirm="${text("确认要删除该民主测评记录吗？")}"><i class="fa fa-trash-o"></i></a>&nbsp;');
+				actions.push('<a href="${ctx}/evalu/evaluData/form?id='+row.id+'" class="btnList" title="${text("编辑民主测评记录")}"><i class="fa fa-pencil"></i></a>&nbsp;');
+				actions.push('<a href="${ctx}/evalu/evaluData/delete?id='+row.id+'" class="btnList" title="${text("删除民主测评记录")}" data-confirm="${text("确认要删除该民主测评记录吗？")}"><i class="fa fa-trash-o"></i></a>&nbsp;');
 			<% } %>
 			return actions.join('');
 		}}

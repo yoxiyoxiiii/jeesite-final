@@ -25,4 +25,5 @@ public interface EvaluDao extends CrudDao<Evalu> {
     //获取对比表单
     public List<EvaluData> findGrid(Map<String, Object> params);
     public List<Map<String, Object>> findReport(Map<String, Object> params);
+    public List<Map<String, Object>> findUsers(Map<String, Object> params);
 }

@@ -6,6 +6,7 @@ package com.jeesite.modules.evalu.web;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.jeesite.modules.sys.utils.UserUtils;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -58,6 +59,9 @@ public class EvaluOpinionController extends BaseController {
 	@ResponseBody
 	public Page<EvaluOpinion> listData(EvaluOpinion evaluOpinion, HttpServletRequest request, HttpServletResponse response) {
 		evaluOpinion.setPage(new Page<>(request, response));
+		if( evaluOpinion.getCreateBy() == null  || evaluOpinion.getCreateBy().equals("")){
+			evaluOpinion.setCreateBy(UserUtils.getUser().getUserCode());
+		}
 		Page<EvaluOpinion> page = evaluOpinionService.findPage(evaluOpinion);
 		return page;
 	}

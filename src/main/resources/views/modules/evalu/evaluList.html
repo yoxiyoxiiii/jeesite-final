@@ -89,9 +89,14 @@ $('#dataGrid').dataGrid({
 			return actions.join('');
 		}}
 	],
+	multiselect: true,
 	// 加载成功后执行事件
 	ajaxSuccess: function(data){
 		
 	}
+	// ,
+	// onCellSelect: function(rowid,iCol, cellcontent,e){
+	// 	alert(cellcontent);
+	// },
 });
 </script>

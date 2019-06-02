@@ -107,10 +107,11 @@ public class EvaluService extends CrudService<EvaluDao, Evalu> {
 	 * @param evaluId
 	 * @return
 	 */
-	public List<EvaluData> findGrid(String evaluId, String deptId) {
+	public List<EvaluData> findGrid(String evaluId, String deptId, String createBy) {
 		Map<String, Object> ps = MapUtils.newHashMap();
 		ps.put("evaluId", evaluId);
 		ps.put("deptId", deptId);
+		ps.put("createBy",createBy);
 		List<EvaluData> result = dao.findGrid(ps);
 		return result;
 	}
@@ -121,12 +122,22 @@ public class EvaluService extends CrudService<EvaluDao, Evalu> {
 	 * @param deptId  参评部门ID
 	 * @return
 	 */
+	@Transactional(readOnly = false)
 	public List<Map<String, Object>> findReport(String evaluId, String createBy, String deptId) {
 		Map<String, Object> ps = MapUtils.newHashMap();
 		ps.put("evaluId", evaluId);
 		ps.put("createBy", createBy);
 		ps.put("deptId", deptId);
 		List<Map<String, Object>> result = dao.findReport(ps);
+		return result;
+	}
+
+	@Transactional(readOnly = false)
+	public List<Map<String, Object>> findUsers(String userCodes){
+		String[] inStrings = userCodes.split(",");
+		Map<String, Object> ps = MapUtils.newHashMap();
+		ps.put("userCodes", inStrings);
+		List<Map<String, Object>> result = dao.findUsers(ps);
 		return result;
 	}
 }

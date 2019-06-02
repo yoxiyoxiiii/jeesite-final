@@ -3,70 +3,74 @@
 <mapper namespace="com.jeesite.modules.evalu.dao.EvaluDao">
 
 
+    <!-- 查询数据
+    <select id="findList" resultType="Evalu">
+        SELECT ${sqlMap.column.toSql()}
+        FROM ${sqlMap.table.toSql()}
+        <where>
+            ${sqlMap.where.toSql()}
+        </where>
+        ORDER BY ${sqlMap.order.toSql()}
+    </select> -->
 
-	<!-- 查询数据
-	<select id="findList" resultType="Evalu">
-		SELECT ${sqlMap.column.toSql()}
-		FROM ${sqlMap.table.toSql()}
-		<where>
-			${sqlMap.where.toSql()}
-		</where>
-		ORDER BY ${sqlMap.order.toSql()}
-	</select> -->
+    <!-- 演示Map参数和返回值，支持分页 -->
+    <select id="findListForMap" resultType="map">
+        SELECT * FROM js_sys_office a
+        <where>
+            <if test="officeCode != null and officeCode != ''">
+                AND a.office_code in
+                <foreach collection="officeCode" index="index" item="item" open="(" separator="," close=")">
+                    #{item}
+                </foreach>
+            </if>
+        </where>
+        <if test="page != null and page.orderBy != null and page.orderBy != ''">
+            ORDER BY ${page.orderBy}
+        </if>
+    </select>
 
-	<!-- 演示Map参数和返回值，支持分页 -->
-	<select id="findListForMap" resultType="map">
-		SELECT * FROM js_sys_office a
-		<where>
-			<if test="officeCode != null and officeCode != ''">
-				AND a.office_code in
-				<foreach collection="officeCode" index="index" item="item" open="(" separator="," close=")">
-					#{item}
-				</foreach>
-			</if>
-		</where>
-		<if test="page != null and page.orderBy != null and page.orderBy != ''">
-			ORDER BY ${page.orderBy}
-		</if>
-	</select>
+    <!-- 演示Map参数和返回值，支持分页 -->
+    <select id="findByIn" resultType="com.jeesite.modules.sys.entity.Office">
+        SELECT * FROM js_sys_office a
+        <where>
+            <if test="officeCode != null and officeCode != ''">
+                AND a.office_code in
+                <foreach collection="officeCode" index="index" item="item" open="(" separator="," close=")">
+                    #{item}
+                </foreach>
+            </if>
+        </where>
+    </select>
 
-	<!-- 演示Map参数和返回值，支持分页 -->
-	<select id="findByIn" resultType="com.jeesite.modules.sys.entity.Office">
-		SELECT * FROM js_sys_office a
-		<where>
-			<if test="officeCode != null and officeCode != ''">
-				AND a.office_code in
-				<foreach collection="officeCode" index="index" item="item" open="(" separator="," close=")">
-					#{item}
-				</foreach>
-			</if>
-		</where>
-	</select>
+    <!-- 演示Map参数和返回值，支持分页 -->
+    <select id="findGrid" resultType="EvaluData">
+        select * from biz_evalu_data a
+        where evalu_lib_id in (select tree_code from biz_evalu_lib where evalu_id = #{evaluId})
 
-	<!-- 演示Map参数和返回值，支持分页 -->
-	<select id="findGrid" resultType="EvaluData">
-		select * from biz_evalu_data a
-		where evalu_lib_id in (select tree_code from biz_evalu_lib where evalu_id = #{evaluId})
+        <if test="deptId != null and deptId != ''">
+            AND a.dept_id = #{deptId}
+        </if>
+        <if test="createBy != null and createBy != ''">
+            AND a.create_by = #{createBy}
+        </if>
 
-			<if test="deptId != null and deptId != ''">
-				AND a.dept_id = #{deptId}
-			</if>
+    </select>
 
-	</select>
+    <!-- 演示Map参数和返回值，支持分页 -->
+    <select id="findReport" resultType="map">
+        call jeesite.findReport(#{evaluId})
+    </select>
 
-	<!-- 演示Map参数和返回值，支持分页 -->
-	<select id="findReport" resultType="map">
-		SELECT * FROM js_sys_office a
-		<where>
-			<if test="officeCode != null and officeCode != ''">
-				AND a.office_code in
-				<foreach collection="officeCode" index="index" item="item" open="(" separator="," close=")">
-					#{item}
-				</foreach>
-			</if>
-		</where>
-		<if test="page != null and page.orderBy != null and page.orderBy != ''">
-			ORDER BY ${page.orderBy}
-		</if>
-	</select>
+    <!-- 演示Map参数和返回值，支持分页 -->
+    <select id="findUsers" resultType="map">
+        SELECT emp_code, emp_name, office_code, office_name FROM js_sys_employee a
+        <where>
+            <if test="userCodes != null and userCodes != ''">
+                AND a.emp_code in
+                <foreach collection="userCodes" index="index" item="item" open="(" separator="," close=")">
+                    #{item}
+                </foreach>
+            </if>
+        </where>
+    </select>
 </mapper>

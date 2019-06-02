@@ -1,4 +1,4 @@
-<% layout('/layouts/default.html', {title: '民主测评明细树表管理', libs: ['dataGrid']}){ %>
+<% layout('/layouts/default.html', {title: '民主测评明细树表管理', libs: ['dataGrid','validate']}){ %>
 <div class="main-content">
 	<div class="box box-main">
 		<div class="box-header">
@@ -46,23 +46,23 @@
 <% } %>
 <script>
 // 初始化DataGrid对象
+var jsonData = null;
 $('#dataGrid').dataGrid({
 	searchForm: $("#searchForm"),
 	columnModel: [
 		{header:'${text("评测项")}', name:'treeName', index:'a.tree_name', width:500, align:"left", frozen:true, formatter: function(val, obj, row, act){
-			return '( '+row.treeCode+' ) '+'<a href="${ctx}/evalu/evaluLib/form?treeCode='+row.treeCode+'" class="btnList" data-title="${text("编辑民主测评明细树表")}">'+(val||row.id)+'</a>';
+			return '<a href="${ctx}/evalu/evaluLib/form?treeCode='+row.treeCode+'" class="btnList" data-title="${text("编辑民主测评明细树表")}">'+(val||row.id)+'</a>';
 		}},
 		{header:'${text("分数权重")}', name:'score', index:'a.score', width:150, align:"right", formatter: function(val, obj, row, act){
 			//return js.formatNumber(val, 2, false, ''); // 数值类型格式化 (原始数值, 小数位数, 是否千分位, 默认值，金额情况下设置0.00);
 			var html = [];
-			//html.push('<input type="hidden" name="ids" value="'+row.treeCode+'"/>');
 			var otherProps ="";
 			if(row.isTreeLeaf){
-				otherProps = ' onblur="ScoreCheck(\'' + val + '\', \''+ obj+'\',\''+ row + '\',\''+ act + '\')" ';
+				otherProps = ' onblur="ScoreCheck(\'' + row.treeCode + '\', \''+ row.parentCode +'\',\''+ row.treeLevel + '\')" ';
 			}else{
-				otherProps = ' disabled="disabled" ';
+				otherProps = ' readonly="readonly" ';
 			}
-			html.push('<input name="scores" type="text" value="'+row.score+'"'+ otherProps +' style="width:50px;height:19px;margin:0;padding:0;text-align:center;border:1px solid #ddd">');
+			html.push('<input name="scores" type="text" id="' + row.treeCode +'" class="required number" value="'+row.score+'"'+ otherProps +' style="width:50px;height:19px;margin:0;padding:0;text-align:center;border:1px solid #ddd">');
 			return html.join('');
 		}},
 		{header:'${text("计分方式")}', name:'evalSelectType', index:'a.eval_select_type', width:150, align:"center", formatter: function(val, obj, row, act){
@@ -88,11 +88,12 @@ $('#dataGrid').dataGrid({
 		}}
 	],
 	treeGrid: true,			// 启用树结构表格
-	defaultExpandLevel: 0,	// 默认展开的层次
-	expandNodeClearPostData: 'treeName,evaluId,remarks,', // 展开节点清理请求参数数据（一般设置查询条件的字段属性，否则在查询后，不能展开子节点数据）	// 加载成功后执行事件
+	defaultExpandLevel: 99,	// 默认展开的层次
+	expandNodeClearPostData: 'treeName,score,evalSelectType,evaluId,remarks,', // 展开节点清理请求参数数据（一般设置查询条件的字段属性，否则在查询后，不能展开子节点数据）	// 加载成功后执行事件
 	showFooter: true,
 	showRownum: true,
 	ajaxSuccess: function(data){
+		jsonData = data;
 		var totalItem = 0;
 		var totalScore = 0;
 		$(data).each(function(index, d){
@@ -111,7 +112,7 @@ $('#dataGrid').dataGrid({
 		}
 		$('#dataGrid').dataGrid("footerData", "set", {
 			"score" : "<center><em>共计："+ totalItem + "</em> 评测项</center>",
-			"treeName": "各评测项总分:<em> "+ totalScore +" </em> 分"
+			"treeName": "各评测项总分:<em id='totalScore'> "+ totalScore +" </em> 分"
 		}, false);
 	}
 });
@@ -129,8 +130,36 @@ $('#btnUpdateSort').click(function(){
    //保存时分数不平衡提示信息
 });
 
-function ScoreCheck(val, obj, row, act){
+function ScoreCheck(node, parent, treeLevel){
+	if( parent == null || parent == "" || parent == "0"){
+		//顶层指标不处理
+		if(treeLevel != '0'){
+			return;
+		}		
+	}
+	var treeTotal = 0;
+	$(jsonData).each(function(index,item){
+		if(item.parentCode == parent){
+			var temp = $("input[id='"+ item.treeCode + "']").val();
+			try{
+				treeTotal += parseFloat(temp);
+			}catch(e){}
+		}
+	});
 	//累加上级数据
-	alert(val);
+	var total = 0;
+	$("input[id='"+ parent + "']").val(treeTotal);
+	$(" td[aria-describedby='dataGrid_score']").find("input").not("[readonly='readonly']").each(function(index, con){
+		try{
+			total += parseFloat($(con).val());
+		}catch(e){}
+	});
+	$("#totalScore").text( total )
+	if( total != parseFloat('${evalu.score}')){
+		$("#totalScore").addClass("text-danger");
+	}else{
+		$("#totalScore").removeClass("text-danger");
+	}
+	
 }
 </script>

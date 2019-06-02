@@ -54,10 +54,18 @@
 		/*color: red;*/
 	}
 
+	.noborder{
+		border-width:0 !important;
+		background-color: rgba(0,0,0,0);
+	}
 	/* .evaluindex:before {
 		counter-increment: subsubsubsection;
 		content: counter(subsubsubsection);
 	} */
+
+	.forceHeight{
+		height: 100% !important;
+	}
 </style>
 <div class="main-content">
 	<div class="box box-main">
@@ -81,7 +89,7 @@
 			</div>
 			<!-- info row -->
 			<div class="row">
-				<div class="col-md-4 col-sm-6 col-xs-12">
+				<div class="col-md-6 col-sm-6 col-xs-12">
 					<div class="info-box bg-gray-light">
 						<span class="info-box-icon bg-yellow"><i class="fa fa-forumbee"></i></span>
 						<div class="info-box-content">
@@ -91,7 +99,7 @@
 						</div>
 					</div>
 				</div>
-				<div class="col-md-4 col-sm-6 col-xs-12">
+				<div class="col-md-6 col-sm-6 col-xs-12">
 					<div class="info-box bg-aqua">
 						<span class="info-box-icon"><i class="fa fa-sliders"></i></span>
 						<div class="info-box-content">
@@ -110,23 +118,12 @@
 				</div>
 				<!-- fix for small devices only -->
 				<div class="clearfix visible-sm-block"></div>
-
-				<div class="col-md-4 col-sm-6 col-xs-12">
-					<div class="info-box bg-gray-light">
-						<span class="info-box-icon bg-green"><i class="fa fa-pagelines"></i></span>
-						<div class="info-box-content">
-							<span class="info-box-text">测评结果</span>
-							<span class="info-box-number">38 / 70 / 10</span>
-							<small>(优秀/合格/不合格/作废)</small>
-						</div>
-					</div>
-				</div>
 			</div>
 
 
 			<!-- Table row -->
 			<div class="row">
-				<div class="col-xs-6">
+				<div class="col-xs-12" id="dataGridContent">
 					<table id="dataGrid"></table>
 					<div id="dataGridPage"></div>
 				</div>				
@@ -136,39 +133,50 @@
 			<div class="row">
 				<!-- accepted payments column -->
 				<div class="col-xs-6">
-					<p class="lead">Payment Methods:</p>
-					<img src="../../dist/img/credit/visa.png" alt="Visa">
-					<img src="../../dist/img/credit/mastercard.png" alt="Mastercard">
-					<img src="../../dist/img/credit/american-express.png" alt="American Express">
-					<img src="../../dist/img/credit/paypal2.png" alt="Paypal">
+					<p class="lead">测评有效性分析:</p>
+					<a class="btn btn-app">
+						<i class="fa fa-repeat"></i> 有效
+					</a>
+					<a class="btn btn-app">
+						<span class="badge bg-yellow">3</span>
+						<i class="fa fa-bullhorn"></i> 预发布
+					</a>
+				
+					<a class="btn btn-app">
+						<span class="badge bg-green">300</span>
+						<i class="fa fa-barcode"></i> 公示
+					</a>
+					<a class="btn btn-app" id="printReport">						
+						<i class="fa fa-print"></i> 打印报告
+					</a>
 					<p class="text-muted well well-sm no-shadow" style="margin-top: 10px;">
-						Etsy doostang zoodles disqus groupon greplin oooj voxy zoodles, weebly ning heekya handango
-						imeem plugg
-						dopplr jibjab, movity jajah plickers sifteo edmodo ifttt zimbra.
+						本次活动与2019-4-20 08:00:00启动,发出票数200张.<br>
+						截止2019-6-1 20:00:00结束,共收回票数198张. 其中1张作废.<br>
+						测评过程: 有效.
 					</p>
 				</div>
 				<!-- /.col -->
 				<div class="col-xs-6">
-					<p class="lead">Amount Due 2/22/2014</p>
+					<p class="lead">测评结果报告 2/22/2014</p>
 
 					<div class="table-responsive">
 						<table class="table">
 							<tbody>
 								<tr>
-									<th style="width:50%">Subtotal:</th>
-									<td>$250.30</td>
+									<th style="width:50%">督考推任务完成情况(10.5%):</th>
+									<td>10</td>
 								</tr>
 								<tr>
-									<th>Tax (9.3%)</th>
-									<td>$10.34</td>
+									<th>服务意识 (59.3%)</th>
+									<td>10.34</td>
 								</tr>
 								<tr>
-									<th>Shipping:</th>
+									<th>德育(40%):</th>
 									<td>$5.80</td>
 								</tr>
 								<tr>
-									<th>Total:</th>
-									<td>$265.24</td>
+									<th>作废:</th>
+									<td>5</td>
 								</tr>
 							</tbody>
 						</table>
@@ -180,59 +188,135 @@
 
 			<!-- this row will not appear when printing -->
 			<div class="row no-print">
-				<div class="col-xs-12">
-					<a href="invoice-print.html" target="_blank" class="btn btn-default"><i class="fa fa-print"></i>
-						Print</a>
-					<button type="button" class="btn btn-success pull-right"><i class="fa fa-credit-card"></i> Submit
-						Payment
+				<div class="col-xs-12">				
+					<button type="button" class="btn btn-success pull-right"><i class="fa fa-credit-card"></i> 关闭报告
 					</button>
 					<button type="button" class="btn btn-primary pull-right" style="margin-right: 5px;">
-						<i class="fa fa-download"></i> Generate PDF
+						<i class="fa fa-download"></i> 导出 EXCLE
 					</button>
 				</div>
 			</div>
 		</section>
 	</div>
 </div>
+<!-- 模态框（Modal） -->
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+						&times;
+					</button>
+					<h4 class="modal-title" id="myModalLabel">
+						选择测评人
+					</h4>
+				</div>
+				<div class="modal-body span6">								
+					<%for(usr in users ){%>
+							<div class="user-block" onclick="viewDitail('${usr.emp_code}','${usr.office_name}')">
+									<img class="img-circle" src="${ctxStatic}/modules/sys/user2-160x160.jpg" alt="User Image">
+									<span class="username"><a href="#">${usr.emp_name}</a></span>
+									<span class="description">${usr.office_name}</span>
+							</div>
+					<%}%>				
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-primary" data-dismiss="modal">确定
+							</button>
+					<button type="button" class="btn btn-default" data-dismiss="modal">取消
+					</button>
+				</div>
+			</div>
+		</div>
+	</div>
 <% } %>
 
 <script>
+
 //加载测评数据记录
 var evaluData = null;
 		$.ajax({
 			type:"POST",
 			async: false,
-			url:"${ctx}/evalu/evalu/evaluData?evaluId=${evalu.id}&deptId=",
+			url:"${ctx}/evalu/evalu/evaluReport?evaluId=${evalu.id}&deptId=",
 			dataType:"json",
 			success: function(json){
-				evaluData = json;
+				evaluData = json;				
 			}});
 
 // 初始化DataGrid对象
 $('#dataGrid').dataGrid({
 	data: evaluData,
     datatype: "local",
+	height: "100%",
+	loadonce: true,
+	loadui: "disable", 
+	rowNum : evaluData==null?20:evaluData.length,//一页显示多少条
+    rowList : [ 20, 50, 100 ],//可供用户选择一页显示多少条 
 	columnModel: [
-		{header:'${text("参评部门")}', name:'title', index:'a.title', width:250, align:"left", formatter: function(val, obj, row, act){
-			return '<a href="${ctx}/evalu/evalu/form?id='+row.id+'" class="btnList" data-title="${text("查看部门详细得分")}">'+(val||row.id)+'</a>';
+		{header:'${text("参评部门")}', name:'full_name', index:'a.dept_id', width:300, align:"left", formatter: function(val, obj, row, act){
+			return '<a href="${ctx}/evalu/evalu/form?id='+row.dept_id+'" class="btnList" data-title="${text("查看部门详细得分")}">'+(val)+'</a>';
 		}},		
-		{header:'${text("有效回收评测表")}', name:'amount', index:'a.score', width:150, align:"right"},
-		{header:'${text("总分")}', name:'sum', index:'a.has_opinion', width:150, align:"center"},
-		{header:'${text("平均分")}', name:'score', index:'a.status', width:150, align:"center"},
-		{header:'${text("名次")}', name:'ranking', index:'a.status', width:150, align:"center"},
-		{header:'${text("操作")}', name:'actions', width:120, sortable:false, title:false, formatter: function(val, obj, row, act){
+		{header:'${text("有效回收评测表")}', name:'youxiao', index:'a.youxiao', width:100, align:"center"},
+		{header:'${text("总分")}', name:'zongfen', index:'a.zongfen', width:100, align:"center"},
+		{header:'${text("平均分")}', name:'pingjun', index:'a.pingjun', width:100, align:"center"},
+		{header:'${text("名次")}', name:'rownum', index:'a.rownum', width:100, align:"center"},
+		{header:'${text("操作")}', name:'actions', width:120, sortable:false, title:false, align:"center", formatter: function(val, obj, row, act){
 			var actions = [];
 			<% if(hasPermi('evalu:evalu:edit')){ %>
-				actions.push('<a href="${ctx}/evalu/evalu/form?id='+row.id+'" class="btnList" title="${text("查看评测意见")}"><i class="fa fa-pencil"></i></a>&nbsp;');
-				actions.push('<a href="${ctx}/evalu/evalu/delete?id='+row.id+'" class="btnList" title="${text("查看评测明细")}" data-confirm="${text("确认要删除该民主测评吗？")}"><i class="fa fa-trash-o"></i></a>&nbsp;');
-				actions.push('<a href="${ctx}/evalu/evaluLib/list/'+row.id+'" class="btnList" title="${text("测评项管理")}"><i class="fa fa-list-ol"></i></a>&nbsp;');	
+				actions.push('<button onclick="viewEvaluTable(this)" type="button" class="btn btn-default noborder" data-depat="'+ row.dept_id +'" data-depatname="'+ row.full_name +'" title="${text("查看评测明细")}"><i class="fa fa-list-ol"></i></button>&nbsp;');
 			<% } %>
 			return actions.join('');
 		}}
 	],
-	// 加载成功后执行事件
+	// loadComplete: function() {
+	// 	resetHeight();
+	// 	//BUG:手动关闭loading窗口
+	// 	js.closeLoading(0, true)
+	// },
 	ajaxSuccess: function(data){
 		
 	}
 });
+
+$(window).bind('resize', function() { 	
+		resetHeight();	
+});
+
+$(".btnList").bind('onClick', function(){
+	alert($(this));
+});
+$(function(){
+	$("#printReport").click(function(){
+		var printHtml = document.getElementsByTagName('html')[0].innerHTML;
+		var wind = window.open("", "newwin", "toolbar=no,scrollbars=yes,menubar=no");	
+		wind.document.body.innerHTML = printHtml;
+		wind.print();
+		wind.close();
+	}); 
+});
+function resetHeight(){
+	if( evaluData.length != null){
+		var newHeight = (evaluData.length + 3)*36;
+		$("#dataGridContent").height(newHeight);
+		$(".ui-jqgrid .ui-jqgrid-bdiv").addClass("forceHeight");
+	}	
+}
+
+
+var temDepatID = "";
+var temDepatFullName = "";
+function viewEvaluTable(obj){
+	temDepatID = $(obj).attr("data-depat");
+	temDepatFullName = $(obj).attr("data-depatname");
+	$("#myModal #myModalLabel").html( temDepatFullName +  "<small>请选择测评人</small>");
+	$('#myModal').modal('show');
+	return false;
+}
+
+function viewDitail(name, depat_name){
+	// 查看明细	
+		js.addTabPage($(this), '评测明细', '${ctx}/evalu/evaluLib/reportTableView/${evalu.id}/' + temDepatID + '/' + name, true, false);		
+	
+}
 </script>

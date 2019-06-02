@@ -228,7 +228,7 @@ var evaluData = null;
 $.ajax({
 	type:"POST",
 	async: false,
-	url:"${ctx}/evalu/evalu/evaluData?evaluId=${evalu.id}&deptId=",
+	url:"${ctx}/evalu/evalu/evaluData?evaluId=${evalu.id}&deptId=&createBy=",
 	dataType:"json",
 	success: function(json){
 		evaluData = json;

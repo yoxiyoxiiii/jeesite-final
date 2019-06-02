@@ -15,7 +15,9 @@ import com.jeesite.modules.evalu.service.EvaluDataService;
 import com.jeesite.modules.evalu.service.EvaluOpinionService;
 import com.jeesite.modules.evalu.service.EvaluService;
 import com.jeesite.modules.sys.entity.Office;
+import com.jeesite.modules.sys.entity.User;
 import com.jeesite.modules.sys.service.OfficeService;
+import com.jeesite.modules.sys.service.UserService;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -55,6 +57,8 @@ public class EvaluLibController extends BaseController {
 	private EvaluDataService evaluDataService;
 	@Autowired
 	private EvaluOpinionService evaluOpinionService;
+	@Autowired
+	private UserService userService;
 	/**
 	 * 获取数据
 	 */
@@ -235,8 +239,41 @@ public class EvaluLibController extends BaseController {
 		model.addAttribute("evalu",evalu);
 		model.addAttribute("user",UserUtils.getUser());
 		model.addAttribute("office", office);
+		model.addAttribute("createBy","");
 		return "modules/evalu/evaluDataTable";
 	}
+
+
+	/**
+	 * 独立评价表
+	 */
+	@RequestMapping(value = {"reportTableView/{evaluId}/{depatId}/{createBy}", ""})
+	public String reportTableView(@PathVariable String evaluId, @PathVariable String depatId, @PathVariable String createBy, EvaluLib evaluLib, Model model) {
+		//todo:需要权限判断
+		Evalu evalu = evaluService.get(evaluId);
+		evaluLib.setEvaluId(evaluId);
+		//防止createBy字段错误传递给lib
+		evaluLib.setCreateBy(null);
+		List<EvaluLib> listEvaluLib = this.listData(evaluLib);
+		for(int i=0; i<listEvaluLib.size(); i++){
+			EvaluLib lib = listEvaluLib.get(i);
+			if( listEvaluLib.get(i).getIsTreeLeaf()){
+				String temType[] = lib.getEvalSelectType().split(",");
+				listEvaluLib.get(i).setEvalSelectType(temType[temType.length-1]);
+			}
+		}
+		//评测数据
+		//测评单位
+		Office office = officeService.get(depatId);
+		model.addAttribute("listEvaluLib", listEvaluLib);
+		model.addAttribute("evalu",evalu);
+		model.addAttribute("user",UserUtils.getUser());
+		model.addAttribute("office", office);
+		model.addAttribute("createBy",createBy);
+		return "modules/evalu/evaluDataTable";
+	}
+
+
 
 	/**
 	 * 对比评测表格
@@ -254,10 +291,13 @@ public class EvaluLibController extends BaseController {
 			}
 		}
 
+//		List<User> users =
+		//参评领导
+		List<Map<String, Object>>  users = evaluService.findUsers(evalu.getExeUser());
 		model.addAttribute("evaluLib", evaluLib);
 		model.addAttribute("listEvaluLib",listEvaluLib);
 		model.addAttribute("evalu",evalu);
-//		model.addAttribute("columns",columns);
+		model.addAttribute("users",users);
 		return "modules/evalu/evaluDataGrid";
 	}
 
@@ -373,9 +413,11 @@ public class EvaluLibController extends BaseController {
 			model.addAttribute("office", office);
 		}
 
+		List<Map<String, Object>>  users = evaluService.findUsers(evalu.getExeUser());
 		model.addAttribute("listEvaluLib", listEvaluLib);
 		model.addAttribute("evalu",evalu);
 		model.addAttribute("user",UserUtils.getUser());
+		model.addAttribute("users",users);
 
 		return "modules/evalu/evaluDataReport";
 	}

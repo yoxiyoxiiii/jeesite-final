@@ -18,11 +18,12 @@ import com.jeesite.common.mybatis.mapper.query.QueryType;
 /**
  * 民主测评记录Entity
  * @author sanye
- * @version 2019-05-30
+ * @version 2019-06-01
  */
 @Table(name="biz_evalu_data", alias="a", columns={
-		@Column(name="evalu_lib_id", attrName="evaluLibId", label="所属测评项", isPK=true),
-		@Column(name="dept_id", attrName="deptId", label="参评单位", isPK=true),
+		@Column(name="id", attrName="id", label="编号", isPK=true),
+		@Column(name="evalu_lib_id", attrName="evaluLibId", label="所属测评项"),
+		@Column(name="dept_id", attrName="deptId", label="参评单位"),
 		@Column(name="score", attrName="score", label="得分", comment="得分(仅记录选项)"),
 		@Column(includeEntity=DataEntity.class),
 		@Column(name="audit_by", attrName="auditBy", label="审批者"),
@@ -39,15 +40,15 @@ public class EvaluData extends DataEntity<EvaluData> {
 	private Date auditDate;		// 审批时间
 	
 	public EvaluData() {
-		this(null,null,null);
+		this(null);
 	}
 
-	public EvaluData(String evaluLibId, String deptId, String createBy){
-		this.evaluLibId = evaluLibId;
-		this.deptId = deptId;
-		this.createBy = createBy;
+	public EvaluData(String id){
+		super(id);
 	}
 	
+	@NotBlank(message="所属测评项不能为空")
+	@Length(min=0, max=64, message="所属测评项长度不能超过 64 个字符")
 	public String getEvaluLibId() {
 		return evaluLibId;
 	}
@@ -56,6 +57,8 @@ public class EvaluData extends DataEntity<EvaluData> {
 		this.evaluLibId = evaluLibId;
 	}
 	
+	@NotBlank(message="参评单位不能为空")
+	@Length(min=0, max=64, message="参评单位长度不能超过 64 个字符")
 	public String getDeptId() {
 		return deptId;
 	}

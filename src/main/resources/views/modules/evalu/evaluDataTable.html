@@ -70,6 +70,7 @@
 						class="fa fa-minus"></i></button>
 			</div>
 		</div>
+		<div>需要添加信息:  被评测单位, 测评人(只读): </div>
 		<#form:form id="inputForm" model="${evaluLib}" action="${ctx}/evalu/evaluLib/saveData" method="post"
 			class="form-horizontal">
 			<div class="box-body">
@@ -82,7 +83,7 @@
 					<div class="col-xs-12">
 						<div class="form-group">
 							<label class="col-sm-7 <%if(evaluLib.treeLevel==0){%>title0<%}else{%>sss titleL<%}%>">
-							${evaluLib.treeLevel}.${evaluLib.treeName}.(${evaluLib.score}分)</label>
+							${evaluLib.treeName}.(${evaluLib.score}分)</label>
 							</label>
 							<div class="col-sm-5">
 								<#form:radio path="${evaluLib.treeCode}" dictType="${evaluLib.evalSelectType}"
@@ -145,7 +146,7 @@ var evaluData = null;
 $.ajax({
 	type:"POST",
 	async: false,
-	url:"${ctx}/evalu/evalu/evaluData?evaluId=${evalu.id}&deptId=${office.officeCode}",
+	url:"${ctx}/evalu/evalu/evaluData?evaluId=${evalu.id}&deptId=${office.officeCode}&createBy=${createBy}",
 	dataType:"json",
 	success: function(json){
 		evaluData = json;
@@ -162,7 +163,7 @@ $.ajax({
 	$.ajax({
 		type:"POST",
 		async: false,
-		url:"${ctx}/evalu/evaluOpinion/listData?evaluId=${evalu.id}&deptId=${office.officeCode}",
+		url:"${ctx}/evalu/evaluOpinion/listData?evaluId=${evalu.id}&deptId=${office.officeCode}&createBy=${createBy}",
 		dataType:"json",
 		success: function(json){
 			//清空值, 显示当前列
@@ -187,6 +188,14 @@ $.ajax({
 		}
 	});
 
-	//添加序号:
+	//只读控制:
+	var createBy = '${createBy}';
+	$(function(){
+		//查看指定人员ID
+		if(createBy != '' && createBy.length > 0){
+			$("#btnSubmit").hide();
+		}
+	});
+	
 
 </script>
