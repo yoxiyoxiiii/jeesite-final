@@ -71,8 +71,8 @@
 	<div class="box box-main">
 		<div class="pad margin no-print">
 			<div class="callout callout-info" style="margin-bottom: 0!important;">
-				<h4><i class="fa fa-info"></i> Note:</h4>
-				This page has been enhanced for printing. Click the print button at the bottom of the invoice to test.
+				<h4><i class="fa fa-info"></i> 提示:</h4>
+				该民主测评还未完成. 该测评当前没有关联考核方案, 不影响任何一个考核结果. the invoice to test.
 			</div>
 		</div>
 		<section class="invoice">
@@ -191,7 +191,7 @@
 				<div class="col-xs-12">				
 					<button type="button" class="btn btn-success pull-right"><i class="fa fa-credit-card"></i> 关闭报告
 					</button>
-					<button type="button" class="btn btn-primary pull-right" style="margin-right: 5px;">
+					<button type="button" class="btn btn-primary pull-right" id="btnExport" style="margin-right: 5px;">
 						<i class="fa fa-download"></i> 导出 EXCLE
 					</button>
 				</div>
@@ -201,7 +201,10 @@
 </div>
 <!-- 模态框（Modal） -->
 <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-		<div class="modal-dialog">
+	<form id="searchForm" action="" method="post" class="form-inline hide" data-page-no="" data-page-size="" data-order-by="">
+
+	</form>
+	<div class="modal-dialog">
 			<div class="modal-content">
 				<div class="modal-header">
 					<button type="button" class="close" data-dismiss="modal" aria-hidden="true">
@@ -259,8 +262,9 @@ $('#dataGrid').dataGrid({
 		}},		
 		{header:'${text("有效回收评测表")}', name:'youxiao', index:'a.youxiao', width:100, align:"center"},
 		{header:'${text("总分")}', name:'zongfen', index:'a.zongfen', width:100, align:"center"},
-		{header:'${text("平均分")}', name:'pingjun', index:'a.pingjun', width:100, align:"center"},
-		{header:'${text("名次")}', name:'rownum', index:'a.rownum', width:100, align:"center"},
+		{header:'${text("最终得分")}', name:'pingjun', index:'a.pingjun', width:100, align:"center"},
+		{header:'${text("总排名")}', name:'rownum', index:'a.rownum', width:100, align:"center"},
+		{header:'${text("等级")}', name:'level', index:'a.level', width:100, align:"center"},
 		{header:'${text("操作")}', name:'actions', width:120, sortable:false, title:false, align:"center", formatter: function(val, obj, row, act){
 			var actions = [];
 			<% if(hasPermi('evalu:evalu:edit')){ %>
@@ -286,6 +290,15 @@ $(window).bind('resize', function() {
 $(".btnList").bind('onClick', function(){
 	alert($(this));
 });
+
+//异步下载
+$('#btnExport').click(function(){
+	js.ajaxSubmitForm($('#searchForm'), {
+		url:'${ctx}/demo/print',
+		downloadFile:true
+	});
+});
+
 $(function(){
 	$("#printReport").click(function(){
 		var printHtml = document.getElementsByTagName('html')[0].innerHTML;
@@ -319,4 +332,6 @@ function viewDitail(name, depat_name){
 		js.addTabPage($(this), '评测明细', '${ctx}/evalu/evaluLib/reportTableView/${evalu.id}/' + temDepatID + '/' + name, true, false);		
 	
 }
+
+
 </script>

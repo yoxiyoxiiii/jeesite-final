@@ -1,0 +1,214 @@
+<% layout('/layouts/default.html', {title: '申诉管理', libs: ['validate','fileupload']}){ %>
+<div class="main-content">
+
+		<div class="nav-tabs-custom nav-main">
+				<ul class="nav nav-tabs pull-right">
+					<li class=""><a href="#tab-3" data-toggle="tab">申诉信息</a></li>
+					<li class=""><a href="#tab-2" data-toggle="tab">受理情况</a></li>
+					<li class="active"><a href="#tab-1" data-toggle="tab">裁决结果</a></li>
+					<li class="pull-left header">
+							<i class="fa fa-list-alt"></i> ${text(appeal.isNewRecord ? '提起申诉' : '处理申诉')}
+					</li>
+				</ul>
+				<#form:form id="inputForm" model="${appeal}" action="${ctx}/appeal/appeal/save" method="post" class="form-horizontal">
+					<input type="hidden" id="dataSourceName" name="dataSourceName" value="" />
+					<div class="tab-content">
+						<div class="tab-pane active" id="tab-1">
+							<div class="box-body">
+									<div class="form-unit">${text('申诉信息')}</div>
+									<#form:hidden path="id"/>
+									<div class="row">
+										<div class="col-xs-6">
+											<div class="form-group">
+												<label class="control-label col-sm-4" title="">
+													<span class="required ">*</span> ${text('申诉项目')}：<i class="fa icon-question hide"></i></label>
+												<div class="col-sm-8">
+													<#form:input path="palnId" maxlength="64" class="form-control required"/>
+												</div>
+											</div>
+										</div>
+										<div class="col-xs-6">
+											<div class="form-group">
+												<label class="control-label col-sm-4" title="">
+													<span class="required ">*</span> ${text('审核阶段')}：<i class="fa icon-question hide"></i></label>
+												<div class="col-sm-8">
+													<#form:input path="phasesId" maxlength="64" class="form-control required"/>
+												</div>
+											</div>
+										</div>
+									</div>
+									<div class="row">
+										<div class="col-xs-12">
+											<div class="form-group">
+												<label class="control-label col-sm-2" title="">
+													<span class="required hide">*</span> ${text('具体事项')}：<i class="fa icon-question hide"></i></label>
+												<div class="col-sm-10">
+													<#form:textarea path="items" rows="4" maxlength="2000" class="form-control"/>
+												</div>
+											</div>
+										</div>
+									</div>
+									<div class="row">
+										<div class="col-xs-12">
+											<div class="form-group">
+												<label class="control-label col-sm-2" title="">
+													<span class="required hide">*</span> ${text('申诉理由')}：<i class="fa icon-question hide"></i></label>
+												<div class="col-sm-10">
+													<#form:textarea path="reason" rows="4" maxlength="2000" class="form-control"/>
+												</div>
+											</div>
+										</div>
+									</div>									
+										<div class="row">
+											<div class="col-xs-12">
+												<div class="form-group">
+													<label class="control-label col-sm-2">${text('附件上传')}：</label>
+													<div class="col-sm-10">
+														<#form:fileupload id="uploadFile" bizKey="${appeal.id}" bizType="appeal_file"
+															uploadType="all" class="" readonly="false"/>
+													</div>
+												</div>
+											</div>
+										</div>						
+							</div>
+						</div>
+						<div class="tab-pane " id="tab-2">
+							<div class="box-body">
+									<div class="form-unit">受理情况</div>
+									<div class="row">
+											<div class="col-xs-6">
+												<div class="form-group">
+													<label class="control-label col-sm-4" title="">
+														<span class="required hide">*</span> ${text('受理人')}：<i class="fa icon-question hide"></i></label>
+													<div class="col-sm-8">
+														<#form:input path="receiverBy" maxlength="64" class="form-control"/>
+													</div>
+												</div>
+											</div>
+											<div class="col-xs-6">
+												<div class="form-group">
+													<label class="control-label col-sm-4" title="">
+														<span class="required hide">*</span> ${text('受理时间')}：<i class="fa icon-question hide"></i></label>
+													<div class="col-sm-8">
+														<#form:input path="receiveDate" readonly="true" maxlength="20" class="form-control Wdate"
+															dataFormat="datetime" onclick="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm',isShowClear:true});"/>
+													</div>
+												</div>
+											</div>
+										</div>
+										<div class="row">
+											<div class="col-xs-12">
+												<div class="form-group">
+													<label class="control-label col-sm-2" title="">
+														<span class="required hide">*</span> ${text('受理意见')}：<i class="fa icon-question hide"></i></label>
+													<div class="col-sm-10">
+														<#form:textarea path="opinion" rows="4" maxlength="2000" class="form-control"/>
+													</div>
+												</div>
+											</div>
+										</div>
+							</div>
+						</div>
+						<div class="tab-pane " id="tab-3">
+							<div class="box-body">
+								<div class="form-unit">裁决结果</div>
+								<div class="row">
+										<div class="col-xs-12">
+											<div class="form-group">
+												<label class="control-label col-sm-2" title="">
+													<span class="required hide">*</span> ${text('处理过程及意见')}：<i class="fa icon-question hide"></i></label>
+												<div class="col-sm-10">
+													<#form:textarea path="process" rows="4" maxlength="2000" class="form-control"/>
+												</div>
+											</div>
+										</div>
+									</div>
+									<div class="row">
+										<div class="col-xs-6">
+											<div class="form-group">
+												<label class="control-label col-sm-4" title="">
+													<span class="required hide">*</span> ${text('裁决结果')}：<i class="fa icon-question hide"></i></label>
+												<div class="col-sm-8">
+													<#form:select path="result" dictType="" multiple="true" blankOption="true" class="form-control" />
+												</div>
+											</div>
+										</div>
+										<div class="col-xs-6">
+											<div class="form-group">
+												<label class="control-label col-sm-4" title="">
+													<span class="required hide">*</span> ${text('分数调整结果')}：<i class="fa icon-question hide"></i></label>
+												<div class="col-sm-8">
+													<#form:input path="score" class="form-control number"/>
+												</div>
+											</div>
+										</div>
+									</div>
+									<div class="row">
+										<div class="col-xs-6">
+											<div class="form-group">
+												<label class="control-label col-sm-4" title="">
+													<span class="required hide">*</span> ${text('审批者')}：<i class="fa icon-question hide"></i></label>
+												<div class="col-sm-8">
+													<#form:input path="auditBy" maxlength="64" class="form-control"/>
+												</div>
+											</div>
+										</div>
+										<div class="col-xs-6">
+											<div class="form-group">
+												<label class="control-label col-sm-4" title="">
+													<span class="required hide">*</span> ${text('审批时间')}：<i class="fa icon-question hide"></i></label>
+												<div class="col-sm-8">
+													<#form:input path="auditDate" readonly="true" maxlength="20" class="form-control Wdate"
+														dataFormat="datetime" onclick="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm',isShowClear:true});"/>
+												</div>
+											</div>
+										</div>
+									</div>								
+							</div>
+						</div>
+					</div>
+					<div class="box-footer">
+							<div class="form-unit">申诉流程操作记录</div>
+							<div class="row">
+									<div class="col-xs-12">
+										<div class="form-group">										
+											<div class="col-sm-offset-2 col-sm-8">
+												<#form:textarea path="logs" rows="5" maxlength="2000" class="form-control" readonly="true" />
+											</div>
+										</div>
+									</div>
+								</div>
+						</div>
+						<div class="row">
+							<div class="col-sm-offset-2 col-sm-10">
+								<input type="hidden" id="status" name="status" value="" />
+								<button id="btnNext" type="submit" class="btn btn-sm btn-primary"
+									onclick="$('#status').val('0');" title="保存并进入到下一步配置。"><i
+										class="fa fa-arrow-circle-right"></i> 下一步</button>&nbsp;
+								<button id="btnSave" type="submit" class="btn btn-sm btn-primary hide"
+									onclick="$('#status').val('');" title="先保存起来，不进行下一步。"><i class="fa fa-check"></i>
+									提交审批</button>&nbsp;
+								<button type="button" class="btn btn-sm btn-default" id="btnCancel"
+									onclick="js.closeCurrentTabPage()"><i class="fa fa-reply-all"></i> 关 闭</button>
+								&nbsp;&nbsp;								
+									<span class="text-info">以下为申诉流程详细记录</span>
+							</div>
+						</div>						
+					</#form:form>
+			</div>	
+</div>
+<% } %>
+<script>
+$("#inputForm").validate({
+	submitHandler: function(form){
+		js.ajaxSubmitForm($(form), function(data){
+			js.showMessage(data.message);
+			if(data.result == Global.TRUE){
+				js.closeCurrentTabPage(function(contentWindow){
+					contentWindow.page();
+				});
+			}
+		}, "json");
+    }
+});
+</script>

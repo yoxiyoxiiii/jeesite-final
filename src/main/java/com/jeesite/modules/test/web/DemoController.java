@@ -3,6 +3,8 @@
  */
 package com.jeesite.modules.test.web;
 
+import com.jeesite.common.config.Global;
+import com.jeesite.modules.basic.printer.service.PrinterService;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -15,6 +17,11 @@ import com.jeesite.common.lang.StringUtils;
 import com.jeesite.common.web.BaseController;
 import com.jeesite.modules.test.entity.TestData;
 import com.jeesite.modules.test.service.TestDataService;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+import javax.jnlp.PrintService;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 
 /**
  * 演示实例Controller
@@ -27,7 +34,8 @@ public class DemoController extends BaseController {
 
 	@Autowired
 	private TestDataService testDataService;
-	
+	@Autowired
+	private PrinterService printerService;
 	/**
 	 * 获取数据
 	 */
@@ -53,5 +61,23 @@ public class DemoController extends BaseController {
 	public String form(@PathVariable String viewName, TestData testData, Model model) {
 		return "modules/demo/demoForm" + StringUtils.cap(viewName);
 	}
-	
+
+
+	/**
+	 * 报表数据打印
+	 * @param
+	 * @param response
+	 * @throws IOException
+	 */
+	@RequiresPermissions("test:testData:view")
+	@RequestMapping(value = "print")
+	@ResponseBody
+	public String print(TestData testData, HttpServletResponse response){
+		try{
+			printerService.printDemo(testData, response);
+			return renderResult(Global.TRUE, text("打印报价成功！"));
+		}catch(IOException e){
+			return renderResult(Global.FALSE, text("打印出错！"));
+		}
+	}
 }
