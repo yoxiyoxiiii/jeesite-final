@@ -15,7 +15,8 @@
 		<div class="box-body">
 			<#form:form id="searchForm" model="${businessTargetDataInfo}" action="${ctx}/businesstargetdatainfo/businessTargetDataInfo/listData" method="post" class="form-inline hide"
 					data-page-no="${parameter.pageNo}" data-page-size="${parameter.pageSize}" data-order-by="${parameter.orderBy}">
-				<div class="form-group">
+			<div class="form-group">
+				<input  name="userCode"value="${userCode}">
 					<label class="control-label">${text('数据项')}：</label>
 					<div class="control-inline width-120" >
 						<#form:treeselect id="targetDataItemId" title="${text('用户选择')}"

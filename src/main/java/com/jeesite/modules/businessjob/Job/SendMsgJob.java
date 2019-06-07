@@ -69,8 +69,12 @@ public class SendMsgJob implements Job {
                     user.setUserName(employeeDto.getEmp_name());
                     businessPlanUserTask.setBusinessTarget(businessTarget);
                     businessPlanUserTask.setBusinessTargetDataItem(dateItem);
-                    businessPlanUserTask.setStatus("1");//未完成
+                    businessPlanUserTask.setTaskStatus(1);//未完成
+                    businessPlanUserTask.setTaskDescription(dateItem.getItemDescription());
                     businessPlanUserTask.setUser(user);
+                    //设计计划开始时间和结束时间
+                    businessPlanUserTask.setTaskStartTime(businessCheckPlan.getPlanStartTime());
+                    businessPlanUserTask.setTaskEndTime(businessCheckPlan.getPlanEndTime());
                     businessPlanUserTaskService.save(businessPlanUserTask);
                 });
             });

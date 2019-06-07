@@ -89,9 +89,10 @@ $('#dataGrid').dataGrid({
 		// {header:'${text("更新时间")}', name:'updateDate', index:'a.update_date', width:150, align:"center"},
 		{header:'${text("操作")}', name:'actions', width:120, sortable:false, title:false, formatter: function(val, obj, row, act){
 			var actions = [];
-			<% if(hasPermi('businesstargetdatainfo:businessTargetDataInfo:edit')){ %>
-				// actions.push('<a href="${ctx}/businessplanusertask/businessPlanUserTask/form?id='+row.id+'" class="btnList" title="${text("编辑目标生成的任务")}"><i class="fa fa-pencil"></i></a>&nbsp;');
-				actions.push('<a href="${ctx}/businesstargetdatainfo/businessTargetDataInfo/formNew?userTaskId='+row.id+'&businessTargetId='+row.businessTarget.id+'&dataItemId='+row.businessTargetDataItem.id+'&userCode='+row.user.userCode+'" class="btnList" title="${text("数据上报")}"><i class="fa icon-rocket"></i></a>&nbsp;');
+			<% if(hasPermi('businesstargetdatainfo:businessTargetDataInfo:*')){ %>
+				// actions.push('<a href="${ctx}/businessplanusertask/businessPlanUserTask/form?id='+row.id+'" class="btnList" title="${text("编辑")}"><i class="fa fa-pencil"></i></a>&nbsp;');
+			    actions.push('<a href="${ctx}/businesstargetdatainfo/businessTargetDataInfo?id='+row.id+'&businessTargetId='+row.businessTarget.id+'&dataItemId='+row.businessTargetDataItem.id+'&userCode='+row.user.userCode+'" class="btnList" title="${text("查看")}"><i class="fa fa-pencil"></i></a>&nbsp;');
+			    actions.push('<a href="${ctx}/businesstargetdatainfo/businessTargetDataInfo/formNew?userTaskId='+row.id+'&businessTargetId='+row.businessTarget.id+'&dataItemId='+row.businessTargetDataItem.id+'&userCode='+row.user.userCode+'" class="btnList" title="${text("上报")}"><i class="fa icon-rocket"></i></a>&nbsp;');
 				// actions.push('<a href="${ctx}/businessplanusertask/businessPlanUserTask/delete?id='+row.id+'" class="btnList" title="${text("删除目标生成的任务")}" data-confirm="${text("确认要删除该目标生成的任务吗？")}"><i class="fa fa-trash-o"></i></a>&nbsp;');
 			<% } %>
 			return actions.join('');

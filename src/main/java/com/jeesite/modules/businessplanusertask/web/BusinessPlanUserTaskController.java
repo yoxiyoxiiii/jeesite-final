@@ -3,9 +3,11 @@
  */
 package com.jeesite.modules.businessplanusertask.web;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
+import com.jeesite.common.config.Global;
+import com.jeesite.common.entity.Page;
+import com.jeesite.common.web.BaseController;
+import com.jeesite.modules.businessplanusertask.entity.BusinessPlanUserTask;
+import com.jeesite.modules.businessplanusertask.service.BusinessPlanUserTaskService;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -16,11 +18,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.jeesite.common.config.Global;
-import com.jeesite.common.entity.Page;
-import com.jeesite.common.web.BaseController;
-import com.jeesite.modules.businessplanusertask.entity.BusinessPlanUserTask;
-import com.jeesite.modules.businessplanusertask.service.BusinessPlanUserTaskService;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 /**
  * 目标生成的任务Controller

@@ -18,6 +18,7 @@ import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.util.StringUtils;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -61,7 +62,8 @@ public class BusinessTargetDataInfoController extends BaseController {
 	 */
 	@RequiresPermissions("businesstargetdatainfo:businessTargetDataInfo:view")
 	@RequestMapping(value = {"list", ""})
-	public String list(BusinessTargetDataInfo businessTargetDataInfo, Model model) {
+	public String list(BusinessTargetDataInfo businessTargetDataInfo, String userCode,Model model) {
+		model.addAttribute("userCode", userCode);
 		model.addAttribute("businessTargetDataInfo", businessTargetDataInfo);
 		return "modules/businesstargetdatainfo/businessTargetDataInfoList";
 	}
@@ -72,10 +74,18 @@ public class BusinessTargetDataInfoController extends BaseController {
 	@RequiresPermissions("businesstargetdatainfo:businessTargetDataInfo:view")
 	@RequestMapping(value = "listData")
 	@ResponseBody
-	public Page<BusinessTargetDataInfo> listData(BusinessTargetDataInfo businessTargetDataInfo, HttpServletRequest request, HttpServletResponse response) {
+	public Page<BusinessTargetDataInfo> listData(BusinessTargetDataInfo businessTargetDataInfo, String userCode,HttpServletRequest request, HttpServletResponse response) {
+
 		businessTargetDataInfo.setPage(new Page<>(request, response));
-		Page<BusinessTargetDataInfo> page = businessTargetDataInfoService.findPage(businessTargetDataInfo);
-		return page;
+		if (StringUtils.isEmpty(userCode)) {
+			Page<BusinessTargetDataInfo> page = businessTargetDataInfoService.findPage(businessTargetDataInfo);
+			return page;
+		}
+		//更具用户过滤
+		User user = new User();
+		user.setUserCode(userCode);
+		businessTargetDataInfo.setUser(user);
+		return businessTargetDataInfoService.findPage(businessTargetDataInfo);
 	}
 
 	/**
@@ -86,6 +96,16 @@ public class BusinessTargetDataInfoController extends BaseController {
 	public String form(BusinessTargetDataInfo businessTargetDataInfo, Model model) {
 		model.addAttribute("businessTargetDataInfo", businessTargetDataInfo);
 		return "modules/businesstargetdatainfo/businessTargetDataInfoForm";
+	}
+
+	/**
+	 * 查看编辑表单
+	 */
+	@RequiresPermissions("businesstargetdatainfo:businessTargetDataInfo:view")
+	@RequestMapping(value = "viewAndUpdate")
+	public String viewAndUpdate(BusinessTargetDataInfo businessTargetDataInfo, Model model) {
+		model.addAttribute("businessTargetDataInfo", businessTargetDataInfo);
+		return "modules/businesstargetdatainfo/businessTargetDataInfoFormAndUpdate";
 	}
 
 	/**

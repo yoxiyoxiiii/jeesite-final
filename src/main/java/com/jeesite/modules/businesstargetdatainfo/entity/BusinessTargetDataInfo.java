@@ -32,7 +32,7 @@ import org.hibernate.validator.constraints.Length;
 						on = "businessTargetDataItem.id = a.target_data_item_id", attrName = "businessTargetDataItem",
 						columns = {@Column(includeEntity = BusinessTargetDataItem.class)}),
 				@JoinTable(type = JoinTable.Type.LEFT_JOIN, entity = BusinessTarget2.class, alias = "businessTarget",
-						on = "businessTarget.id = a.target_data_item_id", attrName = "businessTarget",
+						on = "businessTarget.id = a.target_id", attrName = "businessTarget",
 						columns = {@Column(includeEntity = BusinessTarget2.class)}),
 				@JoinTable(type = JoinTable.Type.LEFT_JOIN, entity = User.class, alias = "user",
 						on = "user.user_code = a.user_id", attrName = "user",
