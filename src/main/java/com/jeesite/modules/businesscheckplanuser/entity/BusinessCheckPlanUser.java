@@ -3,20 +3,14 @@
  */
 package com.jeesite.modules.businesscheckplanuser.entity;
 
-import com.jeesite.common.mybatis.annotation.JoinTable;
-import com.jeesite.modules.businesscheckplan.entity.BusinessCheckPlan;
-import com.jeesite.modules.sys.entity.Office;
-import com.jeesite.modules.sys.entity.Post;
-import com.jeesite.modules.sys.entity.User;
-import lombok.Data;
-import lombok.Getter;
-import lombok.Setter;
-import org.hibernate.validator.constraints.Length;
-
 import com.jeesite.common.entity.DataEntity;
 import com.jeesite.common.mybatis.annotation.Column;
+import com.jeesite.common.mybatis.annotation.JoinTable;
 import com.jeesite.common.mybatis.annotation.Table;
-import com.jeesite.common.mybatis.mapper.query.QueryType;
+import com.jeesite.modules.businesscheckplan.entity.BusinessCheckPlan;
+import com.jeesite.modules.sys.entity.Office;
+import lombok.Getter;
+import lombok.Setter;
 
 /**
  * 考核名单Entity
@@ -54,7 +48,6 @@ import com.jeesite.common.mybatis.mapper.query.QueryType;
 public class BusinessCheckPlanUser extends DataEntity<BusinessCheckPlanUser> {
 	
 	private static final long serialVersionUID = 1L;
-//	private User user;		// 被考核的人
 	@Getter
 	@Setter
 	private Office office;		// 被考核的部门
@@ -65,7 +58,11 @@ public class BusinessCheckPlanUser extends DataEntity<BusinessCheckPlanUser> {
 	@Getter
 	@Setter
 	private String planUserName; //考核名单名称
-	
+
+	@Getter
+	@Setter
+	private String departmentId;
+
 	public BusinessCheckPlanUser() {
 		this(null);
 	}

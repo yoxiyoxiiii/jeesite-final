@@ -3,22 +3,19 @@
  */
 package com.jeesite.modules.businessplanusertask.entity;
 
-import com.jeesite.modules.businesscheckplan.entity.BusinessCheckPlan;
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.jeesite.common.entity.DataEntity;
+import com.jeesite.common.mybatis.annotation.Column;
+import com.jeesite.common.mybatis.annotation.JoinTable;
+import com.jeesite.common.mybatis.annotation.Table;
 import com.jeesite.modules.businesstarget.entity.BusinessTarget;
 import com.jeesite.modules.businesstargetdataitem.entity.BusinessTargetDataItem;
 import com.jeesite.modules.sys.entity.User;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.validator.constraints.Length;
-import java.util.Date;
-import com.jeesite.common.mybatis.annotation.JoinTable;
-import com.jeesite.common.mybatis.annotation.JoinTable.Type;
-import com.fasterxml.jackson.annotation.JsonFormat;
 
-import com.jeesite.common.entity.DataEntity;
-import com.jeesite.common.mybatis.annotation.Column;
-import com.jeesite.common.mybatis.annotation.Table;
-import com.jeesite.common.mybatis.mapper.query.QueryType;
+import java.util.Date;
 
 /**
  * 目标生成的任务Entity
@@ -46,12 +43,11 @@ import com.jeesite.common.mybatis.mapper.query.QueryType;
 						on = "businessTarget.id = a.target_id", attrName = "businessTarget",
 						columns = {@Column(includeEntity = BusinessTarget.class)}),
 
-				@JoinTable(type = JoinTable.Type.LEFT_JOIN, entity = BusinessTarget.class, alias = "businessTargetDataItem",
+				@JoinTable(type = JoinTable.Type.LEFT_JOIN, entity = BusinessTargetDataItem.class, alias = "businessTargetDataItem",
 						on = "businessTargetDataItem.id = a.target_data_item_id", attrName = "businessTargetDataItem",
-						columns = {@Column(includeEntity = BusinessTarget.class)}),
+						columns = {@Column(includeEntity = BusinessTargetDataItem.class)}),
 
 		},
-
 		orderBy="a.update_date DESC"
 )
 public class BusinessPlanUserTask extends DataEntity<BusinessPlanUserTask> {

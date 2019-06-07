@@ -3,11 +3,15 @@
  */
 package com.jeesite.modules.businesstargetdataitem.web;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
+import com.jeesite.common.codec.EncodeUtils;
+import com.jeesite.common.config.Global;
+import com.jeesite.common.entity.Page;
+import com.jeesite.common.mapper.JsonMapper;
+import com.jeesite.common.web.BaseController;
 import com.jeesite.modules.businesstarget.entity.BusinessTarget;
 import com.jeesite.modules.businesstarget.service.BusinessTargetService;
+import com.jeesite.modules.businesstargetdataitem.entity.BusinessTargetDataItem;
+import com.jeesite.modules.businesstargetdataitem.service.BusinessTargetDataItemService;
 import com.jeesite.modules.stagetarget.entity.stagetarget.StageTarget;
 import com.jeesite.modules.stagetarget.service.stagetarget.StageTargetService;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
@@ -20,13 +24,10 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.jeesite.common.config.Global;
-import com.jeesite.common.entity.Page;
-import com.jeesite.common.web.BaseController;
-import com.jeesite.modules.businesstargetdataitem.entity.BusinessTargetDataItem;
-import com.jeesite.modules.businesstargetdataitem.service.BusinessTargetDataItemService;
-
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.util.List;
+import java.util.Map;
 
 /**
  * 数据采集项Controller
@@ -146,6 +147,16 @@ public class BusinessTargetDataItemController extends BaseController {
 	public String delete(BusinessTargetDataItem businessTargetDataItem) {
 		businessTargetDataItemService.delete(businessTargetDataItem);
 		return renderResult(Global.TRUE, text("删除数据采集项成功！"));
+	}
+
+	@RequestMapping({"listSelect"})
+	public String listSelect(BusinessTarget businessTarget, String selectData, Model model) {
+		String selectDataJson = EncodeUtils.decodeUrl(selectData);
+		if (JsonMapper.fromJson(selectDataJson, Map.class) != null) {
+			model.addAttribute("selectData", selectDataJson);
+		}
+		model.addAttribute("businessTarget", businessTarget);
+		return "modules/businesstargetdataitem/listSelect";
 	}
 	
 }

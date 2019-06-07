@@ -1,0 +1,151 @@
+<% layout('/layouts/default.html', {title: '上报的数据管理', libs: ['validate','fileupload']}){ %>
+<script>
+	/**
+	 * 选择框回调方法
+	 * @param id  标签的id
+	 * @param act 动作事件：ok、cloear、cancel
+	 * @param index layer的索引号
+	 * @param layero layer内容的jQuery对象
+	 * @param selectData 当前选择列表的数据MAP
+	 */
+	function selectCallback(id, act, index, layero, selectData){
+
+			var win = layero.iframeWindow();
+			alert(win);    // 选择框内容的window对象
+			log(act);    // 回调活动事件（ok、clear、cancel）
+			log(index);  // layer的index
+			log(layero); // layer实例对象
+			log(selectData);  // 选择的节点数据
+			alert("jsdkkfj")
+		$("#666").val("1111")
+	}
+	/**
+	 * 选择前调用，数据验证函数，返回false代表验证失败
+	 * @param id  标签的id
+	 * @param selectData  当前选择列表的数据MAP
+	 * @return true 验证成功，false 验证失败
+	 */
+	function selectGetSelectData(id, selectData){
+
+		alert("kkkk");
+		var  itemCode = $("#targetDataItemId").val();
+		alert(itemCode)
+		alert(selectData)
+
+		return true;
+	}
+
+</script>
+<div class="main-content">
+	<div class="box box-main">
+		<div class="box-header with-border">
+			<div class="box-title">
+				<i class="fa fa-list-alt"></i> ${text(businessTargetDataInfo.isNewRecord ? '新增上报的数据' : '编辑上报的数据')}
+			</div>
+			<div class="box-tools pull-right">
+				<button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
+			</div>
+		</div>
+		<#form:form id="inputForm" model="${businessTargetDataInfo}" action="${ctx}/businesstargetdatainfo/businessTargetDataInfo/save" method="post" class="form-horizontal">
+			<div class="box-body">
+				<div class="form-unit">${text('基本信息')}</div>
+				<#form:hidden path="id"/>
+				<div class="row">
+				<div class="row">
+					<div class="col-xs-12">
+						<div class="form-group">
+							<label class="control-label col-sm-2" title="">
+								<span class="required hide">*</span> ${text('考核细则')}：<i class="fa icon-question hide"></i></label>
+							<div class="col-sm-5">
+								<#form:listselect id="targetDataItemId" title="${text('考核细则')}"
+									path="businessTarget.id" labelPath="businessTarget.targetContent"
+									url="${ctx}/businesstarget2/businessTarget2/listSelect"
+								    checkbox="false" itemCode="id" itemName="targetContent"  class="" allowClear="false"/>
+							</div>
+						</div>
+						<div class="form-group">
+							<label class="control-label col-sm-2" title="">
+								<span class="required hide">*</span> ${text('数据项')}：<i class="fa icon-question hide"></i></label>
+							<div class="col-sm-5">
+								<#form:listselect id="dataItemId" title="${text('数据项')}"
+									path="businessTargetDataItem.id" labelPath="businessTargetDataItem.itemName"
+								    url="${ctx}/businesstargetdataitem/businessTargetDataItem/listSelect" checkbox="false" itemCode="id" itemName="itemName" class="" allowClear="false"/>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-xs-12">
+						<div class="form-group">
+							<label class="control-label col-sm-2" title="">
+								<span class="required hide">*</span> ${text('数据上报用户')}：<i class="fa icon-question hide"></i></label>
+							<div class="col-sm-5">
+								<#form:listselect id="employeeList" title="用户选择"
+								url="${ctx}/sys/user/userSelect?userType=employee" allowClear="false"
+								path="businessCheckPlan.id"  labelPath="businessCheckPlan.planName" value= "id" checkbox="false" itemCode="userCode" itemName="userName"/>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-xs-12">
+						<div class="form-group">
+							<label class="control-label col-sm-2" title="">
+								<span class="required hide">*</span> ${text('数据信息')}：<i class="fa icon-question hide"></i></label>
+							<div class="col-sm-5">
+								<#form:textarea path="dataInfo" rows="4" maxlength="255" class="form-control"/>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-xs-12">
+						<div class="form-group">
+							<label class="control-label col-sm-2">${text('图片上传')}：</label>
+							<div class="col-sm-10">
+								<#form:fileupload id="uploadImage" bizKey="${businessTargetDataInfo.id}" bizType="businessTargetDataInfo_image"
+									uploadType="image" class="" readonly="false"/>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-xs-12">
+						<div class="form-group">
+							<label class="control-label col-sm-2">${text('附件上传')}：</label>
+							<div class="col-sm-10">
+								<#form:fileupload id="uploadFile" bizKey="${businessTargetDataInfo.id}" bizType="businessTargetDataInfo_file"
+									uploadType="all" class="" readonly="false"/>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="box-footer">
+				<div class="row">
+					<div class="col-sm-offset-2 col-sm-10">
+						<% if (hasPermi('businesstargetdatainfo:businessTargetDataInfo:edit')){ %>
+							<button type="submit" class="btn btn-sm btn-primary" id="btnSubmit"><i class="fa fa-check"></i> ${text('保 存')}</button>&nbsp;
+						<% } %>
+						<button type="button" class="btn btn-sm btn-default" id="btnCancel" onclick="js.closeCurrentTabPage()"><i class="fa fa-reply-all"></i> ${text('关 闭')}</button>
+					</div>
+				</div>
+			</div>
+		</#form:form>
+	</div>
+</div>
+<% } %>
+<script>
+$("#inputForm").validate({
+	submitHandler: function(form){
+		js.ajaxSubmitForm($(form), function(data){
+			js.showMessage(data.message);
+			if(data.result == Global.TRUE){
+				js.closeCurrentTabPage(function(contentWindow){
+					contentWindow.page();
+				});
+			}
+		}, "json");
+    }
+});
+</script>

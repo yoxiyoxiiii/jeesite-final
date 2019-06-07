@@ -51,10 +51,7 @@ $('#dataGrid').dataGrid({
 	columnModel: [
 		{header:'${text("模板")}', name:'businessCheckTemplate.tempName', index:'a.temp_id', width:150, align:"left"},
 
-		{header:'${text("目标")}', name:'businessTarget.targetName', index:'a.target_id', width:150, align:"left", frozen:true, formatter: function(val, obj, row, act){
-			return '<a href="${ctx}/businesschecktemplateinfo/businessCheckTemplateInfo/form?id='+row.id+'" class="btnList" data-title="${text("编辑考核指标")}">'+(val||row.id)+'</a>';
-		}},
-
+		{header:'${text("考核细则")}', name:'businessTarget.targetContent', index:'businessTarget.target_content', width:150, align:"left"},
 		{header:'${text("描述信息")}', name:'description', index:'a.description', width:150, align:"left"},
 		{header:'${text("更新时间")}', name:'updateDate', index:'a.update_date', width:150, align:"center"},
 		{header:'${text("操作")}', name:'actions', width:120, sortable:false, title:false, formatter: function(val, obj, row, act){

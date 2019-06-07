@@ -3,11 +3,14 @@
  */
 package com.jeesite.modules.businesscheckplanuser.web;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
+import com.jeesite.common.config.Global;
+import com.jeesite.common.entity.Page;
 import com.jeesite.common.idgen.IdGen;
 import com.jeesite.common.lang.StringUtils;
+import com.jeesite.common.web.BaseController;
+import com.jeesite.modules.businesscheckplanuser.entity.BusinessCheckPlanUser;
+import com.jeesite.modules.businesscheckplanuser.service.BusinessCheckPlanUserService;
+import com.jeesite.modules.businesscheckplanuser.service.OfficeServiceWarpper;
 import com.jeesite.modules.sys.entity.Office;
 import com.jeesite.modules.sys.service.OfficeService;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
@@ -20,11 +23,10 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.jeesite.common.config.Global;
-import com.jeesite.common.entity.Page;
-import com.jeesite.common.web.BaseController;
-import com.jeesite.modules.businesscheckplanuser.entity.BusinessCheckPlanUser;
-import com.jeesite.modules.businesscheckplanuser.service.BusinessCheckPlanUserService;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * 考核名单Controller
@@ -42,6 +44,9 @@ public class BusinessCheckPlanUserController extends BaseController {
 	//部门信息
 	@Autowired
 	private OfficeService officeService;
+
+	@Autowired
+	private OfficeServiceWarpper officeServiceWarpper;
 	
 	/**
 	 * 获取数据
@@ -68,8 +73,23 @@ public class BusinessCheckPlanUserController extends BaseController {
 	@RequestMapping(value = "listData")
 	@ResponseBody
 	public Page<BusinessCheckPlanUser> listData(BusinessCheckPlanUser businessCheckPlanUser, HttpServletRequest request, HttpServletResponse response) {
+
 		businessCheckPlanUser.setPage(new Page<>(request, response));
 		Page<BusinessCheckPlanUser> page = businessCheckPlanUserService.findPage(businessCheckPlanUser);
+		List<BusinessCheckPlanUser> list = page.getList();
+		list.forEach(item->{
+			Office office = item.getOffice();
+			String officeCode = office.getOfficeCode();
+			List<Office> offices = officeServiceWarpper.findListIn(Arrays.asList(officeCode.split(",")));
+
+			//设置office name
+			StringBuffer officeNames = new StringBuffer();
+			offices.forEach(itemOffice->{
+				officeNames.append(itemOffice.getOfficeName()).append(",");
+			});
+			office.setOfficeName(officeNames.toString());
+			item.setOffice(office);
+		});
 		return page;
 	}
 
