@@ -1,0 +1,101 @@
+<% layout('/layouts/default.html', {title: '任务监控管理', libs: ['dataGrid']}){ %>
+<div class="main-content">
+	<div class="box box-main">
+		<div class="box-header">
+			<div class="box-title">
+				<i class="fa fa-list-alt"></i> ${text('任务监控管理')}
+			</div>
+			<div class="box-tools pull-right">
+				<a href="#" class="btn btn-default" id="btnSearch" title="${text('查询')}"><i class="fa fa-filter"></i> ${text('查询')}</a>
+				<a href="#" class="btn btn-default" id="btnRefreshTree" title="${text('刷新')}"><i class="fa fa-refresh"></i> ${text('刷新')}</a>
+				<a href="#" class="btn btn-default" id="btnExpandTreeNode" title="${text('展开一级')}"><i class="fa fa-angle-double-down"></i> ${text('展开')}</a>
+				<a href="#" class="btn btn-default" id="btnCollapseTreeNode" title="${text('折叠全部')}"><i class="fa fa-angle-double-up"></i> ${text('折叠')}</a>
+<!--				<% if(hasPermi('businesstargettaskmonitor:businessTargetTaskMonitor:edit')){ %>-->
+<!--					<a href="${ctx}/businesstargettaskmonitor/businessTargetTaskMonitor/form" class="btn btn-default btnTool" title="${text('新增任务监控')}"><i class="fa fa-plus"></i> ${text('新增')}</a>-->
+<!--				<% } %>-->
+			</div>
+		</div>
+		<div class="box-body">
+			<#form:form id="searchForm" model="${businessTargetTaskMonitor}" action="${ctx}/businesstargettaskmonitor/businessTargetTaskMonitor/listData" method="post" class="form-inline hide"
+					data-page-no="${parameter.pageNo}" data-page-size="${parameter.pageSize}" data-order-by="${parameter.orderBy}">
+				<div class="form-group">
+					<label class="control-label">${text('考核细则')}：</label>
+					<div class="control-inline">
+						<#form:input path="targetId" maxlength="50" class="form-control width-120"/>
+					</div>
+				</div>
+			<div class="form-group">
+				<label class="control-label">${text('指标项')}：</label>
+				<div class="control-inline col-sm-8">
+					<#form:treeselect  id="targetType" title="${text('指标项')}"
+					path="businessTargetType.targetTypeCode" labelPath="businessTargetType.targetTypeName"
+					class="" allowClear="true" canSelectRoot="true" canSelectParent="true"/>
+				</div>
+			</div>
+				<div class="form-group">
+					<label class="control-label">${text('考核部门ID')}：</label>
+					<div class="control-inline">
+						<#form:input path="departmentId" maxlength="50" class="form-control width-120"/>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="control-label">${text('考核计划')}：</label>
+					<div class="control-inline">
+						<#form:input path="planId" maxlength="50" class="form-control width-120"/>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="control-label">${text('数据上报状态 已上报/未上报')}：</label>
+					<div class="control-inline width-120">
+						<#form:select path="status" dictType="planStatus" blankOption="true" class="form-control"/>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="control-label">${text('target_type_name')}：</label>
+					<div class="control-inline">
+						<#form:input path="targetTypeName" maxlength="255" class="form-control width-120"/>
+					</div>
+				</div>
+				<div class="form-group">
+					<button type="submit" class="btn btn-primary btn-sm">${text('查询')}</button>
+					<button type="reset" class="btn btn-default btn-sm">${text('重置')}</button>
+				</div>
+			</#form:form>
+			<table id="dataGrid"></table>
+		</div>
+	</div>
+</div>
+<% } %>
+<script>
+// 初始化DataGrid对象
+$('#dataGrid').dataGrid({
+	searchForm: $("#searchForm"),
+	columnModel: [
+		{header:'${text("考核细则")}', name:'businessTarget2.targetContent', index:'a.target_id', width:250, align:"left", frozen:true, formatter: function(val, obj, row, act){
+			return '<a href="${ctx}/businesstargettaskmonitor/businessTargetTaskMonitor/form?id='+row.id+'" class="btnList" data-title="${text("编辑任务监控")}">'+(val||row.id)+'</a>';
+		}},
+		// {header:'${text("考核细则")}', name:'targetId', index:'a.target_id', width:150, align:"left"},
+		{header:'${text("考核部门")}', name:'office.fullName', index:'a.department_id', width:150, align:"left"},
+		{header:'${text("考核计划")}', name:'businessCheckPlan.planName', index:'a.plan_id', width:150, align:"left"},
+		{header:'${text("上报状态")}', name:'status', index:'a.status', width:150, align:"center", formatter: function(val, obj, row, act){
+			return js.getDictLabel(${@DictUtils.getDictListJson('planStatus')}, val, '${text("未知")}', true);
+		}},
+		{header:'${text("应上报数据项")}', name:'dataItemCount', index:'a.tree_sort', width:150, align:"center"},
+		{header:'${text("实上报数据项")}', name:'upItemCount', index:'a.tree_sort', width:150, align:"center"},
+		{header:'${text("操作")}', name:'actions', width:120, sortable:false, title:false, formatter: function(val, obj, row, act){
+			var actions = [];
+			<% if(hasPermi('businesstargettaskmonitor:businessTargetTaskMonitor:edit')){ %>
+				actions.push('<a href="${ctx}/businesstargettaskmonitor/businessTargetTaskMonitor/treeList" class="btnList" title="${text("树形展示")}"><i class="fa fa-envira"></i></a>&nbsp;');
+					actions.push('<a href="${ctx}/businesstargettaskmonitor/businessTargetTaskMonitor/form?parentCode='+row.id+'" class="btnList" title="${text("提醒")}"><i class="fa  fa-bell-o"></i></a>&nbsp;');
+			<% } %>
+			return actions.join('');
+		}}
+	],
+	treeGrid: true,			// 启用树结构表格
+	defaultExpandLevel: 0,	// 默认展开的层次
+	expandNodeClearPostData: 'targetId,departmentId,planId,targetTypeName,', // 展开节点清理请求参数数据（一般设置查询条件的字段属性，否则在查询后，不能展开子节点数据）	// 加载成功后执行事件
+	ajaxSuccess: function(data){
+		
+	}
+});
+</script>

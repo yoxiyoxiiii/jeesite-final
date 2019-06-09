@@ -23,4 +23,9 @@ public class EmployeeDto implements Serializable {
      * 员工姓名=username
      */
     private String emp_name;
+
+    /*
+    所在的部门ID
+     */
+    private String officeCode;
 }

@@ -20,18 +20,11 @@
 					<div class="control-inline col-sm-8">
 						<#form:treeselect  id="targetType" title="${text('指标项')}"
 						path="businessTargetType.targetTypeCode" labelPath="businessTargetType.targetTypeName"
-						url="${ctx}/businesstargettypetree/businessTargetTypeTree/treeData?ctrlPermi=2"
 						class="" allowClear="true" canSelectRoot="true" canSelectParent="true"/>
 					</div>
 				</div>
 				<div class="form-group">
-					<label class="control-label">${text('关联分类ID')}：</label>
-					<div class="control-inline">
-						<#form:input path="targetTypeId" maxlength="50" class="form-control width-120"/>
-					</div>
-				</div>
-				<div class="form-group">
-					<label class="control-label">${text('目标考核周期 周、半月、月、季度、半年、年 ，定时任务关联')}：</label>
+					<label class="control-label">${text('考核周期')}：</label>
 					<div class="control-inline">
 						<#form:input path="targetCheckCycle" maxlength="255" class="form-control width-120"/>
 					</div>
@@ -43,7 +36,7 @@
 					</div>
 				</div>
 				<div class="form-group">
-					<label class="control-label">${text('指标属性 定性、定量')}：</label>
+					<label class="control-label">${text('指标属性')}：</label>
 					<div class="control-inline">
 						<#form:input path="targetAttribute" maxlength="255" class="form-control width-120"/>
 					</div>
@@ -60,18 +53,7 @@
 						<#form:input path="targetJoinDepId" maxlength="50" class="form-control width-120"/>
 					</div>
 				</div>
-				<div class="form-group">
-					<label class="control-label">${text('目标结果计算公式')}：</label>
-					<div class="control-inline">
-						<#form:input path="targetResultExpression" maxlength="255" class="form-control width-120"/>
-					</div>
-				</div>
-				<div class="form-group">
-					<label class="control-label">${text('是否分解')}：</label>
-					<div class="control-inline">
-						<#form:input path="targetIsDecompose" maxlength="4" class="form-control width-120"/>
-					</div>
-				</div>
+
 				<div class="form-group">
 					<button type="submit" class="btn btn-primary btn-sm">${text('查询')}</button>
 					<button type="reset" class="btn btn-default btn-sm">${text('重置')}</button>

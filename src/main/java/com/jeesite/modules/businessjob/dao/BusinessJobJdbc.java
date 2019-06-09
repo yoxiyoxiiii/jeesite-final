@@ -20,19 +20,23 @@ public class BusinessJobJdbc {
     @Autowired
     private JdbcTemplate jdbcTemplate;
 
-    public List<EmployeeDto> findByOfficeCode(String officeCode) {
-        String sql = "select e.emp_code as user_code,e.emp_name from js_sys_employee e where office_code in (:office_codes)";
+    public EmployeeDto findByOfficeCode(String officeCode,String roleCode) {
+        String sql = "SELECT e.emp_code as user_code , e.emp_name,e.office_code FROM js_sys_employee e LEFT JOIN js_sys_user_role ur ON e.emp_code = ur.user_code WHERE ur.role_code = :roleCode AND e.office_code IN (:office_codes) limit 1";
         String[] split = officeCode.split(",");
         List<String> codes = Arrays.asList(split);
         Map<String, Object> params  = new HashMap<>();
         params.put("office_codes",codes);
+        params.put("roleCode", roleCode);
         NamedParameterJdbcTemplate namedParameterJdbcTemplate = new NamedParameterJdbcTemplate(jdbcTemplate);
         List<EmployeeDto> list = namedParameterJdbcTemplate.query(sql, params, new RowMapper<EmployeeDto>() {
             @Override
             public EmployeeDto mapRow(ResultSet rs, int rowNum) throws SQLException {
-                return EmployeeDto.builder().emp_code(rs.getString("user_code")).emp_name(rs.getString("emp_name")).build();
+                return EmployeeDto.builder().emp_code(rs.getString("user_code"))
+                        .emp_name(rs.getString("emp_name"))
+                        .officeCode(rs.getString("office_code"))
+                        .build();
             }
         });
-        return list;
+        return list.stream().findFirst().orElse(new EmployeeDto());
     }
 }

@@ -10,6 +10,7 @@ import com.jeesite.common.mybatis.annotation.JoinTable;
 import com.jeesite.common.mybatis.annotation.Table;
 import com.jeesite.modules.businesstarget.entity.BusinessTarget;
 import com.jeesite.modules.businesstargetdataitem.entity.BusinessTargetDataItem;
+import com.jeesite.modules.sys.entity.Office;
 import com.jeesite.modules.sys.entity.User;
 import lombok.Getter;
 import lombok.Setter;
@@ -25,6 +26,8 @@ import java.util.Date;
 @Table(name="business_plan_user_task", alias="a", columns={
 		@Column(name="id", attrName="id", label="id", isPK=true),
 		@Column(name="user_id", attrName="user.userCode", label="任务所属的user"),
+		@Column(name="business_check_plan_id", attrName="businessCheckPlanId", label="任务所属的user"),
+		@Column(name="department_id", attrName="office.officeCode", label="任务所属的部门"),
 		@Column(name="target_id", attrName="businessTarget.id", label="任务关联的目标"),
 		@Column(name="target_data_item_id", attrName="businessTargetDataItem.id", label="任务关联的数据项"),
 		@Column(name="task_status", attrName="taskStatus", label="任务状态"),
@@ -67,6 +70,17 @@ public class BusinessPlanUserTask extends DataEntity<BusinessPlanUserTask> {
 	private String taskDescription;		// 描述信息
 	private Date taskStartTime;		// 任务开始时间
 	private Date taskEndTime;		// 任务结束时间
+
+	@Getter
+	@Setter
+	private Office office;
+
+	/**
+	 * 关联考核计划
+	 */
+	@Getter
+	@Setter
+	private String businessCheckPlanId;
 	
 	public BusinessPlanUserTask() {
 		this(null);

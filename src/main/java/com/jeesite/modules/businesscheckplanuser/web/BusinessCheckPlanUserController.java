@@ -25,8 +25,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.util.Arrays;
-import java.util.List;
 
 /**
  * 考核名单Controller
@@ -65,7 +63,16 @@ public class BusinessCheckPlanUserController extends BaseController {
 		model.addAttribute("businessCheckPlanUser", businessCheckPlanUser);
 		return "modules/businesscheckplanuser/businessCheckPlanUserList";
 	}
-	
+	/**
+	 * 监控列表
+	 */
+	@RequiresPermissions("businesscheckplanuser:businessCheckPlanUser:view")
+	@RequestMapping(value = {"listMonitor"})
+	public String listMonitor(BusinessCheckPlanUser businessCheckPlanUser, Model model) {
+		model.addAttribute("businessCheckPlanUser", businessCheckPlanUser);
+		return "modules/businesscheckplanuser/businessCheckPlanUserListMonitor";
+	}
+
 	/**
 	 * 查询列表数据
 	 */
@@ -73,23 +80,8 @@ public class BusinessCheckPlanUserController extends BaseController {
 	@RequestMapping(value = "listData")
 	@ResponseBody
 	public Page<BusinessCheckPlanUser> listData(BusinessCheckPlanUser businessCheckPlanUser, HttpServletRequest request, HttpServletResponse response) {
-
 		businessCheckPlanUser.setPage(new Page<>(request, response));
 		Page<BusinessCheckPlanUser> page = businessCheckPlanUserService.findPage(businessCheckPlanUser);
-		List<BusinessCheckPlanUser> list = page.getList();
-		list.forEach(item->{
-			Office office = item.getOffice();
-			String officeCode = office.getOfficeCode();
-			List<Office> offices = officeServiceWarpper.findListIn(Arrays.asList(officeCode.split(",")));
-
-			//设置office name
-			StringBuffer officeNames = new StringBuffer();
-			offices.forEach(itemOffice->{
-				officeNames.append(itemOffice.getOfficeName()).append(",");
-			});
-			office.setOfficeName(officeNames.toString());
-			item.setOffice(office);
-		});
 		return page;
 	}
 
@@ -151,7 +143,9 @@ public class BusinessCheckPlanUserController extends BaseController {
 	@PostMapping(value = "save")
 	@ResponseBody
 	public String save(@Validated BusinessCheckPlanUser businessCheckPlanUser) {
-		businessCheckPlanUserService.save(businessCheckPlanUser);
+		String departmentId = businessCheckPlanUser.getOffice().getOfficeCode();
+		String[] departmentIds = departmentId.split(",");
+		businessCheckPlanUserService.saveAll(businessCheckPlanUser, departmentIds);
 		return renderResult(Global.TRUE, text("保存考核名单成功！"));
 	}
 	

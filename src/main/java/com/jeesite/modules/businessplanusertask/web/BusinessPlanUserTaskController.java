@@ -32,6 +32,7 @@ public class BusinessPlanUserTaskController extends BaseController {
 
 	@Autowired
 	private BusinessPlanUserTaskService businessPlanUserTaskService;
+
 	
 	/**
 	 * 获取数据
@@ -50,7 +51,19 @@ public class BusinessPlanUserTaskController extends BaseController {
 		model.addAttribute("businessPlanUserTask", businessPlanUserTask);
 		return "modules/businessplanusertask/businessPlanUserTaskList";
 	}
-	
+
+	/**
+	 * 任务监控
+	 */
+	@RequiresPermissions("businessplanusertask:businessPlanUserTask:view")
+	@RequestMapping(value = {"listMonitor"})
+	public String listMonitor(BusinessPlanUserTask businessPlanUserTask, Model model) {
+		model.addAttribute("businessPlanUserTask", businessPlanUserTask);
+		return "modules/businessplanusertask/businessPlanUserTaskListMonitor";
+	}
+
+
+
 	/**
 	 * 查询列表数据
 	 */
@@ -94,5 +107,6 @@ public class BusinessPlanUserTaskController extends BaseController {
 		businessPlanUserTaskService.delete(businessPlanUserTask);
 		return renderResult(Global.TRUE, text("删除目标生成的任务成功！"));
 	}
+
 	
 }

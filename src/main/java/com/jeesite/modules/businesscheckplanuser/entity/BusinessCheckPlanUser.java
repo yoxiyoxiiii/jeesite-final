@@ -8,6 +8,7 @@ import com.jeesite.common.mybatis.annotation.Column;
 import com.jeesite.common.mybatis.annotation.JoinTable;
 import com.jeesite.common.mybatis.annotation.Table;
 import com.jeesite.modules.businesscheckplan.entity.BusinessCheckPlan;
+import com.jeesite.modules.businesstarget2.entity.BusinessTarget2;
 import com.jeesite.modules.sys.entity.Office;
 import lombok.Getter;
 import lombok.Setter;
@@ -24,6 +25,7 @@ import lombok.Setter;
 		@Column(name="department_id", attrName="office.officeCode", label="被考核的人"),
 //		@Column(name="post_id", attrName="post.postCode", label="被考核的人"),
 		@Column(name="plan_id", attrName="businessCheckPlan.id", label="考核计划"),
+		@Column(name="plan_status", attrName="planStatus", label="部门上报数据状态"),
 		@Column(name="create_date", attrName="createDate", label="创建时间", isUpdate=false, isQuery=false),
 		@Column(name="update_date", attrName="updateDate", label="更新时间", isQuery=false),
 	},
@@ -62,6 +64,17 @@ public class BusinessCheckPlanUser extends DataEntity<BusinessCheckPlanUser> {
 	@Getter
 	@Setter
 	private String departmentId;
+
+	@Getter
+	@Setter
+	private String planStatus;
+
+	/**
+	 * 考核细则
+	 */
+	@Getter
+	@Setter
+	private BusinessTarget2 businessTarget2;
 
 	public BusinessCheckPlanUser() {
 		this(null);

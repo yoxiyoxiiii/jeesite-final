@@ -11,5 +11,14 @@
 		</where>
 		ORDER BY ${sqlMap.order.toSql()}
 	</select> -->
-	
+
+    <select id="findIn" resultType="com.jeesite.modules.businesstarget2.entity.BusinessTarget2">
+        SELECT ${sqlMap.column.toSql()}
+        FROM ${sqlMap.table.toSql()}
+        where id in
+        <foreach collection="list" item="id" index="index" open="(" close=")" separator=",">
+            #{id}
+        </foreach>
+        ORDER BY ${sqlMap.order.toSql()}
+    </select>
 </mapper>

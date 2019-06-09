@@ -3,20 +3,19 @@
  */
 package com.jeesite.modules.businesstarget2.service;
 
-import java.util.List;
-
+import com.jeesite.common.entity.Page;
+import com.jeesite.common.service.CrudService;
+import com.jeesite.modules.businesstarget2.dao.BusinessStageTarget2Dao;
+import com.jeesite.modules.businesstarget2.dao.BusinessTarget2Dao;
+import com.jeesite.modules.businesstarget2.dao.BusinessTargetDataItem2Dao;
+import com.jeesite.modules.businesstarget2.entity.BusinessStageTarget2;
+import com.jeesite.modules.businesstarget2.entity.BusinessTarget2;
+import com.jeesite.modules.businesstarget2.entity.BusinessTargetDataItem2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.jeesite.common.entity.Page;
-import com.jeesite.common.service.CrudService;
-import com.jeesite.modules.businesstarget2.entity.BusinessTarget2;
-import com.jeesite.modules.businesstarget2.dao.BusinessTarget2Dao;
-import com.jeesite.modules.businesstarget2.entity.BusinessTargetDataItem2;
-import com.jeesite.modules.businesstarget2.dao.BusinessTargetDataItem2Dao;
-import com.jeesite.modules.businesstarget2.entity.BusinessStageTarget2;
-import com.jeesite.modules.businesstarget2.dao.BusinessStageTarget2Dao;
+import java.util.List;
 
 /**
  * 指标Service
@@ -128,5 +127,9 @@ public class BusinessTarget2Service extends CrudService<BusinessTarget2Dao, Busi
 		businessStageTarget2.setTargetId(businessTarget2);
 		businessStageTarget2Dao.deleteByEntity(businessStageTarget2);
 	}
-	
+
+	public List<BusinessTarget2> findIn(List<String> targets) {
+
+		return super.dao.findIn(targets);
+	}
 }

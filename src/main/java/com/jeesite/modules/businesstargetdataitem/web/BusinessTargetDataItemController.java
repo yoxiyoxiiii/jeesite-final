@@ -19,10 +19,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -113,7 +110,18 @@ public class BusinessTargetDataItemController extends BaseController {
 		businessTargetDataItemService.save(businessTargetDataItem);
 		return renderResult(Global.TRUE, text("保存数据采集项成功！"));
 	}
-	
+
+	/**
+	 * 根据targetId 来获取下面的数据采集项
+	 */
+	@RequiresPermissions("businesstargetdataitem:businessTargetDataItem:view")
+	@GetMapping(value = "findByTargetId")
+	@ResponseBody
+	public List<BusinessTargetDataItem> findByTargetId(String targetId) {
+		List<BusinessTargetDataItem> list = businessTargetDataItemService.findByBusinessTargetId(targetId);
+		return list;
+	}
+
 	/**
 	 * 停用数据采集项
 	 */
@@ -157,6 +165,6 @@ public class BusinessTargetDataItemController extends BaseController {
 		}
 		model.addAttribute("businessTarget", businessTarget);
 		return "modules/businesstargetdataitem/listSelect";
-	}
+}
 	
 }

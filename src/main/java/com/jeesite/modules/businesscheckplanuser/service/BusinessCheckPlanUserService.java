@@ -3,15 +3,18 @@
  */
 package com.jeesite.modules.businesscheckplanuser.service;
 
-import java.util.List;
-
+import com.jeesite.common.entity.Page;
+import com.jeesite.common.service.CrudService;
+import com.jeesite.modules.businesscheckplanuser.dao.BusinessCheckPlanUserDao;
+import com.jeesite.modules.businesscheckplanuser.entity.BusinessCheckPlanUser;
+import com.jeesite.modules.sys.entity.Office;
+import com.jeesite.modules.sys.service.OfficeService;
+import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.jeesite.common.entity.Page;
-import com.jeesite.common.service.CrudService;
-import com.jeesite.modules.businesscheckplanuser.entity.BusinessCheckPlanUser;
-import com.jeesite.modules.businesscheckplanuser.dao.BusinessCheckPlanUserDao;
+import java.util.List;
 
 /**
  * 考核名单Service
@@ -21,7 +24,10 @@ import com.jeesite.modules.businesscheckplanuser.dao.BusinessCheckPlanUserDao;
 @Service
 @Transactional(readOnly=true)
 public class BusinessCheckPlanUserService extends CrudService<BusinessCheckPlanUserDao, BusinessCheckPlanUser> {
-	
+
+	@Autowired
+	private OfficeService officeService;
+
 	/**
 	 * 获取单条数据
 	 * @param businessCheckPlanUser
@@ -74,7 +80,23 @@ public class BusinessCheckPlanUserService extends CrudService<BusinessCheckPlanU
 	}
 
 	public List<BusinessCheckPlanUser> findByBusinessCheckPlanId(String businessCheckPlanId) {
-
 		return dao.findByBusinessCheckPlanId(businessCheckPlanId);
+	}
+
+	@Transactional(readOnly=false)
+	public void saveAll(BusinessCheckPlanUser businessCheckPlanUser, String[] departmentIds) {
+		for (int i = 0 ;i<departmentIds.length; i++) {
+			BusinessCheckPlanUser checkPlanUser = new BusinessCheckPlanUser();
+			BeanUtils.copyProperties(businessCheckPlanUser, checkPlanUser);
+			String dpit = departmentIds[i];
+			Office office = new Office();
+			office.setOfficeCode(dpit);
+			Integer treeLevel = officeService.get(office).getTreeLevel();
+			if (treeLevel!=0) {
+				checkPlanUser.setOffice(office);
+				super.save(checkPlanUser);
+			}
+
+   		}
 	}
 }

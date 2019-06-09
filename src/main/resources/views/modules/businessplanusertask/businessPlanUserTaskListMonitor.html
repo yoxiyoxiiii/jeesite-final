@@ -1,9 +1,9 @@
-<% layout('/layouts/default.html', {title: '任务列表', libs: ['dataGrid']}){ %>
+<% layout('/layouts/default.html', {title: '任务监控', libs: ['dataGrid']}){ %>
 <div class="main-content">
 	<div class="box box-main">
 		<div class="box-header">
 			<div class="box-title">
-				<i class="fa fa-list-alt"></i> ${text('任务列表')}
+				<i class="fa fa-list-alt"></i> ${text('任务监控')}
 			</div>
 			<div class="box-tools pull-right">
 				<a href="#" class="btn btn-default" id="btnSearch" title="${text('查询')}"><i class="fa fa-filter"></i> ${text('查询')}</a>
@@ -21,12 +21,10 @@
 						<#form:input path="userId" maxlength="100" class="form-control width-120"/>
 					</div>
 				</div>
-			    <div class="form-group">
-					<label class="control-label">${text('考核细则')}：</label>
+				<div class="form-group">
+					<label class="control-label">${text('任务关联的目标')}：</label>
 					<div class="control-inline">
-						<#form:treeselect  id="businessTarget2" title="${text('考核细则')}"
-						path="businessTarget.id" labelPath="businessTarget.targetContent"
-						class="" allowClear="true" canSelectRoot="true" canSelectParent="true"/>
+						<#form:input path="targetId" maxlength="50" class="form-control width-120"/>
 					</div>
 				</div>
 				<div class="form-group">
@@ -77,7 +75,7 @@
 $('#dataGrid').dataGrid({
 	searchForm: $("#searchForm"),
 	columnModel: [
-		{header:'${text("任务所属对象")}', name:'user.userName', index:'a.user_id', width:150, align:"left", frozen:true, formatter: function(val, obj, row, act){
+		{header:'${text("考核部门")}', name:'office.fullName', index:'a.user_id', width:150, align:"left", frozen:true, formatter: function(val, obj, row, act){
 			return '<a href="${ctx}/businessplanusertask/businessPlanUserTask/form?id='+row.id+'" class="btnList" data-title="${text("编辑目标生成的任务")}">'+(val||row.id)+'</a>';
 		}},
 		{header:'${text("考核细则")}', name:'businessTarget.targetContent' ,index:'a.target_id', width:150, align:"left"},

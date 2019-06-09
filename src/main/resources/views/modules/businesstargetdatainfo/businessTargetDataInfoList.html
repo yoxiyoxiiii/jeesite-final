@@ -28,7 +28,7 @@
 					<label class="control-label">${text('数据上报的人/部门')}：</label>
 					<div class="control-inline width-120" >
 						<#form:treeselect id="userId" title="${text('用户选择')}"
-							path="userId" labelPath="" 
+							path="user.userCode" labelPath="user.userName"
 							url="${ctx}/sys/office/treeData?isLoadUser=true" allowClear="true"/>
 					</div>
 				</div>
@@ -64,9 +64,8 @@ $('#dataGrid').dataGrid({
 			return '<a href="${ctx}/businesstargetdatainfo/businessTargetDataInfo/form?id='+row.id+'" class="btnList" data-title="${text("编辑上报的数据")}">'+(val||row.id)+'</a>';
 		}},
 		{header:'${text("考核细则")}', name:'businessTarget.targetContent', index:'a.user_id', width:150, align:"center"},
-		{header:'${text("数据上报的人/部门")}', name:'', index:'a.user_id', width:150, align:"center"},
-		{header:'${text("具体的数据")}', name:'dataInfo', index:'a.data_info', width:150, align:"left"},
-		{header:'${text("数据类型")}', name:'dataType', index:'a.data_type', width:150, align:"center"},
+		{header:'${text("用户")}', name:'user.userName', index:'a.user_id', width:150, align:"center"},
+		{header:'${text("数据")}', name:'dataInfo', index:'a.data_info', width:150, align:"left"},
 		{header:'${text("操作")}', name:'actions', width:120, sortable:false, title:false, formatter: function(val, obj, row, act){
 			var actions = [];
 			<% if(hasPermi('businesstargetdatainfo:businessTargetDataInfo:edit')){ %>

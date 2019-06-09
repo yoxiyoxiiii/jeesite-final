@@ -5,11 +5,18 @@ package com.jeesite.modules.businesstargetdatainfo.service;
 
 import com.jeesite.common.entity.Page;
 import com.jeesite.common.service.CrudService;
+import com.jeesite.modules.businesscheckplan.entity.BusinessCheckPlan;
+import com.jeesite.modules.businesscheckplan.service.BusinessCheckPlanService;
+import com.jeesite.modules.businesscheckplanuser.entity.BusinessCheckPlanUser;
+import com.jeesite.modules.businesscheckplanuser.service.BusinessCheckPlanUserService;
 import com.jeesite.modules.businessplanusertask.entity.BusinessPlanUserTask;
 import com.jeesite.modules.businessplanusertask.service.BusinessPlanUserTaskService;
 import com.jeesite.modules.businesstargetdatainfo.dao.BusinessTargetDataInfoDao;
 import com.jeesite.modules.businesstargetdatainfo.entity.BusinessTargetDataInfo;
+import com.jeesite.modules.businesstargettaskmonitor.entity.BusinessTargetTaskMonitor;
+import com.jeesite.modules.businesstargettaskmonitor.service.BusinessTargetTaskMonitorService;
 import com.jeesite.modules.file.utils.FileUploadUtils;
+import com.jeesite.modules.sys.entity.Office;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -38,7 +45,6 @@ public class BusinessTargetDataInfoService extends CrudService<BusinessTargetDat
 	/**
 	 * 查询分页数据
 	 * @param businessTargetDataInfo 查询条件
-	 * @param businessTargetDataInfo.page 分页对象
 	 * @return
 	 */
 	@Override
@@ -65,15 +71,51 @@ public class BusinessTargetDataInfoService extends CrudService<BusinessTargetDat
 	 * 保存数据（插入或更新）
 	 * @param businessTargetDataInfo
 	 */
+	@Autowired
+	private BusinessCheckPlanUserService checkPlanUserService;
+	@Autowired
+	private BusinessCheckPlanService businessCheckPlanService;
+	@Autowired
+	private BusinessTargetTaskMonitorService businessTargetTaskMonitorService;
 	@Transactional(readOnly=false)
 	public void save(BusinessTargetDataInfo businessTargetDataInfo,String userTaskId) {
 		this.save(businessTargetDataInfo);
 		//更新个人任务状态
-		BusinessPlanUserTask businessPlanUserTask =new BusinessPlanUserTask();
+		BusinessPlanUserTask businessPlanUserTask =planUserTaskService.get(userTaskId);
 		businessPlanUserTask.setTaskStatus(2);
 		businessPlanUserTask.setId(userTaskId);
 		businessPlanUserTask.setIsNewRecord(false);
 		planUserTaskService.save(businessPlanUserTask);
+		Office office = businessPlanUserTask.getOffice();
+		BusinessCheckPlanUser businessCheckPlanUser = new BusinessCheckPlanUser();
+		businessCheckPlanUser.setPlanStatus("2");//设置考核名单中，上报数据后部门的数据上报状态
+		businessCheckPlanUser.setOffice(office);
+		String businessCheckPlanId = businessPlanUserTask.getBusinessCheckPlanId();
+		BusinessCheckPlan businessCheckPlan = businessCheckPlanService.get(businessCheckPlanId);
+		businessCheckPlanUser.setBusinessCheckPlan(businessCheckPlan);
+		checkPlanUserService.save(businessCheckPlanUser);//更新部门任务上报状态
+
+		BusinessTargetTaskMonitor taskMonitor = businessTargetTaskMonitorService.findByIds(businessPlanUserTask.getBusinessTarget().getId(), office.getOfficeCode(), businessCheckPlanId);
+
+		Integer dataItemCount = taskMonitor.getDataItemCount();
+		taskMonitor.addUpItemCount();//+1
+		Integer upItemCount = taskMonitor.getUpItemCount();
+		if (dataItemCount<= upItemCount) {
+			taskMonitor.setStatus("3");//设置考核细则数据填报完整。
+			upItemCount = dataItemCount;
+		}
+		 String status = taskMonitor.getStatus();
+		//businessTargetTaskMonitorService.save(taskMonitor);//更新
+		//设置数据上报的数量 + 1
+		businessTargetTaskMonitorService.updateByIds(
+				businessPlanUserTask.getBusinessTarget().getId(),
+				office.getOfficeCode(),
+				businessCheckPlanId,
+				upItemCount,
+				status
+		);
+
+
 	}
 
 	/**
