@@ -92,7 +92,15 @@ public class BusinessTarget2 extends DataEntity<BusinessTarget2> {
 	private Integer targetIsDecompose;		// 是否分解
 	private List<BusinessTargetDataItem2> businessTargetDataItem2List = ListUtils.newArrayList();		// 子表列表
 	private List<BusinessStageTarget2> businessStageTarget2List = ListUtils.newArrayList();		// 子表列表
-	
+
+
+	@Getter
+	@Setter
+	private String dataItemList;
+	@Getter
+	@Setter
+	private String symbolList;
+
 	public BusinessTarget2() {
 		this(null);
 	}

@@ -3,20 +3,21 @@
  */
 package com.jeesite.modules.businesstarget2.web;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
 import com.jeesite.common.codec.EncodeUtils;
+import com.jeesite.common.config.Global;
+import com.jeesite.common.entity.Page;
 import com.jeesite.common.idgen.IdGen;
 import com.jeesite.common.lang.StringUtils;
 import com.jeesite.common.mapper.JsonMapper;
+import com.jeesite.common.web.BaseController;
 import com.jeesite.modules.businesstarget.entity.BusinessTarget;
+import com.jeesite.modules.businesstarget2.entity.BusinessTarget2;
+import com.jeesite.modules.businesstarget2.entity.BusinessTargetDataItem2;
+import com.jeesite.modules.businesstarget2.service.BusinessTarget2Service;
 import com.jeesite.modules.businesstargettype.entity.BusinessTargetType;
 import com.jeesite.modules.businesstargettype.service.BusinessTargetTypeService;
-import com.jeesite.modules.businesstargettypetree.entity.BusinessTargetTypeTree;
 import com.jeesite.modules.sys.entity.Office;
 import com.jeesite.modules.sys.service.OfficeService;
-import com.jeesite.modules.test.entity.TestTree;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -27,12 +28,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.jeesite.common.config.Global;
-import com.jeesite.common.entity.Page;
-import com.jeesite.common.web.BaseController;
-import com.jeesite.modules.businesstarget2.entity.BusinessTarget2;
-import com.jeesite.modules.businesstarget2.service.BusinessTarget2Service;
-
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 import java.util.Map;
 
@@ -185,6 +182,51 @@ public class BusinessTarget2Controller extends BaseController {
 		}
 		model.addAttribute("businessTarget", businessTarget);
 		return "modules/businesstarget2/listSelect";
+	}
+
+	/**
+	 * 跳转到公式添加页
+	 * @return
+	 */
+	@RequiresPermissions("businesstarget2:businessTarget2:edit")
+	@RequestMapping({"add"})
+	public String addList(BusinessTarget2 businessTarget2, Model model) {
+		/**
+		 * 符号列表
+		 */
+		StringBuffer sb = new StringBuffer();
+		sb.append("加（+）").append(" ");
+		sb.append("减（-）").append(" ");
+		sb.append("乘（*）").append(" ");
+		sb.append("除（/）").append(" \n");
+		sb.append("左括号: (").append(" \n");
+		sb.append("右括号:  )").append(" \n");
+		sb.append("大于等于: >=").append(" \n");
+		sb.append("小于等于: <=").append(" \n");
+		sb.append("小于: <").append(" \n");
+		sb.append("大于: >").append(" \n");
+		sb.append("分隔符: @").append("\n ");
+		sb.append("AND").append(" ");
+		sb.append("OR").append(" \n");
+		sb.append("if").append("&nbsp").append("else");
+
+		BusinessTarget2 target2 = businessTarget2Service.get(businessTarget2);
+		List<BusinessTargetDataItem2> businessTargetDataItem2List = target2.getBusinessTargetDataItem2List();
+		StringBuffer dataItemList = new StringBuffer();
+		for (int i=0;i<businessTargetDataItem2List.size(); i++) {
+			BusinessTargetDataItem2 businessTargetDataItem2 = businessTargetDataItem2List.get(i);
+
+			dataItemList.append(businessTargetDataItem2.getItemName()).append("&nbsp");
+			if (i%5==0) {
+				dataItemList.append("\n");
+			}
+		}
+
+
+		businessTarget2.setSymbolList(sb.toString());
+		businessTarget2.setDataItemList(dataItemList.toString());
+		model.addAttribute("businessTarget2",businessTarget2);
+		return "modules/businesstarget2/addList";
 	}
 	
 }

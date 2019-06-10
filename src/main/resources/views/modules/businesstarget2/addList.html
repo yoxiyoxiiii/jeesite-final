@@ -1,4 +1,4 @@
-<% layout('/layouts/default.html', {title: '指标管理', libs: ['validate','dataGrid']}){ %>
+<% layout('/layouts/default.html', {title: '公式配置', libs: ['validate','dataGrid']}){ %>
 <div class="main-content">
 	<div class="box box-main">
 		<div class="box-header with-border">
@@ -13,115 +13,50 @@
 			<div class="box-body">
 				<div class="form-unit">${text('基本信息')}</div>
 				<#form:hidden path="id"/>
-				<div class="row">
-					<div class="col-xs-6">
-						<div class="form-group">
-							<label class="control-label col-sm-4" title="">
-								<span class="required hide">*</span> ${text('指标项')}：<i class="fa icon-question hide"></i></label>
-							<div class="col-sm-8">
-								<#form:treeselect   model="${businessTargetType}" id="targetType" title="${text('指标项')}"
-								path="businessTargetType.id" labelPath="businessTargetType.typeName"
-								url="${ctx}/businesstargettypetree/businessTargetTypeTree/treeData?excludeCode=${businessTargetType.id}&ctrlPermi=2"
-								class="" allowClear="true" canSelectRoot="true" canSelectParent="true"/>
-							</div>
-						</div>
-					</div>
-					<div class="col-xs-6">
-						<div class="form-group">
-							<label class="control-label col-sm-4" title="">
-								<span class="required hide">*</span> ${text('考核周期')}：<i class="fa icon-question hide"></i></label>
-							<div class="col-sm-8">
-								<#form:select path="targetCheckCycle" dictType="target_check_cycle" blankOption="true" class="form-control" />
-							</div>
-						</div>
-					</div>
-				</div>
-				<div class="row">
-					<div class="col-xs-6">
-						<div class="form-group">
-							<label class="control-label col-sm-4" title="">
-								<span class="required hide">*</span> ${text('单位分值')}：<i class="fa icon-question hide"></i></label>
-							<div class="col-sm-8">
-								<#form:input path="targetScore" maxlength="255" class="form-control"/>
-							</div>
-						</div>
-					</div>
-					<div class="col-xs-6">
-						<div class="form-group">
-							<label class="control-label col-sm-4" title="">
-								<span class="required hide">*</span> ${text('最高标准')}：<i class="fa icon-question hide"></i></label>
-							<div class="col-sm-8">
-								<#form:input path="targetMax" maxlength="255" class="form-control"/>
-							</div>
-						</div>
-					</div>
-				</div>
-				<div class="row">
-					<div class="col-xs-6">
-						<div class="form-group">
-							<label class="control-label col-sm-4" title="">
-								<span class="required hide">*</span> ${text('考核细则')}：<i class="fa icon-question hide"></i></label>
-							<div class="col-sm-8">
-								<#form:listselect id="listSelectplan" title="考核计划"
-								url="${ctx}/businesscheckplan/businessCheckPlan/listSelect" allowClear="false"
-								path="businessCheckPlan.id"  labelPath="businessCheckPlan.planName" value= "id" checkbox="false" itemCode="id" itemName="planName"/>
-							</div>
-						</div>
-					</div>
-					<div class="col-xs-6">
-						<div class="form-group">
-							<label class="control-label col-sm-4" title="">
-								<span class="required hide">*</span> ${text('协同部门')}：<i class="fa icon-question hide"></i></label>
-							<div class="col-sm-8">
-								<#form:treeselect   model="${office}" id="jointWorkDepartments" title="${text('协同部门')}"
-								path="jointWorkDepartments.officeCode" labelPath="jointWorkDepartments.officeName"
-								url="${ctx}/sys/office/treeData?excludeCode=${office.id}&ctrlPermi=2"
-								class="" allowClear="true" canSelectRoot="true" canSelectParent="true"/>
-							</div>
-						</div>
-					</div>
 
-				</div>
 				<div class="row">
-
 					<div class="col-xs-6">
 						<div class="form-group">
 							<label class="control-label col-sm-4" title="">
-								<span class="required hide">*</span> ${text('指标属性')}：<i class="fa icon-question hide"></i></label>
+								<span class="required hide">*</span> ${text('计算公式')}：<i class="fa icon-question hide"></i></label>
 							<div class="col-sm-8">
-								<#form:select path="targetAttribute" dictType="target_belong_type" blankOption="true" class="form-control" />
+								<#form:textarea path="targetResultExpression" rows="5" maxlength="255" class="form-control"/>
 							</div>
 						</div>
 					</div>
-
+					<div class="col-xs-6">
+						<div class="form-group">
+							<label class="control-label col-sm-4" title="">
+								<span class="required hide">*</span> ${text('基本系数')}：<i class="fa icon-question hide"></i></label>
+							<div class="col-sm-8">
+								<#form:input path="targetScore" readonly="true" maxlength="255" class="form-control"/>
+							</div>
+						</div>
+					</div>
 				</div>
 				<div class="row">
 						<div class="col-xs-12">
 							<div class="form-group">
 								<label class="control-label col-sm-2" title="">
-									<span class="required hide">*</span> ${text('指标内容及细则')}：<i class="fa icon-question hide"></i></label>
-								<div class="col-sm-10">
-									<#form:textarea path="targetContent" rows="4" maxlength="200" class="form-control"/>
+									<span class="required hide">*</span> ${text('操作符号')}：<i class="fa icon-question hide"></i></label>
+								<div class="col-sm-5">
+									<#form:textarea path="symbolList" rows="10" maxlength="200" readonly="true" class="form-control"/>
 								</div>
 							</div>
 						</div>
+				</div>
 
+				<div class="row">
+						<div class="col-xs-12">
+							<div class="form-group">
+								<label class="control-label col-sm-2" title="">
+									<span class="required hide">*</span> ${text('数据项')}：<i class="fa icon-question hide"></i></label>
+								<div class="col-sm-10">
+									<#form:textarea path="dataItemList" rows="10" maxlength="200" readonly="true" class="form-control"/>
+								</div>
+							</div>
+						</div>
 				</div>
-				<h4 class="form-unit">${text('阶段目标')}</h4>
-				<div class="ml10 mr10">
-					<table id="businessStageTarget2DataGrid"></table>
-					<% if (hasPermi('businesstarget2:businessTarget2:edit')){ %>
-						<a href="#" id="businessStageTarget2DataGridAddRowBtn" class="btn btn-primary btn-sm mt10 mb10"><i class="fa fa-plus"></i> ${text('增行')}</a>
-					<% } %>
-				</div>
-				<h4 class="form-unit">${text('数据采集项')}</h4>
-				<div class="ml10 mr10">
-					<table id="businessTargetDataItem2DataGrid"></table>
-					<% if (hasPermi('businesstarget2:businessTarget2:edit')){ %>
-					<a href="#" id="businessTargetDataItem2DataGridAddRowBtn" class="btn btn-primary btn-sm mt10 mb10"><i class="fa fa-plus"></i> ${text('增行')}</a>
-					<% } %>
-				</div>
-			</div>
 			<div class="box-footer">
 				<div class="row">
 					<div class="col-sm-offset-2 col-sm-10">
