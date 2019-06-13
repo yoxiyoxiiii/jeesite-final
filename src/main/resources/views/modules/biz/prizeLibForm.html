@@ -54,19 +54,24 @@
 						<div class="form-group">
 							<label class="control-label col-sm-4" title="">
 								<span class="required ">*</span> ${text('类型')}：<i class="fa icon-question hide"></i></label>
-							<div class="col-sm-8">
-								<#form:select path="isAdd" dictType="prize_is_add" class="form-control required" />
+							<div class="col-sm-8 ">
+								<div class="btn-group">
+									<#form:radio path="isAdd" dictType="prize_is_add" class="form-control required" />
+								</div>
 							</div>
 						</div>
 					</div>
 					<div class="col-xs-6">
-						<div class="form-group">
-							<label class="control-label col-sm-4" title="">
-								<span class="required ">*</span> ${text('加分控制')}：<i class="fa icon-question hide"></i></label>
-							<div class="col-sm-8">
-								<#form:input path="limit" class="form-control required number"/>
-							</div>
-						</div>
+							<div class="form-group">
+									<label class="control-label col-sm-4" title="计算类型为:单项否决时, 分数控制可忽略">
+										<span class="required ">*</span> ${text('分数控制')}：<i class="fa icon-question"></i></label>
+									<div class="col-sm-8 ">
+										<div class="input-group">
+												<#form:input path="limit" class="form-control required number" placeholder="0.0表示不限制"/>
+												<span class="input-group-addon">.00</span>
+										</div>								
+									</div>
+								</div>
 					</div>
 				</div>
 				<div class="row">
@@ -98,7 +103,9 @@
 							<label class="control-label col-sm-4" title="">
 								<span class="required hide">*</span> ${text('扩展字段1名称')}：<i class="fa icon-question hide"></i></label>
 							<div class="col-sm-8">
-								<#form:input path="extend1Name" maxlength="64" class="form-control"/>
+									
+									<#form:input path="extend1Name" maxlength="64" class="form-control"/>
+								
 							</div>
 						</div>
 					</div>
@@ -107,7 +114,19 @@
 							<label class="control-label col-sm-4" title="">
 								<span class="required hide">*</span> ${text('扩展字段1选项')}：<i class="fa icon-question hide"></i></label>
 							<div class="col-sm-8">
-								<#form:input path="extend1Option" maxlength="100" class="form-control"/>
+									<div class="input-group">
+										<div class="input-group-btn">
+											<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Action <span class="caret"></span></button>
+											<ul class="dropdown-menu">
+													<li><a href="#" data-val="string">文本</a></li>
+													<li><a href="#" data-val="number">数字</a></li>
+													<li><a href="#" data-val="datetime">时间</a></li>
+													<li role="separator" class="divider"></li>
+													<li><a href="#" data-val="">数据字典</a></li>
+												</ul>
+											</div>
+										<#form:input path="extend1Option" maxlength="100" class="form-control"/>
+									</div>
 							</div>
 						</div>
 					</div>
@@ -240,4 +259,22 @@ $("#inputForm").validate({
 		}, "json");
     }
 });
+
+//分数控制操作提示
+if( $("input:radio[name='isAdd']:checked").val() == "0"){
+	$("#limit").attr("readonly","readonly");
+}
+$("#isAdd>label").click(function(){
+	$("#limit").removeAttr("readonly");	
+	if($(this).find("input").eq(0).val() == "0"){
+		$("#limit").attr("readonly","readonly");
+	}
+});
+$(".iradio_minimal-grey").click(function(){
+	$("#limit").removeAttr("readonly");	
+	if($(this).parent.find("input").eq(0).val() == "0"){
+		$("#limit").attr("readonly","readonly");
+	}
+});
+
 </script>

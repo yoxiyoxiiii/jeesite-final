@@ -51,11 +51,11 @@
 					</div>
 					<div class="col-xs-6">
 						<div class="form-group">
-							<label class="control-label col-sm-4" title="">
-								<span class="required ">*</span> ${text('获奖时间')}：<i class="fa icon-question hide"></i></label>
+							<label class="control-label col-sm-4" title="仅能登记本年度内的奖扣">
+								<span class="required ">*</span> ${text('获奖时间')}：<i class="fa icon-question"></i></label>
 							<div class="col-sm-8">
 								<#form:input path="prizeDate" readonly="true" maxlength="20" class="form-control Wdate required"
-									dataFormat="datetime" onclick="WdatePicker({dateFmt:'yyyy-MM-dd',isShowClear:false});" />
+									dataFormat="datetime" onclick="WdatePicker({dateFmt:'yyyy-MM-dd',isShowClear:false,minDate: '#{%y-1}-%M-%d}' ,maxDate:'%y-%M-%d'});" />
 							</div>
 						</div>
 					</div>
@@ -66,7 +66,7 @@
 							<label class="control-label col-sm-2" title="">
 								<span class="required ">*</span> ${text('情况说明')}：<i class="fa icon-question hide"></i></label>
 							<div class="col-sm-10">
-								<#form:input path="evidence" maxlength="500" class="form-control required" />
+								<#form:textarea path="evidence" maxlength="500" class="form-control required" rows="4" place-holder="对奖扣情况进行必要的说明" />
 							</div>
 						</div>
 					</div>
@@ -74,10 +74,14 @@
 				<div class="row">
 					<div class="col-xs-6">
 						<div class="form-group">
-							<label class="control-label col-sm-4" title="">
-								<span class="required hide">*</span> ${text('奖扣结果')}：<i class="fa icon-question hide"></i></label>
-							<div class="col-sm-8">
-								<#form:input path="score" class="form-control number" />
+							<label class="control-label col-sm-4" title="可以使用小数">
+								<span class="required hide">*</span> ${text('奖扣结果')}：<i class="fa icon-question"></i></label>
+							<div class="col-sm-6">
+									<div class="input-group">
+									<span id="prizeIsAdd" class="input-group-addon"><i> </i></span>									
+								<#form:input path="score" class="form-control number" style="color:green;font-size:24px;font-weight:600;height:48px;"/>
+								<span class="input-group-addon">.00</span>
+									</div>
 							</div>
 						</div>
 					</div>
@@ -154,7 +158,7 @@
 				<div class="row">
 					<div class="col-xs-12">
 						<div class="form-group">
-							<label class="control-label col-sm-2">${text('附件上传')}：</label>
+							<label class="control-label col-sm-2" title="提交正式文书照片或其他证明材料">${text('奖/扣公文材料')}：<i class="fa icon-question"></i></label>
 							<div class="col-sm-10">
 								<#form:fileupload id="uploadFile" bizKey="${prize.id}" bizType="prize_file" uploadType="all" class=""
 									readonly="false" />
@@ -222,6 +226,11 @@
 	var cacheVals = [];
 	function setExtendCol(selectLibID) {
 		$.get("${ctx}/biz/prizeLib/get?id=" + selectLibID, function (data, status) {
+			//奖扣类型提示
+			var isAddStr = js.getDictLabel(${@DictUtils.getDictListJson('prize_is_add')}, data.prizeLib.isAdd, '${text("未知")}', true)
+			$("#prizeIsAdd>i").text(isAddStr);
+			$("#prizeIsAdd>i").addClass(data.prizeLib.isAdd == "1"? "text-success":"text-danger")
+			//扩展字段处理
 			$(".extendTitle").hide();
 			for (i = 1; i <= EXTEND_LENTH; i++) {
 				//扩展字段名不为空才解析

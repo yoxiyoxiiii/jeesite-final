@@ -86,7 +86,11 @@ public class PrizeLibController extends BaseController {
 	@PostMapping(value = "save")
 	@ResponseBody
 	public String save(@Validated PrizeLib prizeLib) {
+
+		//只要修改过,就重走流程
+		prizeLib.setStatus( PrizeLib.STATUS_DRAFT);
 		prizeLibService.save(prizeLib);
+		prizeLibService.updateStatus(prizeLib);
 		return renderResult(Global.TRUE, text("保存奖扣分类成功！"));
 	}
 	
@@ -101,6 +105,50 @@ public class PrizeLibController extends BaseController {
 		return renderResult(Global.TRUE, text("删除奖扣分类成功！"));
 	}
 
+	/**
+	 * 停用奖扣类型
+	 */
+	@RequiresPermissions("biz:prizeLib:edit")
+	@RequestMapping(value = "disable")
+	@ResponseBody
+	public String disable(PrizeLib prizeType) {
+		prizeType.setStatus(PrizeLib.STATUS_DISABLE);
+		prizeLibService.updateStatus(prizeType);
+		return renderResult(Global.TRUE, text("停用奖扣类型成功"));
+	}
+
+	/**
+	 * 启用奖扣类型
+	 */
+	@RequiresPermissions("biz:prizeLib:edit")
+	@RequestMapping(value = "enable")
+	@ResponseBody
+	public String enable(PrizeLib prizeLib) {
+		prizeLib.setStatus(PrizeLib.STATUS_NORMAL);
+		prizeLibService.updateStatus(prizeLib);
+		return renderResult(Global.TRUE, text("启用奖扣类型成功"));
+	}
+
+	/**
+	 * 审批奖扣类型
+	 */
+	@RequiresPermissions("biz:prizeLib:audit")
+	@RequestMapping(value = "audit")
+	@ResponseBody
+	public String audit(PrizeLib prizeLib, String status) {
+		prizeLib.setStatus(status);
+			prizeLibService.updateStatus(prizeLib);
+			return renderResult(Global.TRUE, text("审批操作成功"));
+			//todo:流程状态需要内部控制
+	/*	if( status.equals( PrizeLib.STATUS_AUDIT_BACK)  ||
+			status.equals(PrizeLib.STATUS_NORMAL)) {
+			prizeType.setStatus(status);
+			prizeLibService.updateStatus(prizeType);
+			return renderResult(Global.TRUE, text("启用奖扣类型成功"));
+		}else{
+			return renderResult(Global.FALSE, text("没有权限")) ;
+		}  */
+	}
 
 //
 //	//	@RequiresPermissions("biz:prizeLib:edit")

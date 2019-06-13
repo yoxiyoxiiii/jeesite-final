@@ -3,8 +3,14 @@
  */
 package com.jeesite.modules.appeal.service;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
+import com.jeesite.modules.sys.utils.DictUtils;
+import com.jeesite.modules.sys.utils.UserUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -65,6 +71,22 @@ public class AppealService extends CrudService<AppealDao, Appeal> {
 	@Override
 	@Transactional(readOnly=false)
 	public void updateStatus(Appeal appeal) {
+		//日志: 谁,什么时间,什么操作?
+		Appeal temp = get(appeal.getId());
+		String logs = temp.getLogs();
+		//操作状态
+		String option = DictUtils.getDictLabel("appeal_status", appeal.getStatus(), "处理");
+		Date date = new Date();
+		DateFormat df = new SimpleDateFormat("yyyy年MM月dd日 hh时mm分ss秒  EE", Locale.CHINA);
+		String log = "用户 %s 在 %s 时间,对该申诉进行 %s 操作\r\n";
+		logs += String.format(log,
+				UserUtils.getUser().getUserName(),
+				df.format(date),
+				option
+				);
+		appeal.setLogs(logs);
+		appeal.setIsNewRecord(false);
+		super.save(appeal);
 		super.updateStatus(appeal);
 	}
 	

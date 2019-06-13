@@ -5,6 +5,8 @@ package com.jeesite.modules.biz.service;
 
 import java.util.List;
 
+import com.jeesite.modules.msg.entity.content.PcMsgContent;
+import com.jeesite.modules.msg.utils.MsgPushUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -51,6 +53,16 @@ public class SupervisionService extends CrudService<SupervisionDao, Supervision>
 	@Transactional(readOnly=false)
 	public void save(Supervision supervision) {
 		super.save(supervision);
+		// 根据事项ID,获取人,接收人,发送人
+		PcMsgContent msgContent  =  new  PcMsgContent();
+		msgContent.setTitle("任务督办");
+		String content = "请在%s前,完成任务:%s.<br>%s";
+		msgContent.setContent(String.format(content,
+				supervision.getLimitDate().toString(),
+				supervision.getJobId(),
+				supervision.getRequirement()));
+		msgContent.addButton("立即办理",  "/a/demo/demoCustomer/form?id=1120518619533426688");
+		MsgPushUtils.push(msgContent,  "BizKey",  "BizType",  "system");
 	}
 	
 	/**

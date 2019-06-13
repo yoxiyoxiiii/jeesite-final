@@ -4,6 +4,9 @@
 package com.jeesite.modules.biz.entity;
 
 import javax.validation.constraints.NotBlank;
+
+import com.jeesite.common.mybatis.annotation.JoinTable;
+import com.jeesite.modules.sys.entity.Office;
 import org.hibernate.validator.constraints.Length;
 import javax.validation.constraints.NotNull;
 
@@ -23,9 +26,16 @@ import com.jeesite.common.mybatis.mapper.query.QueryType;
 		@Column(name="is_add", attrName="isAdd", label="类型"),
 		@Column(name="limit", attrName="limit", label="加分控制"),
 		@Column(name="rule_remark", attrName="ruleRemark", label="奖扣标准说明", queryType=QueryType.LIKE),
-		@Column(name="led", attrName="led", label="牵头部门"),
+		@Column(name="led", attrName="ledOffice.officeCode", label="牵头部门"),
 		@Column(includeEntity=DataEntity.class),
-	}, orderBy="a.update_date DESC"
+	},joinTable={
+		@JoinTable(type= JoinTable.Type.LEFT_JOIN, entity= Office.class, attrName="ledOffice", alias="u11",
+				on="u11.office_code = a.led", columns={
+				@Column(name="office_code", label="机构编码", isPK=true),
+				@Column(name="office_name", label="机构名称", isQuery=false),
+		})
+    },
+		orderBy="a.update_date DESC"
 )
 public class PrizeType extends DataEntity<PrizeType> {
 	
@@ -34,7 +44,7 @@ public class PrizeType extends DataEntity<PrizeType> {
 	private String isAdd;		// 类型
 	private Double limit;		// 加分控制
 	private String ruleRemark;		// 奖扣标准说明
-	private String led;		// 牵头部门
+	private Office ledOffice;		// 牵头部门
 	
 	public PrizeType() {
 		this(null);
@@ -81,15 +91,13 @@ public class PrizeType extends DataEntity<PrizeType> {
 	public void setRuleRemark(String ruleRemark) {
 		this.ruleRemark = ruleRemark;
 	}
-	
-	@NotBlank(message="牵头部门不能为空")
-	@Length(min=0, max=200, message="牵头部门长度不能超过 200 个字符")
-	public String getLed() {
-		return led;
+
+	public Office getLedOffice() {
+		return ledOffice;
 	}
 
-	public void setLed(String led) {
-		this.led = led;
+	public void setLedOffice(Office ledOffice) {
+		this.ledOffice = ledOffice;
 	}
 	
 }
