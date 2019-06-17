@@ -2,22 +2,23 @@
 <div class="main-content">
     <div class="box box-main">
         <div class="box-body">
-            <#form:form id="searchForm" model="${prizeLib}" action="${ctx}/biz/prizeLib/listData" method="post" class="form-inline hide"
+            <#form:form id="searchForm" model="${prizeLib}" action="${ctx}/biz/prizeLib/listData" method="post" class="form-inline"
             data-page-no="${parameter.pageNo}" data-page-size="${parameter.pageSize}" data-order-by="${parameter.orderBy}">
 
             <#form:hidden name="isAll" value="${parameter.isAll}"/>
+            <#form:hidden name="status" value="0"/>
+            <div class="form-group">
+                    <label class="control-label">${text('奖扣分类')}：</label>
+                    <div class="control-inline " style="width:200px;">
+                        <#form:select path="prizeType.id" dictType="" blankOption="true" class="form-control"/>
+                    </div>
+                </div>
             <div class="form-group">
                 <label class="control-label">${text('奖扣说明')}：</label>
                 <div class="control-inline">
                     <#form:input path="ruleRemark" maxlength="500" class="form-control width-120"/>
                 </div>
-            </div>
-            <div class="form-group">
-                <label class="control-label">${text('奖扣分类')}：</label>
-                <div class="control-inline width-120">
-                    <#form:select path="prizeType.name" dictType="" blankOption="true" class="form-control"/>
-                </div>
-            </div>
+            </div>            
             <div class="form-group">
                 <label class="control-label">${text('部门')}：</label>
                 <div class="control-inline width-120" >
@@ -32,18 +33,18 @@
                     <#form:select path="isAdd" dictType="prize_is_add" blankOption="true" class="form-control"/>
                 </div>
             </div>
-            <div class="form-group">
+            <!-- <div class="form-group">
                 <label class="control-label">${text('加分控制')}：</label>
                 <div class="control-inline">
                     <#form:input path="limit" class="form-control width-120"/>
                 </div>
-            </div>
-            <div class="form-group">
+            </div> -->
+            <!-- <div class="form-group">
                 <label class="control-label">${text('状态')}：</label>
                 <div class="control-inline width-120">
                     <#form:select path="status" dictType="sys_search_status" blankOption="true" class="form-control"/>
                 </div>
-            </div>
+            </div> -->
             <div class="form-group">
                 <button type="submit" class="btn btn-primary btn-sm">${text('查询')}</button>
                 <button type="reset" class="btn btn-default btn-sm">${text('重置')}</button>
@@ -63,15 +64,29 @@
 </div>
 <% } %>
 <script>
+    //加载分类下拉选择框
+$(function(){
+	js.ajaxSubmit("${ctx}/biz/prizeType/treeData?___t="
+				+ new Date().getTime(), {
+			ctrlPermi : '2'/*1拥有的权限 2管理的权限*/
+		}, function(data) {
+			var typeSelect = $("#prizeType_id")[0];
+			$(data).each(function(index, item){
+				typeSelect.options.add(new Option(item.pId =="0"?item.name:"  "+item.name, item.id, false, false));
+			});
+		}, null, null, js.text('loading.message'));
+});
+</script>
+<script>
     var selectData = ${isNotBlank(selectData!) ? selectData! : "{\}"},
     selectNum = 0, dataGrid = $('#dataGrid').dataGrid({
 	searchForm: $("#searchForm"),
-	columnModel: [
+	columnModel: [		
+		{header:'${text("奖扣分类")}', name:'prizeType.name', index:'prizeType.name', width:100, align:"left"},
 		{header:'${text("奖扣说明")}', name:'ruleRemark', index:'a.rule_remark', width:300, align:"left", frozen:true, formatter: function(val, obj, row, act){
-			return '<a href="${ctx}/biz/prizeLib/form?id='+row.id+'" class="btnList" data-title="${text("编辑奖扣分类")}">'+(val||row.id)+'</a>';
+			return (val||row.id);
 		}},
-		{header:'${text("奖扣分类")}', name:'prizeType.name', index:'prizeType.name', width:100, align:"center"},
-		{header:'${text("牵头部门")}', name:'office.officeName', index:'office.office_code', width:50, align:"center"},
+        {header:'${text("牵头部门")}', name:'office.officeName', index:'office.office_code', width:50, align:"center"},
 		{header:'${text("类型")}', name:'isAdd', index:'a.is_add', width:50, align:"center", formatter: function(val, obj, row, act){
 			return js.getDictLabel(${@DictUtils.getDictListJson('prize_is_add')}, val, '${text("未知")}', true);
 		}},

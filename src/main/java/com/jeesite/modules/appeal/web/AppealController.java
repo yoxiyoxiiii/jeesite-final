@@ -6,6 +6,9 @@ package com.jeesite.modules.appeal.web;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.jeesite.modules.sys.utils.UserUtils;
+import org.apache.commons.lang3.ObjectUtils;
+import org.apache.ibatis.jdbc.Null;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -21,6 +24,8 @@ import com.jeesite.common.entity.Page;
 import com.jeesite.common.web.BaseController;
 import com.jeesite.modules.appeal.entity.Appeal;
 import com.jeesite.modules.appeal.service.AppealService;
+
+import java.util.Date;
 
 /**
  * 申诉Controller
@@ -65,12 +70,48 @@ public class AppealController extends BaseController {
 	}
 
 	/**
-	 * 查看编辑表单
+	 * 提起申诉表单(两种权限: 可见, 可编辑)
 	 */
 	@RequiresPermissions("appeal:appeal:view")
 	@RequestMapping(value = "form")
 	public String form(Appeal appeal, Model model) {
 		model.addAttribute("appeal", appeal);
+		model.addAttribute("step",1);
+		return "modules/appeal/appealForm";
+	}
+
+	/**
+	 * 受理申诉表单
+	 */
+	@RequiresPermissions("appeal:appeal:accept")
+	@RequestMapping(value = "formAccept")
+	public String formAccept(Appeal appeal, Model model) {
+		if(!appeal.getId().equals("") && appeal.getReceiverBy().equals("")){
+			//默认受理人为自己
+			appeal.setReceiverBy(UserUtils.getUser().getUserCode());
+			appeal.setReceiveDate(new Date());
+		}
+		model.addAttribute("appeal", appeal);
+		model.addAttribute("step",2);
+		return "modules/appeal/appealForm";
+	}
+
+	/**
+	 * 受理申诉表单
+	 */
+	@RequiresPermissions("appeal:appeal:audit")
+	@RequestMapping(value = "formAudit")
+	public String formAudit(Appeal appeal, Model model) {
+		if(!appeal.getId().equals("")
+				&& !appeal.getReceiverBy().equals("")
+				&& appeal.getStatus().equals("5")
+				&& appeal.getAuditBy().equals("")){
+			//默认受理人为自己
+			appeal.setAuditBy(UserUtils.getUser().getUserCode());
+			appeal.setAuditDate(new Date());
+		}
+		model.addAttribute("appeal", appeal);
+		model.addAttribute("step",3);
 		return "modules/appeal/appealForm";
 	}
 
@@ -82,7 +123,8 @@ public class AppealController extends BaseController {
 	@ResponseBody
 	public String save(@Validated Appeal appeal) {
 		appealService.save(appeal);
-		return renderResult(Global.TRUE, text("保存申诉成功！"));
+		appealService.updateStatus(appeal);
+		return renderResult(Global.TRUE, text("申诉操作成功！"));
 	}
 	
 	/**
@@ -96,7 +138,7 @@ public class AppealController extends BaseController {
 		appealService.updateStatus(appeal);
 		return renderResult(Global.TRUE, text("停用申诉成功"));
 	}
-	
+
 	/**
 	 * 启用申诉
 	 */
@@ -119,5 +161,5 @@ public class AppealController extends BaseController {
 		appealService.delete(appeal);
 		return renderResult(Global.TRUE, text("删除申诉成功！"));
 	}
-	
+
 }

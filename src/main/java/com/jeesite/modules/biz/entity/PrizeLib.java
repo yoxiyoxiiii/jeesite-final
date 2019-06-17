@@ -32,7 +32,7 @@ import com.jeesite.common.mybatis.mapper.query.QueryType;
 @Table(name = "biz_prize_lib", alias = "a", columns = {
         @Column(name = "id", attrName = "id", label = "编号", isPK = true),
         @Column(name = "rule_remark", attrName = "ruleRemark", label = "奖扣说明", queryType = QueryType.LIKE),
-        @Column(name = "prize_type_id", attrName = "prizeType.id", label = "奖扣分类"),
+        @Column(name = "prize_type_id", attrName = "prizeType.id", label = "奖扣分类", queryType = QueryType.EQ),
         @Column(name = "dept_id", attrName = "office.officeCode", label = "部门"),
         @Column(name = "is_add", attrName = "isAdd", label = "类型"),
         @Column(name = "limit", attrName = "limit", label = "加分控制", queryType = QueryType.GT),
@@ -140,7 +140,7 @@ public class PrizeLib extends DataEntity<PrizeLib> {
         this.isAdd = isAdd;
     }
 
-    @NotNull(message = "加分控制不能为空")
+
     public Double getLimit() {
         return limit;
     }

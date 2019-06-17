@@ -63,20 +63,17 @@
 $('#dataGrid').dataGrid({
 	searchForm: $("#searchForm"),
 	columnModel: [
-		{header:'${text("名称")}', name:'name', index:'a.name', width:150, align:"left", frozen:true, formatter: function(val, obj, row, act){
+		{header:'${text("名称")}', name:'name', index:'a.name', width:300, align:"left", frozen:true, formatter: function(val, obj, row, act){
 			return '<a href="${ctx}/biz/prizeType/form?id='+row.id+'" class="btnList" data-title="${text("编辑奖扣类型")}">'+(val||row.id)+'</a>';
 		}},
-		{header:'${text("类型")}', name:'isAdd', index:'a.is_add', width:150, align:"center", formatter: function(val, obj, row, act){
+		{header:'${text("类型")}', name:'isAdd', index:'a.is_add', width:100, align:"center", formatter: function(val, obj, row, act){
 			return js.getDictLabel(${@DictUtils.getDictListJson('prize_is_add')}, val, '${text("未知")}', true);
 		}},
-		{header:'${text("加分控制")}', name:'limit', index:'a.limit', width:150, align:"right", formatter: function(val, obj, row, act){
+		{header:'${text("加分控制")}', name:'limit', index:'a.limit', width:100, align:"right", formatter: function(val, obj, row, act){
 			return js.formatNumber(val, 2, false, ''); // 数值类型格式化 (原始数值, 小数位数, 是否千分位, 默认值，金额情况下设置0.00);
 		}},
-		{header:'${text("奖扣标准说明")}', name:'ruleRemark', index:'a.rule_remark', width:150, align:"left"},
-		{header:'${text("牵头部门")}', name:'', index:'a.led', width:150, align:"center"},
-		{header:'${text("状态")}', name:'status', index:'a.status', width:150, align:"center", formatter: function(val, obj, row, act){
-			return js.getDictLabel(${@DictUtils.getDictListJson('sys_search_status')}, val, '${text("未知")}', true);
-		}},
+		{header:'${text("奖扣标准说明")}', name:'ruleRemark', index:'a.rule_remark', width:300, align:"left"},
+		{header:'${text("牵头部门")}', name:'ledOffice.officeName', index:'a.led', width:100, align:"center"},		
 		{header:'${text("操作")}', name:'actions', width:120, sortable:false, title:false, formatter: function(val, obj, row, act){
 			var actions = [];
 			<% if(hasPermi('biz:prizeType:edit')){ %>

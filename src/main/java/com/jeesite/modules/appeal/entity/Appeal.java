@@ -63,7 +63,7 @@ public class Appeal extends DataEntity<Appeal> {
 		super(id);
 	}
 	
-	@NotBlank(message="申诉项目不能为空")
+
 	@Length(min=0, max=64, message="申诉项目长度不能超过 64 个字符")
 	public String getPalnId() {
 		return palnId;
@@ -73,7 +73,7 @@ public class Appeal extends DataEntity<Appeal> {
 		this.palnId = palnId;
 	}
 	
-	@NotBlank(message="审核阶段不能为空")
+
 	@Length(min=0, max=64, message="审核阶段长度不能超过 64 个字符")
 	public String getPhasesId() {
 		return phasesId;
@@ -83,7 +83,7 @@ public class Appeal extends DataEntity<Appeal> {
 		this.phasesId = phasesId;
 	}
 
-	@NotBlank(message="具体事项不能为空")
+
 	@Length(min=0, max=2000, message="具体事项长度不能超过 2000 个字符")
 	public String getItems() {
 		return items;
@@ -93,7 +93,6 @@ public class Appeal extends DataEntity<Appeal> {
 		this.items = items;
 	}
 
-	@NotBlank(message="申诉理由不能为空")
 	@Length(min=0, max=2000, message="申诉理由长度不能超过 2000 个字符")
 	public String getReason() {
 		return reason;

@@ -35,7 +35,7 @@ import com.jeesite.common.mapper.JsonMapper;
 
 /**
  * 奖扣类型Controller
- *
+ * todo: 最好使用树形接口展示
  * @author sanye
  * @version 2019-05-02
  */
@@ -121,6 +121,7 @@ public class PrizeTypeController extends BaseController {
         return renderResult(Global.TRUE, text("启用奖扣类型成功"));
     }
 
+
     /**
      * 删除奖扣类型
      */
@@ -166,8 +167,8 @@ public class PrizeTypeController extends BaseController {
             map.put("id", e.getId());
             map.put("pId", 0);
             map.put("name", e.getName());
-            map.put("title", e.getName() + " ["+ e.getLed() +"]");
-            map.put("led", e.getLed());
+            map.put("title", e.getName() + " ["+ e.getLedOffice().getFullName() +"]");
+            map.put("led", e.getLedOffice());
             map.put("isAdd", e.getIsAdd());
             // 是否仅获取可管理的栏目，指定 true 或 false
             mapList.add(map);

@@ -74,37 +74,39 @@ public class PrizeController extends BaseController {
 	@RequestMapping(value = "listData")
 	@ResponseBody
 	public Page<Prize> listData(Prize prize, HttpServletRequest request, HttpServletResponse response) {
-//		String id = request.getParameter("prizeLib.id2");
-//		PrizeType pt = new PrizeType();
-//		pt.setId(id);
-//		PrizeLib pb = new PrizeLib();
-//		pb.setPrizeType(pt);
-//		prize.setPrizeLib(pb);
+//		String id = request.getParameter("prizeTypeId");
+//		if( id.length() > 1 ) {
+//			PrizeType pt = new PrizeType();
+//			pt.setId(id);
+//			PrizeLib pb = new PrizeLib();
+//			pb.setPrizeType(pt);
+//			prize.setPrizeLib(pb);
+//		}
 		prize.setPage(new Page<>(request, response));
 		Page<Prize> page = prizeService.findPage(prize);
-		List<Prize> list = page.getList();
-		for(int i=0; i< list.size(); i++) {
-			Office office = list.get(i).getOfficeJoin();
-			String officeNames = "";
-			String[] codes = office.getOfficeCode().split(",");
-			for(String code:codes){
-				Office tOffice = new Office();
-				tOffice.setOfficeCode(code);
-				tOffice = officeService.get(tOffice);
-				if(tOffice != null) {
-					officeNames += tOffice.getOfficeName() + ",";
-				}
-			}
-			if(officeNames.length()> 2){
-				officeNames = officeNames.substring(0,officeNames.length()-1);
-			}
-			//组合名称显示
-			office.setOfficeCode(officeNames);
-			Prize temp = list.get(i);
-			temp.setOfficeJoin(office);
-			list.set(i, temp);
-		}
-		page.setList(list);
+//		List<Prize> list = page.getList();
+//		for(int i=0; i< list.size(); i++) {
+//			Office office = list.get(i).getOfficeJoin();
+//			String officeNames = "";
+//			String[] codes = office.getOfficeCode().split(",");
+//			for(String code:codes){
+//				Office tOffice = new Office();
+//				tOffice.setOfficeCode(code);
+//				tOffice = officeService.get(tOffice);
+//				if(tOffice != null) {
+//					officeNames += tOffice.getOfficeName() + ",";
+//				}
+//			}
+//			if(officeNames.length()> 2){
+//				officeNames = officeNames.substring(0,officeNames.length()-1);
+//			}
+//			//组合名称显示
+//			office.setOfficeCode(officeNames);
+//			Prize temp = list.get(i);
+//			temp.setOfficeJoin(office);
+//			list.set(i, temp);
+//		}
+//		page.setList(list);
 		return page;
 	}
 
@@ -128,7 +130,10 @@ public class PrizeController extends BaseController {
 //	    Office office = new Office();
 //	    office.setOfficeCode("SY0001");
 //		prize.setOfficeJoin(office);
+		//只要修改过,就重走流程
+		prize.setStatus( prize.STATUS_DRAFT);
 		prizeService.save(prize);
+		prizeService.updateStatus(prize);
 		return renderResult(Global.TRUE, text("保存奖扣记录成功！"));
 	}
 	
@@ -167,7 +172,17 @@ public class PrizeController extends BaseController {
 		return renderResult(Global.TRUE, text("删除奖扣记录成功！"));
 	}
 
-
+	/**
+	 * 审批奖扣类型
+	 */
+	@RequiresPermissions("biz:prize:audit")
+	@RequestMapping(value = "audit")
+	@ResponseBody
+	public String audit(Prize prize, String status) {
+		prize.setStatus(status);
+		prizeService.updateStatus(prize);
+		return renderResult(Global.TRUE, text("审批操作成功"));
+	}
     /**
      * 停用奖扣记录
      */
