@@ -7,9 +7,6 @@
 			</div>
 			<div class="box-tools pull-right">
 				<a href="#" class="btn btn-default" id="btnSearch" title="${text('查询')}"><i class="fa fa-filter"></i> ${text('查询')}</a>
-				<% if(hasPermi('businessplanusertask:businessPlanUserTask:edit')){ %>
-					<a href="${ctx}/businessplanusertask/businessPlanUserTask/form" class="btn btn-default btnTool" title="${text('新增目标生成的任务')}"><i class="fa fa-plus"></i> ${text('新增')}</a>
-				<% } %>
 			</div>
 		</div>
 		<div class="box-body">
@@ -81,11 +78,11 @@ $('#dataGrid').dataGrid({
 			return '<a href="${ctx}/businessplanusertask/businessPlanUserTask/form?id='+row.id+'" class="btnList" data-title="${text("编辑目标生成的任务")}">'+(val||row.id)+'</a>';
 		}},
 		{header:'${text("考核细则")}', name:'businessTarget.targetContent' ,index:'a.target_id', width:150, align:"left"},
-		{header:'${text("数据采集项")}', name:'businessTargetDataItem.itemName', index:'a.target_data_item_id', width:150, align:"left"},
+		// {header:'${text("数据采集项")}', name:'businessTargetDataItem.itemName', index:'a.target_data_item_id', width:150, align:"left"},
 		{header:'${text("任务状态")}', name:'taskStatus', index:'a.task_status', width:150, align:"center", formatter: function(val, obj, row, act){
 			return js.getDictLabel(${@DictUtils.getDictListJson('task_status')}, val, '${text("未知")}', true);
 		}},
-		{header:'${text("描述信息")}', name:'taskDescription', index:'a.task_description', width:150, align:"left"},
+		//{header:'${text("描述信息")}', name:'taskDescription', index:'a.task_description', width:150, align:"left"},
 		{header:'${text("任务开始时间")}', name:'taskStartTime', index:'a.task_start_time', width:150, align:"center"},
 		{header:'${text("任务结束时间")}', name:'taskEndTime', index:'a.task_end_time', width:150, align:"center"},
 		// {header:'${text("更新时间")}', name:'updateDate', index:'a.update_date', width:150, align:"center"},

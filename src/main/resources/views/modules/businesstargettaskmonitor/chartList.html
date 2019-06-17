@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>INSPINIA | Dashboard v.2</title>
+    <link href="${ctxStatic}/modules/businesstargettaskmonitor/css/bootstrap.min.css" rel="stylesheet">
+    <link href="${ctxStatic}/modules/businesstargettaskmonitor/font-awesome/css/font-awesome.css" rel="stylesheet">
+
+    <link href="${ctxStatic}/modules/businesstargettaskmonitor/css/animate.css" rel="stylesheet">
+    <link href="${ctxStatic}/modules/businesstargettaskmonitor/css/style.css" rel="stylesheet">
+
+</head>
+<body>
+<div>
+    <div id="page-wrapper" class="">
+        <div class=" animated fadeInRight" >
+            <div class="row" style="display: inline-block; width: 100%;">
+                <div class="col-lg-3" style="float: left">
+                    <div class="ibox">
+                        <div class="ibox-content">
+                            <h5>部门</h5>
+                            <h2>42/20</h2>
+                            <div class="text-center">
+                                <div id="sparkline5"></div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-3" style="float: left">
+                    <div class="ibox">
+                        <div class="ibox-content">
+                            <h5>Percentage division</h5>
+                            <h2>100/54</h2>
+                            <div class="text-center">
+                                <div id="sparkline6"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-3" style="float: left">
+                    <div class="ibox">
+                        <div class="ibox-content">
+                            <h5>Percentage distribution</h5>
+                            <h2>685/211</h2>
+                            <div class="text-center">
+                                <div id="sparkline7"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-3" style="float: left">
+                    <div class="ibox">
+                        <div class="ibox-content">
+                            <h5>Percentage distribution</h5>
+                            <h2>685/211</h2>
+                            <div class="text-center">
+                                <div id="sparkline8"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-3" style="float: left">
+                    <div class="ibox">
+                        <div class="ibox-content">
+                            <h5>Percentage distribution</h5>
+                            <h2>685/211</h2>
+                            <div class="text-center">
+                                <div id="sparkline9"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Mainly scripts -->
+<script src="${ctxStatic}/modules/businesstargettaskmonitor/js/jquery-2.1.1.js"></script>
+<script src="${ctxStatic}/modules/businesstargettaskmonitor/js/bootstrap.min.js"></script>
+<script src="${ctxStatic}/modules/businesstargettaskmonitor/js/plugins/metisMenu/jquery.metisMenu.js"></script>
+<script src="${ctxStatic}/modules/businesstargettaskmonitor/js/plugins/slimscroll/jquery.slimscroll.min.js"></script>
+
+<!-- Sparkline -->
+<script src="${ctxStatic}/modules/businesstargettaskmonitor/js/plugins/sparkline/jquery.sparkline.min.js"></script>
+
+<!-- Peity -->
+<script src="${ctxStatic}/modules/businesstargettaskmonitor/js/plugins/peity/jquery.peity.min.js"></script>
+<script src="js/demo/peity-demo.js"></script>
+
+<!-- Custom and plugin javascript -->
+<script src="${ctxStatic}/modules/businesstargettaskmonitor/js/inspinia.js"></script>
+<script src="${ctxStatic}/modules/businesstargettaskmonitor/js/plugins/pace/pace.min.js"></script>
+
+<script>
+    $(document).ready(function() {
+
+        var sparklineCharts = function(){
+            $(".text-center").sparkline([1, 4], {
+                type: 'pie',
+                height: '140',
+                width: '140',
+                sliceColors: ['#1ab394', '#f5424b']
+            });
+        };
+
+        var sparkResize;
+
+        $(window).resize(function(e) {
+            clearTimeout(sparkResize);
+            sparkResize = setTimeout(sparklineCharts, 500);
+        });
+
+        sparklineCharts();
+
+
+    });
+</script>
+
+<script>
+    $(function () {
+        $.get("item",function (data) {
+            var testDiv = $("#test");
+            $.each(data,function (k, v) {
+                testDiv.append("<input name='test'>");
+                $("input[name=test]").attr("name",v.targetName);
+            })
+        })
+    })
+</script>
+</body>
+</html>

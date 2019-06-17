@@ -3,22 +3,17 @@
  */
 package com.jeesite.modules.businesscheckplan.service;
 
-import java.util.List;
-import java.util.UUID;
-
-import com.alibaba.fastjson.JSON;
-import com.jeesite.modules.businesschecktemplat.entity.BusinessCheckTemplate;
-import com.jeesite.modules.businesschecktemplateinfo.entity.BusinessCheckTemplateInfo;
+import com.jeesite.common.entity.Page;
+import com.jeesite.common.service.CrudService;
+import com.jeesite.modules.businesscheckplan.dao.BusinessCheckPlanDao;
+import com.jeesite.modules.businesscheckplan.entity.BusinessCheckPlan;
 import com.jeesite.modules.businesschecktemplateinfo.service.BusinessCheckTemplateInfoService;
 import com.jeesite.modules.businessjob.entity.BusinessJob;
 import com.jeesite.modules.businessjob.service.BusinessJobService;
-import com.jeesite.modules.businessjob.service.QuartzService;
 import com.jeesite.modules.businesstarget.entity.BusinessTarget;
 import com.jeesite.modules.businesstarget.service.BusinessTargetService;
-import com.jeesite.modules.sys.entity.User;
+import com.jeesite.modules.businesstargettypetree.entity.BusinessTargetTypeTree;
 import com.jeesite.modules.sys.service.UserService;
-import net.bytebuddy.asm.Advice;
-import org.hibernate.validator.constraints.Length;
 import org.quartz.JobDataMap;
 import org.quartz.SchedulerException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,10 +21,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.jeesite.common.entity.Page;
-import com.jeesite.common.service.CrudService;
-import com.jeesite.modules.businesscheckplan.entity.BusinessCheckPlan;
-import com.jeesite.modules.businesscheckplan.dao.BusinessCheckPlanDao;
+import java.util.List;
+import java.util.UUID;
 
 /**
  * 考核计划Service
@@ -66,7 +59,6 @@ public class BusinessCheckPlanService extends CrudService<BusinessCheckPlanDao, 
 	/**
 	 * 查询分页数据
 	 * @param businessCheckPlan 查询条件
-	 * @param businessCheckPlan.page 分页对象
 	 * @return
 	 */
 	@Override
@@ -103,8 +95,8 @@ public class BusinessCheckPlanService extends CrudService<BusinessCheckPlanDao, 
 	public void start(BusinessCheckPlan businessCheckPlan) throws SchedulerException, ClassNotFoundException {
 		this.updateStatus(businessCheckPlan);
 		//考核模板
-		BusinessCheckTemplate businessCheckTemplate = businessCheckPlan.getBusinessCheckTemplate();
-		String checkTemplateId = businessCheckTemplate.getId();
+		BusinessTargetTypeTree businessTargetTypeTree = businessCheckPlan.getBusinessTargetTypeTree();
+		String checkTemplateId = businessTargetTypeTree.getId();
 		List<String> businessTargetIdList = businessCheckTemplateInfoService.findListByCheckTemplateId(checkTemplateId);
 		List<BusinessTarget> businessTargetList = businessTargetService.findListIn(businessTargetIdList);
 		//每个目标都生成一个job

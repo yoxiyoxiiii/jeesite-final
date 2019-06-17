@@ -133,8 +133,10 @@ public class BusinessTargetDataInfoController extends BaseController {
 		businessTargetDataInfo.setUser(userModel);
 		model.addAttribute("businessTargetDataInfo", businessTargetDataInfo);
 		model.addAttribute("userTaskId", userTaskId);
+		model.addAttribute("businessTargetId", businessTargetId);
 		return "modules/businesstargetdatainfo/businessTargetDataInfoFormNew";
 	}
+
 
 	/**
 	 * 保存上报的数据

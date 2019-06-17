@@ -1,9 +1,9 @@
-<% layout('/layouts/default.html', {title: '指标管理', libs: ['dataGrid']}){ %>
+<% layout('/layouts/default.html', {title: '考核细则', libs: ['dataGrid']}){ %>
 <div class="main-content">
 	<div class="box box-main">
 		<div class="box-header">
 			<div class="box-title">
-				<i class="fa fa-list-alt"></i> ${text('指标管理')}
+				<i class="fa fa-list-alt"></i> ${text('考核细则')}
 			</div>
 			<div class="box-tools pull-right">
 				<a href="#" class="btn btn-default" id="btnSearch" title="${text('查询')}"><i class="fa fa-filter"></i> ${text('查询')}</a>
@@ -16,9 +16,9 @@
 			<#form:form id="searchForm" model="${businessTarget2}" action="${ctx}/businesstarget2/businessTarget2/listData" method="post" class="form-inline hide"
 					data-page-no="${parameter.pageNo}" data-page-size="${parameter.pageSize}" data-order-by="${parameter.orderBy}">
 				<div class="form-group">
-					<label class="control-label">${text('指标项')}：</label>
+					<label class="control-label">${text('考核模板')}：</label>
 					<div class="control-inline col-sm-8">
-						<#form:treeselect  id="targetType" title="${text('指标项')}"
+						<#form:treeselect  id="targetType" title="${text('考核模板')}"
 						path="businessTargetType.targetTypeCode" labelPath="businessTargetType.targetTypeName"
 						class="" allowClear="true" canSelectRoot="true" canSelectParent="true"/>
 					</div>

@@ -23,6 +23,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -54,6 +55,29 @@ public class BusinessTargetTaskMonitorController extends BaseController {
 	public String treeList(BusinessTarget2 businessTarget2, Model model) {
 		model.addAttribute("businessTarget2", businessTarget2);
 		return "modules/businesstargettaskmonitor/businessTreeList";
+	}
+
+	/**
+	 * 查询列表
+	 */
+	@RequiresPermissions("businesstargettaskmonitor:businessTargetTaskMonitor:view")
+	@RequestMapping(value = {"chartList"})
+	public String chartList(BusinessTarget2 businessTarget2, Model model) {
+		List<BusinessTarget2> businessTarget2List = new ArrayList<>();
+		businessTarget2.setTargetName("ssssssssss");
+		businessTarget2List.add(businessTarget2);
+		model.addAttribute("businessTarget2", businessTarget2List);
+		return "modules/businesstargettaskmonitor/chartList";
+	}
+
+	@RequestMapping(value = {"item"})
+	@ResponseBody
+	public List<BusinessTarget2> item() {
+		List<BusinessTarget2> businessTarget2List = new ArrayList<>();
+		BusinessTarget2 businessTarget2 = new BusinessTarget2();
+		businessTarget2.setTargetName("name1");
+		businessTarget2List.add(businessTarget2);
+		return businessTarget2List;
 	}
 
 
