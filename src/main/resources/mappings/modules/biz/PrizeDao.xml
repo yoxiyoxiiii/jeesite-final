@@ -11,5 +11,8 @@
 		</where>
 		ORDER BY ${sqlMap.order.toSql()}
 	</select> -->
-	
+
+	<select id="prizeReport" resultType="map">
+		call prize_report(#{startDate},#{endDate},#{isDepart}, #{orderBy})
+	</select>
 </mapper>

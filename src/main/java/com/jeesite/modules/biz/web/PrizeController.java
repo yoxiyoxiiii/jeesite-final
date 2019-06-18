@@ -26,7 +26,11 @@ import com.jeesite.common.web.BaseController;
 import com.jeesite.modules.biz.entity.Prize;
 import com.jeesite.modules.biz.service.PrizeService;
 
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 /**
  * 奖扣记录Controller
@@ -199,4 +203,32 @@ public class PrizeController extends BaseController {
         }
         return renderResult(Global.TRUE, text("停用奖扣记录成功"));
     }*/
+
+	/**
+	 * 查看奖扣报表
+	 */
+	@RequiresPermissions("biz:prize:report")
+	@RequestMapping(value = {"report", ""})
+	public String report(Prize prize, Model model) {
+		//默认时间范围,为1年
+		Calendar c = Calendar.getInstance();
+		Date date = new Date();
+		c.add(Calendar.YEAR, -1);
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+
+		prize.setPrizeDate_gte(c.getTime());
+		prize.setPrizeDate_lte(date);
+		model.addAttribute("prize", prize);
+
+		return "modules/biz/prizeReport";
+	}
+	/**
+	 * 查询列表数据
+	 */
+	@RequiresPermissions("biz:prize:report")
+	@RequestMapping(value = "reportData")
+	@ResponseBody
+	public List<Map<String, Object>> reportData(String prizeDate_gte, String prizeDate_lte, Integer isDepart,String orderBy) {
+		return prizeService.prizeReport(prizeDate_gte, prizeDate_lte, isDepart,orderBy);
+	}
 }

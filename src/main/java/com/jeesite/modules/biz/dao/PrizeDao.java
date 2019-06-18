@@ -7,6 +7,9 @@ import com.jeesite.common.dao.CrudDao;
 import com.jeesite.common.mybatis.annotation.MyBatisDao;
 import com.jeesite.modules.biz.entity.Prize;
 
+import java.util.List;
+import java.util.Map;
+
 /**
  * 奖扣记录DAO接口
  * @author sanye
@@ -14,5 +17,6 @@ import com.jeesite.modules.biz.entity.Prize;
  */
 @MyBatisDao
 public interface PrizeDao extends CrudDao<Prize> {
-	
+
+    public List<Map<String, Object>> prizeReport(Map<String, Object> params);
 }

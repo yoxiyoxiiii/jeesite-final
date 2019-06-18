@@ -1,0 +1,104 @@
+<% layout('/layouts/default.html', {title: '奖扣统计报表', libs: ['dataGrid']}){ %>
+<div class="main-content">
+	<div class="box box-main">
+		<div class="box-header">
+			<div class="box-title">
+				<i class="fa fa-list-alt"></i> ${text('奖扣统计报表')}
+			</div>
+			<div class="box-tools pull-right">
+				<button class="btn btn-default" id="btnSearch" title="${text('查询')}"><i class="fa fa-filter"></i> ${text('查询')}</button>
+				<button type="button" class="btn btn-primary pull-right" id="btnExport" style="margin-left: 10px;">
+					<i class="fa fa-download"></i> 导出 EXCLE
+				</button>
+			</div>
+		</div>
+		<div class="box-body">
+			<#form:form id="searchForm" model="${prize}" action="${ctx}/biz/prize/reportData" method="post" class="form-inline"
+					 data-order-by="${parameter.orderBy}">
+
+				<div class="form-group">
+					<label class="control-label">${text('获奖时间')}：</label>
+					<div class="control-inline">
+							<#form:input path="prizeDate_gte"  readonly="true" maxlength="20" class="form-control Wdate-date"
+							 dataFormat="date" onclick="WdatePicker({dateFmt:'yyyy-MM-dd',isShowClear:false,onpicked:function(){prizeDate_lte.click()}});"/>
+							 --
+							<#form:input path="prizeDate_lte"  readonly="true" maxlength="20" class="form-control Wdate-date"
+							dataFormat="date" onclick="WdatePicker({dateFmt:'yyyy-MM-dd',isShowClear:false});" />
+					</div>
+				</div>
+			<div class="form-group">
+				<label class="control-label"> ${text('统计方式')}： </label>
+				<div class="control-inline" >
+					<div class="form-group">
+						<label class="radio-inline">
+							<input type="radio" name="isDepart" id="isDepart" value="1" checked> 按组织机构统计
+						</label>
+						<label class="radio-inline">
+							<input type="radio" name="isDepart" id="isDepart"  value="0"> 按奖扣指标类型统计
+						</label>
+					</div>
+				</div>
+			</div>
+
+				<div class="form-group">
+					<button type="submit" class="btn btn-primary btn-sm">${text('查询')}</button>
+					<button type="reset" class="btn btn-default btn-sm">${text('重置')}</button>
+				</div>
+			</#form:form>
+			<table id="dataGrid"></table>
+			<div id="dataGridPage"></div>
+		</div>
+	</div>
+</div>
+<% } %>
+<script>
+// 初始化DataGrid对象
+$('#dataGrid').dataGrid({
+	searchForm: $("#searchForm"),
+	columnModel: [
+		{header:'${text("主体单位")}', name:'office_name', index:'office_name', width:300, align:"left", frozen:true},
+		{header:'${text("加分项(次数)")}', name:'count_jiafen', index:'count_jiafen', width:80, align:"center",formatter: function(val, obj, row, act){
+			return  val + ' <a href="${ctx}/biz/prize/list?deptIdCode='+row.office_code+'&is_add=1" class="btnList" data-title="${text("查看明细")}"><i class="fa fa-star"></i></a>';
+		}},
+		{header:'${text("加分小计")}', name:'jiafen', index:'jiafen', width:80, align:"center",formatter: function(val, obj, row, act){
+			return js.formatNumber(val, 2, false, '');
+		}},
+		{header:'${text("扣分项(次数)")}', name:'count_koufen', index:'count_koufen', width:80, align:"center",formatter: function(val, obj, row, act){
+			return  val + ' <a href="${ctx}/biz/prize/list?deptIdCode='+row.office_code+'&is_add=1" class="btnList" data-title="${text("查看明细")}"><i class="fa fa-medkit text-warning"></i></a>';
+		}},
+		{header:'${text("扣分小计")}', name:'koufen', index:'koufen', width:80, align:"center",formatter: function(val, obj, row, act){
+			return js.formatNumber(val, 2, false, '');
+		}},
+		{header:'${text("单项否决")}', name:'foujue', index:'foujue', width:80, align:"center",formatter: function(val, obj, row, act){
+			return  val + ' <a href="${ctx}/biz/prize/list?deptIdCode='+row.office_code+'&is_add=1" class="btnList" data-title="${text("查看明细")}"><i class="fa fa-heartbeat text-danger"></i></a>';
+		}},
+		{header:'${text("其他")}', name:'qita', index:'qita', width:80, align:"center",formatter: function(val, obj, row, act){
+			return  val + ' <a href="${ctx}/biz/prize/list?deptIdCode='+row.office_code+'&is_add=1" class="btnList" data-title="${text("查看明细")}"><i class="fa fa-pagelines"></i></a>';
+		}},
+		{header:'${text("奖扣结果")}', name:'heji', index:'heji', width:120, align:"center", formatter: function(val, obj, row, act){
+
+			return "<h5>"+ js.formatNumber(val, 2, false, '')  + "</h5>"; // 数值类型格式化 (原始数值, 小数位数, 是否千分位, 默认值，金额情况下设置0.00);
+		}},
+		{header:'${text("备注")}', name:'actions', align:"center", width:100, sortable:false, title:false, formatter: function(val, obj, row, act){
+			var hasFoujue = "";
+			if(row.foujue > 0){
+				hasFoujue = "<small><span class='label label-danger'>否决</span><small>"
+			}
+			return hasFoujue;
+		}}
+	],
+	// 加载成功后执行事件
+	ajaxSuccess: function(data){
+		
+	}
+});
+
+//异步下载
+$('#btnExport').click(function(){
+	js.ajaxSubmitForm($('#searchForm'), {
+		url:'${ctx}/demo/print',
+		downloadFile:true
+	});
+});
+
+</script>
