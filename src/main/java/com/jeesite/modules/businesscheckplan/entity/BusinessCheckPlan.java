@@ -3,21 +3,19 @@
  */
 package com.jeesite.modules.businesscheckplan.entity;
 
-import com.jeesite.modules.businesschecktemplat.entity.BusinessCheckTemplate;
-import com.jeesite.modules.businesstarget.entity.BusinessTarget;
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.jeesite.common.entity.DataEntity;
+import com.jeesite.common.mybatis.annotation.Column;
+import com.jeesite.common.mybatis.annotation.JoinTable;
+import com.jeesite.common.mybatis.annotation.Table;
+import com.jeesite.common.mybatis.mapper.query.QueryType;
+import com.jeesite.modules.businesstargettypetree.entity.BusinessTargetTypeTree;
 import com.jeesite.modules.sys.entity.User;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.validator.constraints.Length;
-import java.util.Date;
-import com.jeesite.common.mybatis.annotation.JoinTable;
-import com.jeesite.common.mybatis.annotation.JoinTable.Type;
-import com.fasterxml.jackson.annotation.JsonFormat;
 
-import com.jeesite.common.entity.DataEntity;
-import com.jeesite.common.mybatis.annotation.Column;
-import com.jeesite.common.mybatis.annotation.Table;
-import com.jeesite.common.mybatis.mapper.query.QueryType;
+import java.util.Date;
 
 /**
  * 考核计划Entity
@@ -26,7 +24,7 @@ import com.jeesite.common.mybatis.mapper.query.QueryType;
  */
 @Table(name="business_check_plan", alias="a", columns={
 		@Column(name="id", attrName="id", label="id", isPK=true),
-		@Column(name="temp_id", attrName="businessCheckTemplate.id", label="模板"),
+		@Column(name="temp_id", attrName="businessTargetTypeTree.id", label="模板"),
 		@Column(name="plan_major_type", attrName="planMajorType", label="专业类型"),
 		@Column(name="plan_name", attrName="planName", label="计划名称", queryType=QueryType.LIKE),
 		@Column(name="create_date", attrName="createDate", label="创建时间", isUpdate=false, isQuery=false),
@@ -44,9 +42,9 @@ import com.jeesite.common.mybatis.mapper.query.QueryType;
 		@Column(name="is_update", attrName="isUpdate", label="isUpdate"),
 	},
 		joinTable = {
-				@JoinTable(type = JoinTable.Type.LEFT_JOIN, entity = BusinessCheckTemplate.class, alias = "businessCheckTemplate",
-						on = "businessCheckTemplate.id = a.temp_id", attrName = "businessCheckTemplate",
-						columns = {@Column(includeEntity = BusinessCheckTemplate.class)}),
+				@JoinTable(type = JoinTable.Type.LEFT_JOIN, entity = BusinessTargetTypeTree.class, alias = "businessTargetTypeTree",
+						on = "businessTargetTypeTree.target_type_code = a.temp_id", attrName = "businessTargetTypeTree",
+						columns = {@Column(includeEntity = BusinessTargetTypeTree.class)}),
 				@JoinTable(type = JoinTable.Type.LEFT_JOIN, entity = User.class, alias = "planCheckUser",
 						on = "planCheckUser.user_code = a.plan_check_user_id", attrName = "planCheckUser",
 						columns = {@Column(includeEntity = User.class)}),
@@ -59,7 +57,9 @@ import com.jeesite.common.mybatis.mapper.query.QueryType;
 public class BusinessCheckPlan extends DataEntity<BusinessCheckPlan> {
 	
 	private static final long serialVersionUID = 1L;
-	private BusinessCheckTemplate businessCheckTemplate;		// 模板
+	@Getter
+	@Setter
+	private BusinessTargetTypeTree businessTargetTypeTree;		// 模板
 	private Integer planMajorType;		// 专业类型
 	private String planName;		// 计划名称
 	private Date planStartTime;		// 开始时间
@@ -87,13 +87,7 @@ public class BusinessCheckPlan extends DataEntity<BusinessCheckPlan> {
 		super(id);
 	}
 	
-	public BusinessCheckTemplate getBusinessCheckTemplate() {
-		return businessCheckTemplate;
-	}
 
-	public void setBusinessCheckTemplate(BusinessCheckTemplate businessCheckTemplate) {
-		this.businessCheckTemplate = businessCheckTemplate;
-	}
 	
 	public Integer getPlanMajorType() {
 		return planMajorType;

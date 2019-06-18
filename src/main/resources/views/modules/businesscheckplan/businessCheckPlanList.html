@@ -116,11 +116,11 @@ $('#dataGrid').dataGrid({
 		{header:'${text("计划名称")}', name:'planName', index:'a.plan_name', width:150, align:"left",formatter: function(val, obj, row, act){
 				return '<a href="${ctx}/businesscheckplan/businessCheckPlan/form?id='+row.id+'" class="btnList" data-title="${text("编辑考核计划")}">'+(val||row.id)+'</a>';
 			}},
-		{header:'${text("模板")}', name:'businessCheckTemplate.tempName', index:'businessCheckTemplate.temp_name', width:150, align:"left"},
+		{header:'${text("模板")}', name:'businessTargetTypeTree.targetTypeName', index:'businessCheckTemplate.temp_name', width:150, align:"left"},
 		{header:'${text("专业类型")}', name:'planMajorType', index:'a.plan_major_type', width:150, align:"center",formatter: function(val, obj, row, act){
 				return js.getDictLabel(${@DictUtils.getDictListJson('plan_major_type')}, val, '${text("未知")}', true);
 		}},
-		{header:'${text("权重%")}', name:'planWeight', index:'a.plan_weight', width:150, align:"center"},
+		//{header:'${text("权重%")}', name:'planWeight', index:'a.plan_weight', width:150, align:"center"},
 		{header:'${text("负责人")}', name:'planCheckUser.userName', index:'a.plan_check_user_id', width:150, align:"left"},
 		{header:'${text("责任人")}', name:'planDutyUser.userName', index:'a.plan_duty_user_id', width:150, align:"left"},
 		{header:'${text("开始时间")}', name:'planStartTime', index:'a.plan_start_time', width:150, align:"center"},

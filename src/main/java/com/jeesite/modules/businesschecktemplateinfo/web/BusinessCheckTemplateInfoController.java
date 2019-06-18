@@ -3,15 +3,13 @@
  */
 package com.jeesite.modules.businesschecktemplateinfo.web;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
+import com.jeesite.common.config.Global;
+import com.jeesite.common.entity.Page;
+import com.jeesite.common.web.BaseController;
 import com.jeesite.modules.businesschecktemplat.entity.BusinessCheckTemplate;
 import com.jeesite.modules.businesschecktemplat.service.BusinessCheckTemplateService;
-import com.jeesite.modules.msg.entity.MsgPush;
-import com.jeesite.modules.msg.entity.content.PcMsgContent;
-import com.jeesite.modules.msg.service.MsgPushService;
-import com.jeesite.modules.msg.utils.MsgPushUtils;
+import com.jeesite.modules.businesschecktemplateinfo.entity.BusinessCheckTemplateInfo;
+import com.jeesite.modules.businesschecktemplateinfo.service.BusinessCheckTemplateInfoService;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -23,14 +21,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.jeesite.common.config.Global;
-import com.jeesite.common.entity.Page;
-import com.jeesite.common.web.BaseController;
-import com.jeesite.modules.businesschecktemplateinfo.entity.BusinessCheckTemplateInfo;
-import com.jeesite.modules.businesschecktemplateinfo.service.BusinessCheckTemplateInfoService;
-import sun.swing.StringUIClientPropertyKey;
-
-import java.util.Date;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 /**
  * 考核指标Controller
@@ -91,7 +83,6 @@ public class BusinessCheckTemplateInfoController extends BaseController {
 		}
 		model.addAttribute("businessCheckTemplateInfo", businessCheckTemplateInfo);
 		return "modules/businesschecktemplateinfo/businessCheckTemplateInfoForm";
-
 	}
 
 	/**
