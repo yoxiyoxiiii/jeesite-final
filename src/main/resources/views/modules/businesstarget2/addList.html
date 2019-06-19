@@ -12,7 +12,7 @@
 		<#form:form id="inputForm" model="${businessTarget2}" action="${ctx}/businesstarget2/businessTarget2/save" method="post" class="form-horizontal">
 			<div class="box-body">
 				<div class="form-unit">${text('基本信息')}</div>
-				<#form:hidden path="id"/>
+				<#form:hidden id="businessTargetId" path="id"/>
 
 				<div class="row">
 					<div class="col-xs-6">
@@ -20,7 +20,8 @@
 							<label class="control-label col-sm-4" title="">
 								<span class="required hide">*</span> ${text('计算公式')}：<i class="fa icon-question hide"></i></label>
 							<div class="col-sm-8">
-								<#form:textarea path="targetResultExpression" rows="5" maxlength="255" class="form-control"/>
+								<#form:textarea id ="targetResultExpression" path="targetResultExpression" rows="5" maxlength="255" class="form-control"/>
+								<button type="button" class="btn btn-sm" id="check"><i class="fa fa-check"></i> ${text('校验')}</button>&nbsp;
 							</div>
 						</div>
 					</div>
@@ -174,5 +175,14 @@ $("#inputForm").validate({
 			}
 		}, "json");
     }
+});
+
+$("#check").click(function () {
+	var  expr = $("#targetResultExpression").val();
+	var  id = $("#businessTargetId").val();
+	console.log(expr);
+	$.getJSON("check",{targetResultExpression:expr,businessTargetId:id},function (data) {
+		console.log(data);
+	});
 });
 </script>

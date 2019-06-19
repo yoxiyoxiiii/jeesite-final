@@ -2,7 +2,7 @@ package com.jeesite.modules.businessjob.Job;
 
 import com.jeesite.modules.businesscheckplan.entity.BusinessCheckPlan;
 import com.jeesite.modules.businessjob.service.SendMsgJobService;
-import com.jeesite.modules.businesstarget.entity.BusinessTarget;
+import com.jeesite.modules.businesstarget2.entity.BusinessTarget2;
 import lombok.extern.slf4j.Slf4j;
 import org.quartz.Job;
 import org.quartz.JobDataMap;
@@ -26,7 +26,7 @@ public class SendMsgJob implements Job {
     @Override
     public void execute(JobExecutionContext context) throws JobExecutionException {
         JobDataMap jobDataMap = context.getJobDetail().getJobDataMap();
-        BusinessTarget businessTarget = (BusinessTarget) jobDataMap.get("businessTarget");
+        BusinessTarget2 businessTarget = (BusinessTarget2) jobDataMap.get("businessTarget");
         BusinessCheckPlan businessCheckPlan = (BusinessCheckPlan) jobDataMap.get("businessCheckPlan");
         sendMsgJobService.createTaskJob(businessTarget, businessCheckPlan);
     }

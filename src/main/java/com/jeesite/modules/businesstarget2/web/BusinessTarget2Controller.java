@@ -3,6 +3,8 @@
  */
 package com.jeesite.modules.businesstarget2.web;
 
+import bsh.EvalError;
+import bsh.Interpreter;
 import com.jeesite.common.codec.EncodeUtils;
 import com.jeesite.common.config.Global;
 import com.jeesite.common.entity.Page;
@@ -14,10 +16,13 @@ import com.jeesite.modules.businesstarget.entity.BusinessTarget;
 import com.jeesite.modules.businesstarget2.entity.BusinessTarget2;
 import com.jeesite.modules.businesstarget2.entity.BusinessTargetDataItem2;
 import com.jeesite.modules.businesstarget2.service.BusinessTarget2Service;
+import com.jeesite.modules.businesstargetdataitem.entity.BusinessTargetDataItem;
+import com.jeesite.modules.businesstargetdataitem.service.BusinessTargetDataItemService;
 import com.jeesite.modules.businesstargettype.entity.BusinessTargetType;
 import com.jeesite.modules.businesstargettype.service.BusinessTargetTypeService;
 import com.jeesite.modules.sys.entity.Office;
 import com.jeesite.modules.sys.service.OfficeService;
+import com.jeesite.modules.utils.StringUtil;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -32,6 +37,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * 指标Controller
@@ -228,5 +234,36 @@ public class BusinessTarget2Controller extends BaseController {
 		model.addAttribute("businessTarget2",businessTarget2);
 		return "modules/businesstarget2/addList";
 	}
-	
+
+	/**
+	 *
+	 * 计算公式检测
+	 * @return
+	 */
+	@Autowired
+	private BusinessTargetDataItemService dataItemService;
+	@RequestMapping("/check")
+    @ResponseBody
+	public String check(String targetResultExpression, String businessTargetId) throws EvalError {
+		//先检测公式里的数据采集项是否正确
+		List<BusinessTargetDataItem> businessTargetDataItems = dataItemService.findByBusinessTargetId(businessTargetId);
+		List<String> collect = businessTargetDataItems.stream().map(BusinessTargetDataItem::getItemName).collect(Collectors.toList());
+		//获取数据采集项，从公式中解析出来
+		List<String> chiness = StringUtil.getChiness(targetResultExpression);
+		boolean allMatch = collect.containsAll(chiness);
+		if (allMatch) {//数据采集项都正确，再检测 公式是否能执行出结果
+			//替换中文后的公式,将所有的变量都 设置为1.
+			String expre = StringUtil.replaceChinese(targetResultExpression, "#");
+			Interpreter bsh = new Interpreter();
+			//动态执行 计算公式
+			Object eval = bsh.eval(expre);
+			logger.info("计算公式---> :{}",expre);
+			logger.info("计算公式 校验执行结果 ---> :{}",eval);
+			//拿到 公式中的中文，去查找数据库中的 数据采集项，是否每一项都在，否则计算公式不通过。
+			return renderResult(Global.TRUE, text("计算公式可用！"));
+		}
+		return renderResult(Global.FALSE, text("计算公式不可用！"));
+
+
+	}
 }

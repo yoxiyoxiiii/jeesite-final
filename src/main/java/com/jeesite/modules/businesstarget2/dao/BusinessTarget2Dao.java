@@ -18,4 +18,6 @@ import java.util.List;
 public interface BusinessTarget2Dao extends CrudDao<BusinessTarget2> {
 
     List<BusinessTarget2> findIn(List<String> targets);
+
+    List<BusinessTarget2> findByTypeCode(String targetTypeCode);
 }

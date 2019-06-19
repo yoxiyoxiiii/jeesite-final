@@ -95,8 +95,8 @@ public class BusinessTargetDataInfoService extends CrudService<BusinessTargetDat
 		businessCheckPlanUser.setBusinessCheckPlan(businessCheckPlan);
 		checkPlanUserService.save(businessCheckPlanUser);//更新部门任务上报状态
 
-		BusinessTargetTaskMonitor taskMonitor = businessTargetTaskMonitorService.findByIds(businessPlanUserTask.getBusinessTarget().getId(), office.getOfficeCode(), businessCheckPlanId);
-
+		//BusinessTargetTaskMonitor taskMonitor = businessTargetTaskMonitorService.findByIds(businessPlanUserTask.getBusinessTarget().getId(), office.getOfficeCode(), businessCheckPlanId);
+		BusinessTargetTaskMonitor taskMonitor = businessTargetTaskMonitorService.get(businessPlanUserTask.getMonitorId());
 		Integer dataItemCount = taskMonitor.getDataItemCount();
 		taskMonitor.addUpItemCount();//+1
 		Integer upItemCount = taskMonitor.getUpItemCount();

@@ -25,7 +25,7 @@
 					<label class="control-label">${text('考核对象')}：</label>
 					<div class="control-inline width-120" >
 						<#form:treeselect id="userId" title="${text('部门选择')}"
-							path="userId" labelPath="" 
+							path="userId" labelPath=""
 							url="${ctx}/sys/office/treeData?isLoadUser=true" allowClear="true" checkbox="true"/>
 					</div>
 				</div>
@@ -39,68 +39,31 @@
 			<div id="dataGridPage"></div>
 		</div>
 	</div>
-</div>
 <% } %>
+
 <script>
+
 // 初始化DataGrid对象
 $('#dataGrid').dataGrid({
 	searchForm: $("#searchForm"),
 	columnModel: [
-		{header:'${text("考核名单")}', field:"name" ,name:'planUserName', index:'a.user_id', width:150, align:"left", frozen:true, formatter: function(val, obj, row, act){
+		{header:'${text("考核名单")}',name:'planUserName', index:'a.user_id', width:150, align:"left", frozen:true, formatter: function(val, obj, row, act){
 			return '<a href="${ctx}/businesscheckplanuser/businessCheckPlanUser/form?id='+row.id+'" class="btnList" data-title="${text("编辑考核名单")}">'+(val||row.id)+'</a>';
 		}},
 		{header:'${text("考核计划")}', name:'businessCheckPlan.planName', index:'a.user_id', width:150, align:"left"},
-		{header:'${text("考核部门")}', name:'office.fullName', index:'a.plan_id', width:150, align:"left"},
 		{header:'${text("更新时间")}', name:'updateDate', index:'a.update_date', width:150, align:"center"},
 		{header:'${text("操作")}', name:'actions', width:120, sortable:false, title:false, formatter: function(val, obj, row, act){
 			var actions = [];
 			<% if(hasPermi('businesscheckplanuser:businessCheckPlanUser:edit')){ %>
 				actions.push('<a href="${ctx}/businesscheckplanuser/businessCheckPlanUser/form?id='+row.id+'" class="btnList" title="${text("编辑考核名单")}"><i class="fa fa-pencil"></i></a>&nbsp;');
 				actions.push('<a href="${ctx}/businesscheckplanuser/businessCheckPlanUser/delete?id='+row.id+'" class="btnList" title="${text("删除考核名单")}" data-confirm="${text("确认要删除该考核名单吗？")}"><i class="fa fa-trash-o"></i></a>&nbsp;');
+				actions.push('<a href="${ctx}/businesscheckplanuser/businessCheckPlanUser/view?id='+row.id+'" class="btnList" title="${text("查看名单")}"><i class="fa glyphicon glyphicon-eye-open"></i></a>&nbsp;');
 			<% } %>
 			return actions.join('');
 		}}
 	],
-	// 加载成功后执行事件
-	ajaxSuccess: function(data){
-		merge(data);
-	}
+	//加载成功后执行事件
+	 ajaxSuccess: function(data){
+	 }
 });
-
-function merge (data){	//在加载完成之后合并
-	var start = 0;
-	var end = 0;
-	var mer = ['name'];  //需要合并的字段，即field
-	if (data.total > 0) {
-		var temp = data.rows[0].name;   //需要比较的列
-		for (var i = 1; i < data.rows.length; i++) {
-			if (temp == data.rows[i].name) {
-				end++;
-			} else {
-				if (end > start) {
-					for(var j = 0; j < mer.length; j ++){
-						$('#dg').datagrid('mergeCells', {
-							index: start,   //起始
-							rowspan: end - start + 1,  //需要合并的行数
-							field: mer[j]
-						});
-					}
-				}
-				temp = data.rows[i].name;
-				start = i;
-				end = i;
-			}
-		}
-		/*这里是为了判断重复内容出现在最后的情况，如ABCC*/
-		if (end > start) {
-			for(var j = 0; j < mer.length; j ++){
-				$('#dataGrid').datagrid('mergeCells', {
-					index: start,
-					rowspan: end - start + 1,
-					field: mer[j]
-				});
-			}
-		}
-	}
-}
 </script>

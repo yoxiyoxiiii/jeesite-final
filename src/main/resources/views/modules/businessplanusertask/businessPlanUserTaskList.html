@@ -13,7 +13,7 @@
 			<#form:form id="searchForm" model="${businessPlanUserTask}" action="${ctx}/businessplanusertask/businessPlanUserTask/listData" method="post" class="form-inline hide"
 					data-page-no="${parameter.pageNo}" data-page-size="${parameter.pageSize}" data-order-by="${parameter.orderBy}">
 				<div class="form-group">
-					<label class="control-label">${text('任务所属的user')}：</label>
+					<label class="control-label">${text('任务对象')}：</label>
 					<div class="control-inline">
 						<#form:input path="userId" maxlength="100" class="form-control width-120"/>
 					</div>
@@ -27,32 +27,21 @@
 					</div>
 				</div>
 				<div class="form-group">
-					<label class="control-label">${text('任务关联的数据项')}：</label>
-					<div class="control-inline">
-						<#form:input path="targetDataItemId" maxlength="50" class="form-control width-120"/>
-					</div>
-				</div>
-				<div class="form-group">
 					<label class="control-label">${text('任务状态')}：</label>
 					<div class="control-inline width-120">
 						<#form:select path="taskStatus" dictType="task_status" blankOption="true" class="form-control"/>
 					</div>
 				</div>
+
 				<div class="form-group">
-					<label class="control-label">${text('描述信息')}：</label>
-					<div class="control-inline">
-						<#form:input path="taskDescription" maxlength="255" class="form-control width-120"/>
-					</div>
-				</div>
-				<div class="form-group">
-					<label class="control-label">${text('任务开始时间')}：</label>
+					<label class="control-label">${text('开始时间')}：</label>
 					<div class="control-inline">
 						<#form:input path="taskStartTime" readonly="true" maxlength="20" class="form-control Wdate-datetime"
 							dataFormat="datetime" onclick="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm',isShowClear:false});"/>
 					</div>
 				</div>
 				<div class="form-group">
-					<label class="control-label">${text('任务结束时间')}：</label>
+					<label class="control-label">${text('结束时间')}：</label>
 					<div class="control-inline">
 						<#form:input path="taskEndTime" readonly="true" maxlength="20" class="form-control Wdate-datetime"
 							dataFormat="datetime" onclick="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm',isShowClear:false});"/>
@@ -74,7 +63,7 @@
 $('#dataGrid').dataGrid({
 	searchForm: $("#searchForm"),
 	columnModel: [
-		{header:'${text("任务所属对象")}', name:'user.userName', index:'a.user_id', width:150, align:"left", frozen:true, formatter: function(val, obj, row, act){
+		{header:'${text("任务对象")}', name:'user.userName', index:'a.user_id', width:150, align:"left", frozen:true, formatter: function(val, obj, row, act){
 			return '<a href="${ctx}/businessplanusertask/businessPlanUserTask/form?id='+row.id+'" class="btnList" data-title="${text("编辑目标生成的任务")}">'+(val||row.id)+'</a>';
 		}},
 		{header:'${text("考核细则")}', name:'businessTarget.targetContent' ,index:'a.target_id', width:150, align:"left"},

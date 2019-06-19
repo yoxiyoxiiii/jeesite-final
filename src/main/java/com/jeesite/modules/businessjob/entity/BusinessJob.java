@@ -3,20 +3,17 @@
  */
 package com.jeesite.modules.businessjob.entity;
 
-import com.jeesite.modules.businesscheckplan.entity.BusinessCheckPlan;
-import com.jeesite.modules.businesschecktemplat.entity.BusinessCheckTemplate;
-import com.jeesite.modules.businesstarget.entity.BusinessTarget;
-import lombok.Data;
-import org.hibernate.validator.constraints.Length;
-import java.util.Date;
-import com.jeesite.common.mybatis.annotation.JoinTable;
-import com.jeesite.common.mybatis.annotation.JoinTable.Type;
 import com.fasterxml.jackson.annotation.JsonFormat;
-
 import com.jeesite.common.entity.DataEntity;
 import com.jeesite.common.mybatis.annotation.Column;
+import com.jeesite.common.mybatis.annotation.JoinTable;
 import com.jeesite.common.mybatis.annotation.Table;
 import com.jeesite.common.mybatis.mapper.query.QueryType;
+import com.jeesite.modules.businesscheckplan.entity.BusinessCheckPlan;
+import com.jeesite.modules.businesstarget2.entity.BusinessTarget2;
+import org.hibernate.validator.constraints.Length;
+
+import java.util.Date;
 
 /**
  * 定时任务Entity
@@ -39,25 +36,25 @@ import com.jeesite.common.mybatis.mapper.query.QueryType;
 				@JoinTable(type = JoinTable.Type.LEFT_JOIN, entity = BusinessCheckPlan.class, alias = "businessCheckPlan",
 						on = "businessCheckPlan.id = a.plan_id", attrName = "businessCheckPlan",
 						columns = {@Column(includeEntity = BusinessCheckPlan.class)}),
-				@JoinTable(type = JoinTable.Type.LEFT_JOIN, entity = BusinessTarget.class, alias = "businessTarget",
+				@JoinTable(type = JoinTable.Type.LEFT_JOIN, entity = BusinessTarget2.class, alias = "businessTarget",
 						on = "businessTarget.id = a.target_id", attrName = "businessTarget",
-						columns = {@Column(includeEntity = BusinessTarget.class)}),
+						columns = {@Column(includeEntity = BusinessTarget2.class)}),
 		},
 		orderBy="a.id DESC"
 )
 public class BusinessJob extends DataEntity<BusinessJob> {
 	
 	private static final long serialVersionUID = 1L;
-	private BusinessTarget businessTarget;		// 考核目标
+	private BusinessTarget2 businessTarget;		// 考核目标
 	private BusinessCheckPlan businessCheckPlan;		// 考核计划
 	private String corn;		// 执行周期
 	private String jobName;		// 任务名称
 
-	public BusinessTarget getBusinessTarget() {
+	public BusinessTarget2 getBusinessTarget() {
 		return businessTarget;
 	}
 
-	public void setBusinessTarget(BusinessTarget businessTarget) {
+	public void setBusinessTarget(BusinessTarget2 businessTarget) {
 		this.businessTarget = businessTarget;
 	}
 

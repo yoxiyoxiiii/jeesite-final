@@ -10,8 +10,9 @@ import com.jeesite.modules.businesscheckplan.entity.BusinessCheckPlan;
 import com.jeesite.modules.businesschecktemplateinfo.service.BusinessCheckTemplateInfoService;
 import com.jeesite.modules.businessjob.entity.BusinessJob;
 import com.jeesite.modules.businessjob.service.BusinessJobService;
-import com.jeesite.modules.businesstarget.entity.BusinessTarget;
 import com.jeesite.modules.businesstarget.service.BusinessTargetService;
+import com.jeesite.modules.businesstarget2.entity.BusinessTarget2;
+import com.jeesite.modules.businesstarget2.service.BusinessTarget2Service;
 import com.jeesite.modules.businesstargettypetree.entity.BusinessTargetTypeTree;
 import com.jeesite.modules.sys.service.UserService;
 import org.quartz.JobDataMap;
@@ -94,15 +95,27 @@ public class BusinessCheckPlanService extends CrudService<BusinessCheckPlanDao, 
 	@Transactional(readOnly=false,rollbackFor = Exception.class,propagation = Propagation.REQUIRED)
 	public void start(BusinessCheckPlan businessCheckPlan) throws SchedulerException, ClassNotFoundException {
 		this.updateStatus(businessCheckPlan);
+		addJob(businessCheckPlan);//一个考核计划一个job
+	}
+
+
+	@Autowired
+	private BusinessTarget2Service businessTarget2Service;
+	private void addJob(BusinessCheckPlan businessCheckPlan) {
 		//考核模板
 		BusinessTargetTypeTree businessTargetTypeTree = businessCheckPlan.getBusinessTargetTypeTree();
-		String checkTemplateId = businessTargetTypeTree.getId();
-		List<String> businessTargetIdList = businessCheckTemplateInfoService.findListByCheckTemplateId(checkTemplateId);
-		List<BusinessTarget> businessTargetList = businessTargetService.findListIn(businessTargetIdList);
-		//每个目标都生成一个job
-		for (BusinessTarget item: businessTargetList){
-			setJob(businessCheckPlan, item);
-		}
+		String targetTypeCode = businessTargetTypeTree.getTargetTypeCode();
+		//根据考核模板获取 考核细则
+		List<BusinessTarget2> businessTarget2List = businessTarget2Service.findByTypeCode(targetTypeCode);
+		businessTarget2List.forEach(item->{
+			try {
+				setJob(businessCheckPlan, item);
+			} catch (ClassNotFoundException e) {
+				e.printStackTrace();
+			} catch (SchedulerException e) {
+				e.printStackTrace();
+			}
+		});
 	}
 
 	/**
@@ -123,7 +136,7 @@ public class BusinessCheckPlanService extends CrudService<BusinessCheckPlanDao, 
 	 * @param businessCheckPlan
 	 * @param businessTarget
 	 */
-	private void setJob(BusinessCheckPlan businessCheckPlan, BusinessTarget businessTarget) throws ClassNotFoundException, SchedulerException {
+	private void setJob(BusinessCheckPlan businessCheckPlan, BusinessTarget2 businessTarget) throws ClassNotFoundException, SchedulerException {
 		//目标考核周期 周、半月、月、季度、半年、年 ，定时任务关联长度不能超过 255 个字符")
 		String targetCheckCycle = businessTarget.getTargetCheckCycle();
 		//添加定时任务

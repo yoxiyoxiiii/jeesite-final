@@ -18,13 +18,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * 考核名单Controller
@@ -143,12 +142,32 @@ public class BusinessCheckPlanUserController extends BaseController {
 	@PostMapping(value = "save")
 	@ResponseBody
 	public String save(@Validated BusinessCheckPlanUser businessCheckPlanUser) {
-		String departmentId = businessCheckPlanUser.getOffice().getOfficeCode();
-		String[] departmentIds = departmentId.split(",");
-		businessCheckPlanUserService.saveAll(businessCheckPlanUser, departmentIds);
+		businessCheckPlanUserService.save(businessCheckPlanUser);
 		return renderResult(Global.TRUE, text("保存考核名单成功！"));
 	}
-	
+
+	/**
+	 * 保存考核名单
+	 */
+	@RequiresPermissions("businesscheckplanuser:businessCheckPlanUser:edit")
+	@GetMapping(value = "view")
+	public String view(String id, Model model) {
+		BusinessCheckPlanUser planUser = businessCheckPlanUserService.get(id);
+		String departmentId = planUser.getOffice().getOfficeCode();
+		String[] split = departmentId.split(",");
+		List<Office> offices = new ArrayList<>();
+		for (String item: split) {
+			Office office = officeService.get(item);
+			Integer treeLevel = office.getTreeLevel();
+			if (treeLevel != 0) {
+				offices.add(office);
+			}
+		}
+		model.addAttribute("offices",offices);
+		model.addAttribute("businessCheckPlanUser",planUser);
+		return "modules/businesscheckplanuser/view";
+	}
+
 	/**
 	 * 删除考核名单
 	 */
@@ -159,5 +178,38 @@ public class BusinessCheckPlanUserController extends BaseController {
 		businessCheckPlanUserService.delete(businessCheckPlanUser);
 		return renderResult(Global.TRUE, text("删除考核名单成功！"));
 	}
-	
+
+	/**
+	 * 删除考核名单
+	 */
+	@RequiresPermissions("businesscheckplanuser:businessCheckPlanUser:edit")
+	@RequestMapping(value = "del")
+	public String dele(String officeCode, String id, Model model) {
+		BusinessCheckPlanUser businessCheckPlanUser = businessCheckPlanUserService.get(id);
+		String departmentId = businessCheckPlanUser.getOffice().getOfficeCode();
+		String[] split = departmentId.split(",");
+		List<Office> offices = new ArrayList<>();
+		for (String item: split) {
+			Office office = officeService.get(item);
+			Integer treeLevel = office.getTreeLevel();
+			if (treeLevel != 0) {
+				offices.add(office);
+			}
+		}
+		List<String> codes = new ArrayList<>();
+		for (String s : split) {
+			codes.add(s);
+		}
+		 codes.remove(officeCode);
+		StringBuffer sb = new StringBuffer();
+		for (String item : codes) {
+			sb.append(item).append(",");
+		}
+		businessCheckPlanUser.getOffice().setOfficeCode(sb.toString());
+		businessCheckPlanUserService.update(businessCheckPlanUser);
+		model.addAttribute("offices",offices);
+		model.addAttribute("businessCheckPlanUser",businessCheckPlanUser);
+		return "modules/businesscheckplanuser/view";
+	}
+
 }

@@ -21,4 +21,9 @@
         </foreach>
         ORDER BY ${sqlMap.order.toSql()}
     </select>
+    <select id="findByTypeCode" resultType="com.jeesite.modules.businesstarget2.entity.BusinessTarget2">
+        SELECT *
+        FROM   business_target
+        where  target_type_id = #{targetTypeCode}
+    </select>
 </mapper>

@@ -17,9 +17,9 @@
 					<div class="col-xs-6">
 						<div class="form-group">
 							<label class="control-label col-sm-4" title="">
-								<span class="required hide">*</span> ${text('指标项')}：<i class="fa icon-question hide"></i></label>
+								<span class="required hide">*</span> ${text('考核模板')}：<i class="fa icon-question hide"></i></label>
 							<div class="col-sm-8">
-								<#form:treeselect   model="${businessTarget2}" id="targetType" title="${text('指标项')}"
+								<#form:treeselect   model="${businessTarget2}" id="targetType" title="${text('考核模板')}"
 								path="businessTargetType.targetTypeCode" labelPath="businessTargetType.targetTypeName"
 								url="${ctx}/businesstargettypetree/businessTargetTypeTree/treeData?excludeCode=${businessTargetType.id}&ctrlPermi=2"
 								class="" allowClear="true" canSelectRoot="true" canSelectParent="true"/>
@@ -49,7 +49,7 @@
 					<div class="col-xs-6">
 						<div class="form-group">
 							<label class="control-label col-sm-4" title="">
-								<span class="required hide">*</span> ${text('最高标准')}：<i class="fa icon-question hide"></i></label>
+								<span class="required hide">*</span> ${text('最高分值')}：<i class="fa icon-question hide"></i></label>
 							<div class="col-sm-8">
 								<#form:input path="targetMax" maxlength="255" class="form-control"/>
 							</div>
@@ -57,6 +57,18 @@
 					</div>
 				</div>
 				<div class="row">
+					<div class="col-xs-6">
+						<div class="form-group">
+							<label class="control-label col-sm-4" title="">
+								<span class="required hide">*</span> ${text('执行部门')}：<i class="fa icon-question hide"></i></label>
+							<div class="col-sm-8">
+								<#form:treeselect   model="${office}" id="executeDepartments" title="${text('执行部门')}"
+								path="executeDepartments.officeCode" labelPath="executeDepartments.officeName"
+								url="${ctx}/sys/office/treeData?excludeCode=${office.id}&ctrlPermi=2"
+								class="" allowClear="true" canSelectRoot="true" canSelectParent="true"/>
+							</div>
+						</div>
+					</div>
 					<div class="col-xs-6">
 						<div class="form-group">
 							<label class="control-label col-sm-4" title="">
@@ -69,7 +81,6 @@
 							</div>
 						</div>
 					</div>
-
 				</div>
 				<div class="row">
 

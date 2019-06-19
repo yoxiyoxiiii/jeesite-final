@@ -132,4 +132,8 @@ public class BusinessTarget2Service extends CrudService<BusinessTarget2Dao, Busi
 
 		return super.dao.findIn(targets);
 	}
+
+    public List<BusinessTarget2> findByTypeCode(String targetTypeCode) {
+		return super.dao.findByTypeCode(targetTypeCode);
+    }
 }
