@@ -165,6 +165,7 @@ public class BusinessTarget2Controller extends BaseController {
 	@PostMapping(value = "save")
 	@ResponseBody
 	public String save(@Validated BusinessTarget2 businessTarget2) {
+		businessTarget2.setExpressionStatus(0);//设置公式状态：未设置公式
 		if(businessTarget2.getTargetScore().doubleValue()<=0) {return renderResult(Global.FALSE, text("单位分值不合理！"));}
 		if(org.springframework.util.StringUtils.isEmpty(businessTarget2.getExecuteDepartments().getId())) {return renderResult(Global.FALSE, text("执行部门未设置！"));}
 		List<BusinessTargetDataItem2> businessTargetDataItem2List = businessTarget2.getBusinessTargetDataItem2List();
@@ -180,6 +181,9 @@ public class BusinessTarget2Controller extends BaseController {
 	@PostMapping(value = "save/expr")
 	@ResponseBody
 	public String saveExpr(BusinessTarget2 businessTarget2) {
+		if ("2".equals(businessTarget2.getTargetAttribute())) {
+			return renderResult(Global.FALSE, text("定性指标不能设置公式！"));
+		}
 		businessTarget2.setIsNewRecord(false);
 		Integer expressionStatus = businessTarget2.getExpressionStatus();
 
@@ -267,13 +271,18 @@ public class BusinessTarget2Controller extends BaseController {
 	@RequestMapping("/check")
     @ResponseBody
 	public String check(String targetResultExpression, String businessTargetId) {
+
+		BusinessTarget2 businessTarget2 = businessTarget2Service.get(businessTargetId);
+		if ("2".equals(businessTarget2.getTargetAttribute())) {
+			return renderResult(Global.FALSE, text("定性指标不能设置公式！"));
+		}
 		//先检测公式里的数据采集项是否正确
 		List<BusinessTargetDataItem> businessTargetDataItems = dataItemService.findByBusinessTargetId(businessTargetId);
 		List<String> collect = businessTargetDataItems.stream().map(BusinessTargetDataItem::getItemName).collect(Collectors.toList());
 		//获取数据采集项，从公式中解析出来
 		List<String> chiness = StringUtil.getChiness(targetResultExpression);
 		boolean allMatch = collect.containsAll(chiness);
-		BusinessTarget2 businessTarget2 = businessTarget2Service.get(businessTargetId);
+
 		businessTarget2.setIsNewRecord(false);
 		if (allMatch) {//数据采集项都正确，再检测 公式是否能执行出结果
 			//替换中文后的公式,将所有的变量都 设置为1.
