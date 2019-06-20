@@ -72,7 +72,6 @@ public class BusinessPlanUserTask extends DataEntity<BusinessPlanUserTask> {
 	private Date taskStartTime;		// 任务开始时间
 	private Date taskEndTime;		// 任务结束时间
 
-
 	@Getter
 	@Setter
 	private String monitorId;//监控ID

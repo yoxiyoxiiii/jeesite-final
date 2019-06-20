@@ -3,34 +3,31 @@
  */
 package com.jeesite.modules.businesscheckplan.web;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
 import com.jeesite.common.codec.EncodeUtils;
-import com.jeesite.common.lang.DateUtils;
+import com.jeesite.common.config.Global;
+import com.jeesite.common.entity.Page;
 import com.jeesite.common.mapper.JsonMapper;
+import com.jeesite.common.web.BaseController;
+import com.jeesite.modules.businesscheckplan.entity.BusinessCheckPlan;
+import com.jeesite.modules.businesscheckplan.service.BusinessCheckPlanService;
 import com.jeesite.modules.businesschecktemplat.entity.BusinessCheckTemplate;
-import com.jeesite.modules.msg.entity.MsgPush;
-import com.jeesite.modules.msg.entity.content.PcMsgContent;
-import com.jeesite.modules.msg.service.MsgPushService;
-import com.jeesite.modules.msg.utils.MsgPushUtils;
+import com.jeesite.modules.businesstarget2.entity.BusinessTarget2;
+import com.jeesite.modules.businesstarget2.service.BusinessTarget2Service;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.quartz.SchedulerException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.util.StringUtils;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.jeesite.common.config.Global;
-import com.jeesite.common.entity.Page;
-import com.jeesite.common.web.BaseController;
-import com.jeesite.modules.businesscheckplan.entity.BusinessCheckPlan;
-import com.jeesite.modules.businesscheckplan.service.BusinessCheckPlanService;
-
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -87,11 +84,20 @@ public class BusinessCheckPlanController extends BaseController {
 	/**
 	 * 保存考核计划
 	 */
+	@Autowired
+	private BusinessTarget2Service businessTarget2Service;
 	@RequiresPermissions("businesscheckplan:businessCheckPlan:edit")
 	@PostMapping(value = "save")
 	@ResponseBody
 	public String save(@Validated BusinessCheckPlan businessCheckPlan) {
 		businessCheckPlan.setPlanStatus(1);//未启动
+		String targetTypeCode = businessCheckPlan.getBusinessTargetTypeTree().getTargetTypeCode();
+		List<BusinessTarget2> businessTarget2List = businessTarget2Service.findByTypeCode(targetTypeCode);
+		if (StringUtils.isEmpty(businessTarget2List) || businessTarget2List.size() == 0) {return renderResult(Global.FALSE, text("该考核模板下不存在考核细则或模板层级错误!")); }
+		if (StringUtils.isEmpty(targetTypeCode)) {return renderResult(Global.FALSE, text("考核模板必填!"));}
+		if (StringUtils.isEmpty(businessCheckPlan.getPlanCheckUser().getUserCode())) {return renderResult(Global.FALSE, text("负责人必填!"));}
+		if (StringUtils.isEmpty(businessCheckPlan.getPlanDutyUser().getUserCode())) {return renderResult(Global.FALSE, text("责任人必填!"));}
+
 		businessCheckPlanService.save(businessCheckPlan);
 		return renderResult(Global.TRUE, text("保存考核计划成功！"));
 	}

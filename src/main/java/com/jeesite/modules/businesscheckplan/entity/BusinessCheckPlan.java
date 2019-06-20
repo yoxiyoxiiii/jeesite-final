@@ -15,6 +15,7 @@ import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.validator.constraints.Length;
 
+import javax.validation.constraints.NotNull;
 import java.util.Date;
 
 /**
@@ -60,11 +61,17 @@ public class BusinessCheckPlan extends DataEntity<BusinessCheckPlan> {
 	@Getter
 	@Setter
 	private BusinessTargetTypeTree businessTargetTypeTree;		// 模板
+	@NotNull(message = "专业类型必填")
 	private Integer planMajorType;		// 专业类型
+	@NotNull(message = "计划名称必填")
 	private String planName;		// 计划名称
+	@NotNull(message = "开始时间必填")
 	private Date planStartTime;		// 开始时间
+	@NotNull(message = "结束时间必填")
 	private Date planEndTime;		// 结束时间
+	@NotNull(message = "评分开始时间非空")
 	private Date planScoringStartTime;		// 评分开始时间
+	@NotNull(message = "评分结束时间非空")
 	private Date planScoringEndTime;		// 评分结束时间
 	private User planCheckUser;		// 负责人
 	private User planDutyUser;		// 责任人

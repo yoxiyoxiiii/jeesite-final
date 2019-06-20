@@ -80,28 +80,29 @@ public class SendMsgJobService {
                     new RuntimeException(businessCheckPlanUser.getDepartmentId() + "该部门没有数据上报员!");
                     continue;
                 }
-                for (BusinessTargetDataItem dateItem : businessTargetDataItemList) {
-                    BusinessTargetTaskMonitor businessTargetTaskMonitor = new BusinessTargetTaskMonitor();
-                    businessTargetTaskMonitor.setDataItemCount(businessTarget21.getBusinessTargetDataItem2List().size());
-                    BusinessTarget2 businessTarget2 = new BusinessTarget2();
-                    businessTarget2.setId(businessTarget.getId());
-                    businessTargetTaskMonitor.setBusinessTarget2(businessTarget2);
-                    Office o = new Office();
-                    o.setOfficeCode(employeeDto.getOfficeCode());
-                    businessTargetTaskMonitor.setOffice(o);
-                    businessTargetTaskMonitor.setBusinessCheckPlan(businessCheckPlan);
-                    BusinessTargetTaskMonitor taskMonitor = businessTargetTaskMonitorService.findByIds(businessTarget.getId(), employeeDto.getOfficeCode(), businessCheckPlanId);
-                    if (taskMonitor != null) {
-                        log.info("考核部门任务数据存在: {}", employeeDto);
-                        continue;
-                    }
-                    log.info("考核部门集合: {}", employeeDto);
-                    businessTargetTaskMonitor.setBusinessCheckPlan(businessCheckPlan);
-                    businessTargetTaskMonitor.setStatus("2");
-                    //保存监控主表
-                    businessTargetTaskMonitorService.save(businessTargetTaskMonitor);
-                    BusinessTargetTaskMonitor monitor = businessTargetTaskMonitorService.get(businessTargetTaskMonitor);
 
+                BusinessTargetTaskMonitor businessTargetTaskMonitor = new BusinessTargetTaskMonitor();
+                businessTargetTaskMonitor.setDataItemCount(businessTarget21.getBusinessTargetDataItem2List().size());
+                BusinessTarget2 businessTarget2 = new BusinessTarget2();
+                businessTarget2.setId(businessTarget.getId());
+                businessTargetTaskMonitor.setBusinessTarget2(businessTarget2);
+                Office o = new Office();
+                o.setOfficeCode(employeeDto.getOfficeCode());
+                businessTargetTaskMonitor.setOffice(o);
+                businessTargetTaskMonitor.setBusinessCheckPlan(businessCheckPlan);
+                BusinessTargetTaskMonitor taskMonitor = businessTargetTaskMonitorService.findByIds(businessTarget.getId(), employeeDto.getOfficeCode(), businessCheckPlanId);
+                if (taskMonitor != null) {
+                    log.info("考核部门任务数据存在: {}", employeeDto);
+                    continue;
+                }
+                log.info("考核部门集合: {}", employeeDto);
+                businessTargetTaskMonitor.setBusinessCheckPlan(businessCheckPlan);
+                businessTargetTaskMonitor.setStatus("2");
+                //保存监控主表
+                businessTargetTaskMonitorService.save(businessTargetTaskMonitor);
+                BusinessTargetTaskMonitor monitor = businessTargetTaskMonitorService.get(businessTargetTaskMonitor);
+
+                for (BusinessTargetDataItem dateItem : businessTargetDataItemList) {
 
                     BusinessPlanUserTask businessPlanUserTask = new BusinessPlanUserTask();
                     businessPlanUserTask.setMonitorId(monitor.getId());//设置监控ID
@@ -113,6 +114,7 @@ public class SendMsgJobService {
                     businessPlanUserTask.setTaskStatus(1);//未完成
                     businessPlanUserTask.setTaskDescription(dateItem.getItemDescription());
                     businessPlanUserTask.setUser(user);
+
                     businessPlanUserTask.setBusinessCheckPlanId(businessCheckPlanId);//设置考核计划
                     //设计计划开始时间和结束时间
                     businessPlanUserTask.setTaskStartTime(businessCheckPlan.getPlanStartTime());

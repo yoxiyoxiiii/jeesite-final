@@ -22,7 +22,7 @@ public class BusinessJobJdbc {
     private JdbcTemplate jdbcTemplate;
 
     public List<EmployeeDto> findByOfficeCode(String officeCode, String roleCode) {
-        String sql = "SELECT e.emp_code as user_code , e.emp_name,e.office_code FROM js_sys_employee e LEFT JOIN js_sys_user_role ur ON e.emp_code = ur.user_code WHERE ur.role_code = :roleCode AND e.office_code IN (:office_codes)";
+        String sql = "SELECT e.emp_code, e.emp_name,e.office_code FROM js_sys_employee e LEFT JOIN js_sys_user_role ur ON e.emp_code = ur.user_code WHERE ur.role_code = :roleCode AND e.office_code IN (:office_codes)";
         String[] split = officeCode.split(",");
         List<String> codes = Arrays.asList(split);
         Map<String, Object> params = new HashMap<>();

@@ -13,6 +13,9 @@ import com.jeesite.modules.sys.entity.Office;
 import lombok.Getter;
 import lombok.Setter;
 
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+
 /**
  * 考核名单Entity
  * @author 考核名单
@@ -52,6 +55,7 @@ public class BusinessCheckPlanUser extends DataEntity<BusinessCheckPlanUser> {
 	private static final long serialVersionUID = 1L;
 	@Getter
 	@Setter
+	@NotNull(message = "考核部门必选!")
 	private Office office;		// 被考核的部门
 //	private Post post;		// 被考核的岗位
 	@Getter
@@ -59,6 +63,7 @@ public class BusinessCheckPlanUser extends DataEntity<BusinessCheckPlanUser> {
 	private BusinessCheckPlan businessCheckPlan;		// 考核计划
 	@Getter
 	@Setter
+	@NotBlank(message = "考核名单名称不能为空!")
 	private String planUserName; //考核名单名称
 
 	@Getter

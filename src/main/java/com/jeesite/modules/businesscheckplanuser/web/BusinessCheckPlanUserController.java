@@ -8,6 +8,7 @@ import com.jeesite.common.entity.Page;
 import com.jeesite.common.idgen.IdGen;
 import com.jeesite.common.lang.StringUtils;
 import com.jeesite.common.web.BaseController;
+import com.jeesite.modules.businesscheckplan.entity.BusinessCheckPlan;
 import com.jeesite.modules.businesscheckplanuser.entity.BusinessCheckPlanUser;
 import com.jeesite.modules.businesscheckplanuser.service.BusinessCheckPlanUserService;
 import com.jeesite.modules.businesscheckplanuser.service.OfficeServiceWarpper;
@@ -142,6 +143,10 @@ public class BusinessCheckPlanUserController extends BaseController {
 	@PostMapping(value = "save")
 	@ResponseBody
 	public String save(@Validated BusinessCheckPlanUser businessCheckPlanUser) {
+		String officeCode = businessCheckPlanUser.getOffice().getOfficeCode();
+		BusinessCheckPlan businessCheckPlan = businessCheckPlanUser.getBusinessCheckPlan();
+		if (org.springframework.util.StringUtils.isEmpty(officeCode)) {return renderResult(Global.FALSE, text("考核部门不能为空!"));}
+		if (org.springframework.util.StringUtils.isEmpty(businessCheckPlan.getId())) {return renderResult(Global.FALSE, text("考核计划不能为空!"));}
 		businessCheckPlanUserService.save(businessCheckPlanUser);
 		return renderResult(Global.TRUE, text("保存考核名单成功！"));
 	}

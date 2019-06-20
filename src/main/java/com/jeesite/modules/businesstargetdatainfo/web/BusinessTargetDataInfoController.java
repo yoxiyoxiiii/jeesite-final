@@ -133,6 +133,7 @@ public class BusinessTargetDataInfoController extends BaseController {
 		businessTargetDataInfo.setUser(userModel);
 		model.addAttribute("businessTargetDataInfo", businessTargetDataInfo);
 		model.addAttribute("userTaskId", userTaskId);
+		model.addAttribute("dataItemId", dataItemId);
 		model.addAttribute("businessTargetId", businessTargetId);
 		return "modules/businesstargetdatainfo/businessTargetDataInfoFormNew";
 	}
@@ -144,8 +145,11 @@ public class BusinessTargetDataInfoController extends BaseController {
 	@RequiresPermissions("businesstargetdatainfo:businessTargetDataInfo:edit")
 	@PostMapping(value = "save")
 	@ResponseBody
-	public String save(@Validated BusinessTargetDataInfo businessTargetDataInfo, String userTaskId) {
+	public String save(@Validated BusinessTargetDataInfo businessTargetDataInfo, String userTaskId, String dataItemId) {
 		businessTargetDataInfo.setIsNewRecord(true);
+		BusinessTargetDataItem dataItem = new BusinessTargetDataItem();
+		dataItem.setId(dataItemId);
+		businessTargetDataInfo.setBusinessTargetDataItem(dataItem);
 		businessTargetDataInfoService.save(businessTargetDataInfo,userTaskId);
 		return renderResult(Global.TRUE, text("保存上报的数据成功！"));
 	}
