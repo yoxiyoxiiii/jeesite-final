@@ -15,6 +15,9 @@ import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.validator.constraints.Length;
 
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
 import java.util.List;
 
@@ -38,6 +41,7 @@ import java.util.List;
 		@Column(name="target_execute_dep_id", attrName="executeDepartments.officeCode", label="目标执行部门"),
 		@Column(name="target_join_dep_id", attrName="jointWorkDepartments.officeCode", label="协同部门"),
 		@Column(name="target_result_expression", attrName="targetResultExpression", label="目标结果计算公式"),
+		@Column(name="expression_status", attrName="expressionStatus", label="目标结果计算公式"),
 		@Column(name="create_date", attrName="createDate", label="create_date", isUpdate=false, isQuery=false),
 		@Column(name="update_date", attrName="updateDate", label="update_date", isQuery=false),
 		@Column(name="target_is_decompose", attrName="targetIsDecompose", label="是否分解"),
@@ -57,12 +61,15 @@ import java.util.List;
 public class BusinessTarget2 extends DataEntity<BusinessTarget2> {
 	
 	private static final long serialVersionUID = 1L;
+	@NotNull(message = "考核细则名称必填!")
 	private String targetName;		// 指标名称
 	@Getter
 	@Setter
 	private BusinessTargetTypeTree businessTargetType;		// 关联分类ID
+	@NotNull(message = "考核周期必填!")
 	private String targetCheckCycle;		// 目标考核周期 周、半月、月、季度、半年、年 ，定时任务关联
 	private String targetCheckBasic;		// 考核依据
+	@NotNull(message = "请选择定量/定性")
 	private String targetAttribute;		// 指标属性 定性、定量
 
 	@Getter
@@ -71,15 +78,20 @@ public class BusinessTarget2 extends DataEntity<BusinessTarget2> {
 
 	@Getter
 	@Setter
+	@NotNull(message = "考核内容必填!")
 	private String targetContent;		// 考核内容，考核细则
 	@Getter
 	@Setter
+	@NotNull(message = "请设置单位分值!")
+	@Max(value = 100,message = "请合理设置单位分值!")
 	private BigDecimal targetScore;		// 单位分值
 //	@Getter
 //	@Setter
 //	private BigDecimal targetMaxScore;		// 最高分值
 	@Getter
 	@Setter
+	@Max(value = 100,message = "请合理设置最高分!")
+	@Min(value = 1,message = "请合理设置最高分!")
 	private BigDecimal targetMax;		// 考核计划最高目标
 	@Getter
 	@Setter
@@ -89,6 +101,17 @@ public class BusinessTarget2 extends DataEntity<BusinessTarget2> {
 	@Setter
 	private Office jointWorkDepartments;		// 协同部门
 	private String targetResultExpression;		// 目标结果计算公式
+
+	/**
+	 *  计算公式状态：0 未设置公式
+	 *  1 公式校验未通过
+	 *  2 公式校验通过
+	 *  3 公式正在使用中，不能修改
+	 *  4 公式作废
+	 */
+	@Getter
+	@Setter
+	private Integer expressionStatus;
 	private Integer targetIsDecompose;		// 是否分解
 	private List<BusinessTargetDataItem2> businessTargetDataItem2List = ListUtils.newArrayList();		// 子表列表
 	private List<BusinessStageTarget2> businessStageTarget2List = ListUtils.newArrayList();		// 子表列表

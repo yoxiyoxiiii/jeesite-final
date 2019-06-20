@@ -165,10 +165,34 @@ public class BusinessTarget2Controller extends BaseController {
 	@PostMapping(value = "save")
 	@ResponseBody
 	public String save(@Validated BusinessTarget2 businessTarget2) {
+		if(businessTarget2.getTargetScore().doubleValue()<=0) {return renderResult(Global.FALSE, text("单位分值不合理！"));}
+		if(org.springframework.util.StringUtils.isEmpty(businessTarget2.getExecuteDepartments().getId())) {return renderResult(Global.FALSE, text("执行部门未设置！"));}
+		List<BusinessTargetDataItem2> businessTargetDataItem2List = businessTarget2.getBusinessTargetDataItem2List();
+		if (org.springframework.util.StringUtils.isEmpty(businessTargetDataItem2List) || businessTargetDataItem2List.size() == 0) {return renderResult(Global.FALSE, text("请设置数据采集项!"));}
 		businessTarget2Service.save(businessTarget2);
 		return renderResult(Global.TRUE, text("保存指标成功！"));
 	}
-	
+
+	/**
+	 * 保存指标 公式
+	 */
+	@RequiresPermissions("businesstarget2:businessTarget2:edit")
+	@PostMapping(value = "save/expr")
+	@ResponseBody
+	public String saveExpr(BusinessTarget2 businessTarget2) {
+		businessTarget2.setIsNewRecord(false);
+		Integer expressionStatus = businessTarget2.getExpressionStatus();
+
+		if (expressionStatus == 0 | expressionStatus == 1) {
+			return renderResult(Global.FALSE, text("公式不可用！"));
+		}
+		if(expressionStatus == 3) {
+			return renderResult(Global.FALSE, text("公式正在使用中不可修改！"));
+		}
+			businessTarget2Service.save(businessTarget2);
+			return renderResult(Global.TRUE, text("设置公式成功！"));
+	}
+
 	/**
 	 * 删除指标
 	 */
@@ -227,8 +251,6 @@ public class BusinessTarget2Controller extends BaseController {
 				dataItemList.append("\n");
 			}
 		}
-
-
 		businessTarget2.setSymbolList(sb.toString());
 		businessTarget2.setDataItemList(dataItemList.toString());
 		model.addAttribute("businessTarget2",businessTarget2);
@@ -244,24 +266,41 @@ public class BusinessTarget2Controller extends BaseController {
 	private BusinessTargetDataItemService dataItemService;
 	@RequestMapping("/check")
     @ResponseBody
-	public String check(String targetResultExpression, String businessTargetId) throws EvalError {
+	public String check(String targetResultExpression, String businessTargetId) {
 		//先检测公式里的数据采集项是否正确
 		List<BusinessTargetDataItem> businessTargetDataItems = dataItemService.findByBusinessTargetId(businessTargetId);
 		List<String> collect = businessTargetDataItems.stream().map(BusinessTargetDataItem::getItemName).collect(Collectors.toList());
 		//获取数据采集项，从公式中解析出来
 		List<String> chiness = StringUtil.getChiness(targetResultExpression);
 		boolean allMatch = collect.containsAll(chiness);
+		BusinessTarget2 businessTarget2 = businessTarget2Service.get(businessTargetId);
+		businessTarget2.setIsNewRecord(false);
 		if (allMatch) {//数据采集项都正确，再检测 公式是否能执行出结果
 			//替换中文后的公式,将所有的变量都 设置为1.
 			String expre = StringUtil.replaceChinese(targetResultExpression, "#");
 			Interpreter bsh = new Interpreter();
+
 			//动态执行 计算公式
-			Object eval = bsh.eval(expre);
+			Object eval = null;
+			try {
+				eval = bsh.eval(expre);
+			} catch (EvalError evalError) {
+				businessTarget2.setExpressionStatus(1);//公式校验不通过
+				logger.info("计算公式 无法执行 ---> :{}",evalError.getErrorText());
+				evalError.printStackTrace();
+				return renderResult(Global.FALSE, text("公式错误！"));
+
+			}
 			logger.info("计算公式---> :{}",expre);
 			logger.info("计算公式 校验执行结果 ---> :{}",eval);
 			//拿到 公式中的中文，去查找数据库中的 数据采集项，是否每一项都在，否则计算公式不通过。
+			businessTarget2.setExpressionStatus(2);//公式可用
+			businessTarget2Service.save(businessTarget2);
 			return renderResult(Global.TRUE, text("计算公式可用！"));
 		}
+
+		businessTarget2.setExpressionStatus(1);//公式不可用
+		businessTarget2Service.save(businessTarget2);
 		return renderResult(Global.FALSE, text("计算公式不可用！"));
 
 

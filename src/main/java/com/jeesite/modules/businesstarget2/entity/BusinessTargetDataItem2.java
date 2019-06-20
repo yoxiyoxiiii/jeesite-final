@@ -10,6 +10,10 @@ import com.jeesite.common.mybatis.annotation.Column;
 import com.jeesite.common.mybatis.annotation.Table;
 import com.jeesite.common.mybatis.mapper.query.QueryType;
 
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
+
 /**
  * 指标Entity
  * @author BusinessTarget2
@@ -32,8 +36,13 @@ public class BusinessTargetDataItem2 extends DataEntity<BusinessTargetDataItem2>
 	private static final long serialVersionUID = 1L;
 	private BusinessTarget2 targetId;		// 目标ID 父类
 	private String stageTargetId;		// 阶段目标ID
+	@NotNull(message = "数据采集项名称必填!")
 	private String itemName;		// 采集数据项
+	@NotNull(message = "请设置数据项权重!")
+	@Min(value = 1,message = "权重最小1%")
+	@Max(value = 100, message = "权重最大100%")
 	private Integer itemWeight;		// 数据项权重
+	@NotNull(message = "请设置数据项分值!")
 	private String itemScore;		// 数据项得分
 	private String itemDescription;		// 说明
 	
