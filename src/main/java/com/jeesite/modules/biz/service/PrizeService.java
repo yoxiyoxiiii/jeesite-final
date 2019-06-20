@@ -4,7 +4,9 @@
 package com.jeesite.modules.biz.service;
 
 import java.util.List;
+import java.util.Map;
 
+import com.jeesite.common.collect.MapUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -75,5 +77,15 @@ public class PrizeService extends CrudService<PrizeDao, Prize> {
 	public void delete(Prize prize) {
 		super.delete(prize);
 	}
-	
+
+	@Transactional(readOnly=false)
+    public List<Map<String, Object>> prizeReport(String startDate, String endDate, Integer isDepart,String orderBy) {
+		Map<String, Object> ps = MapUtils.newHashMap();
+		ps.put("startDate", startDate);
+		ps.put("endDate", endDate);
+		ps.put("isDepart", isDepart);
+		ps.put("orderBy", orderBy);
+		List<Map<String, Object>> result = dao.prizeReport(ps);
+		return result;
+	}
 }

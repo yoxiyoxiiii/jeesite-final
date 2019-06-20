@@ -58,7 +58,7 @@
 
     <!-- 演示Map参数和返回值，支持分页 -->
     <select id="findReport" resultType="map">
-        call jeesite.findReport(#{evaluId})
+        call evalu_report(#{evaluId})
     </select>
 
     <!-- 演示Map参数和返回值，支持分页 -->

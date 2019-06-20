@@ -229,7 +229,12 @@
 			//奖扣类型提示
 			var isAddStr = js.getDictLabel(${@DictUtils.getDictListJson('prize_is_add')}, data.prizeLib.isAdd, '${text("未知")}', true)
 			$("#prizeIsAdd>i").text(isAddStr);
-			$("#prizeIsAdd>i").addClass(data.prizeLib.isAdd == "1"? "text-success":"text-danger")
+			$("#prizeIsAdd>i").addClass(data.prizeLib.isAdd == "1"? "text-success":"text-danger");
+			//单项否决只记录次数
+			$("#score").removeAttr("readonly");
+			if(data.prizeLib.isAdd == "0"){
+				$("#score").attr("readonly","readonly");
+			}
 			//扩展字段处理
 			$(".extendTitle").hide();
 			for (i = 1; i <= EXTEND_LENTH; i++) {
