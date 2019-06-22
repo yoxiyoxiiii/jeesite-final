@@ -45,7 +45,7 @@ import org.hibernate.validator.constraints.Length;
 				columns={@Column(includeEntity=Office.class)}),
 		@JoinTable(type= JoinTable.Type.LEFT_JOIN, entity=BusinessTargetType.class, alias="businessTargetType",
 				on="businessTargetType.id = a.target_type_id", attrName = "targetTypes",
-				columns={@Column(includeEntity=BusinessTargetType.class)}),
+				columns={@Column(includeEntity= BusinessTargetType.class)}),
 },
 		orderBy="a.update_date DESC"
 )

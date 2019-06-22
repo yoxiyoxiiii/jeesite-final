@@ -1,32 +1,27 @@
-/**
+package com.jeesite.modules.businesstargettype.service; /**
  * Copyright (c) 2013-Now http://jeesite.com All rights reserved.
  */
-package com.jeesite.modules.businesstargettype.service;
 
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import com.jeesite.modules.businesstargettype.dao.BusinessTargetTypeDao;
+import com.jeesite.modules.businesstargettype.entity.BusinessTargetType;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.jeesite.common.entity.Page;
-import com.jeesite.common.service.CrudService;
-import com.jeesite.modules.businesstargettype.entity.BusinessTargetType;
-import com.jeesite.modules.businesstargettype.dao.BusinessTargetTypeDao;
+import com.jeesite.common.service.TreeService;
+
 
 /**
- * 指标分类Service
- * @author 指标分类
- * @version 2019-04-21
+ * 目标分类Service
+ * @author sanye
+ * @version 2019-06-20
  */
 @Service
 @Transactional(readOnly=true)
-public class BusinessTargetTypeService extends CrudService<BusinessTargetTypeDao, BusinessTargetType> {
-
-
-	@Autowired
-	private BusinessTargetTypeDao businessTargetTypeDao;
-
+public class BusinessTargetTypeService extends TreeService<BusinessTargetTypeDao, BusinessTargetType> {
+	
 	/**
 	 * 获取单条数据
 	 * @param businessTargetType
@@ -38,14 +33,13 @@ public class BusinessTargetTypeService extends CrudService<BusinessTargetTypeDao
 	}
 	
 	/**
-	 * 查询分页数据
-	 * @param businessTargetType 查询条件
-	 * @param businessTargetType.page 分页对象
+	 * 查询列表数据
+	 * @param businessTargetType
 	 * @return
 	 */
 	@Override
-	public Page<BusinessTargetType> findPage(BusinessTargetType businessTargetType) {
-		return super.findPage(businessTargetType);
+	public List<BusinessTargetType> findList(BusinessTargetType businessTargetType) {
+		return super.findList(businessTargetType);
 	}
 	
 	/**
@@ -77,8 +71,5 @@ public class BusinessTargetTypeService extends CrudService<BusinessTargetTypeDao
 	public void delete(BusinessTargetType businessTargetType) {
 		super.delete(businessTargetType);
 	}
-
-	public List<BusinessTargetType> findList() {
-		return businessTargetTypeDao.findList();
-	}
+	
 }

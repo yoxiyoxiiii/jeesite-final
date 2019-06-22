@@ -9,7 +9,7 @@ import com.jeesite.common.mybatis.annotation.Column;
 import com.jeesite.common.mybatis.annotation.JoinTable;
 import com.jeesite.common.mybatis.annotation.Table;
 import com.jeesite.common.mybatis.mapper.query.QueryType;
-import com.jeesite.modules.businesstargettypetree.entity.BusinessTargetTypeTree;
+import com.jeesite.modules.businesstargettype.entity.BusinessTargetType;
 import com.jeesite.modules.sys.entity.User;
 import lombok.Getter;
 import lombok.Setter;
@@ -25,7 +25,7 @@ import java.util.Date;
  */
 @Table(name="business_check_plan", alias="a", columns={
 		@Column(name="id", attrName="id", label="id", isPK=true),
-		@Column(name="temp_id", attrName="businessTargetTypeTree.id", label="模板"),
+		@Column(name="temp_id", attrName="businessTargetType.id", label="模板"),
 		@Column(name="plan_major_type", attrName="planMajorType", label="专业类型"),
 		@Column(name="plan_name", attrName="planName", label="计划名称", queryType=QueryType.LIKE),
 		@Column(name="create_date", attrName="createDate", label="创建时间", isUpdate=false, isQuery=false),
@@ -43,9 +43,9 @@ import java.util.Date;
 		@Column(name="is_update", attrName="isUpdate", label="isUpdate"),
 	},
 		joinTable = {
-				@JoinTable(type = JoinTable.Type.LEFT_JOIN, entity = BusinessTargetTypeTree.class, alias = "businessTargetTypeTree",
-						on = "businessTargetTypeTree.target_type_code = a.temp_id", attrName = "businessTargetTypeTree",
-						columns = {@Column(includeEntity = BusinessTargetTypeTree.class)}),
+				@JoinTable(type = JoinTable.Type.LEFT_JOIN, entity = BusinessTargetType.class, alias = "businessTargetType",
+						on = "businessTargetType.target_type_code = a.temp_id", attrName = "businessTargetType",
+						columns = {@Column(includeEntity = BusinessTargetType.class)}),
 				@JoinTable(type = JoinTable.Type.LEFT_JOIN, entity = User.class, alias = "planCheckUser",
 						on = "planCheckUser.user_code = a.plan_check_user_id", attrName = "planCheckUser",
 						columns = {@Column(includeEntity = User.class)}),
@@ -60,8 +60,9 @@ public class BusinessCheckPlan extends DataEntity<BusinessCheckPlan> {
 	private static final long serialVersionUID = 1L;
 	@Getter
 	@Setter
-	private BusinessTargetTypeTree businessTargetTypeTree;		// 模板
 	@NotNull(message = "专业类型必填")
+	private BusinessTargetType businessTargetType;		// 模板
+
 	private Integer planMajorType;		// 专业类型
 	@NotNull(message = "计划名称必填")
 	private String planName;		// 计划名称

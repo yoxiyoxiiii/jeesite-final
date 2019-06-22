@@ -12,6 +12,8 @@ import com.jeesite.common.idgen.IdGen;
 import com.jeesite.common.lang.StringUtils;
 import com.jeesite.common.mapper.JsonMapper;
 import com.jeesite.common.web.BaseController;
+import com.jeesite.modules.businesscheckplan.entity.BusinessCheckPlan;
+import com.jeesite.modules.businesscheckplan.service.BusinessCheckPlanService;
 import com.jeesite.modules.businesstarget.entity.BusinessTarget;
 import com.jeesite.modules.businesstarget2.entity.BusinessTarget2;
 import com.jeesite.modules.businesstarget2.entity.BusinessTargetDataItem2;
@@ -28,10 +30,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -58,7 +57,9 @@ public class BusinessTarget2Controller extends BaseController {
 	//目标分类信息
 	@Autowired
 	private BusinessTargetTypeService targetTypeService;
-	
+
+	@Autowired
+	private BusinessCheckPlanService businessCheckPlanService;
 	/**
 	 * 获取数据
 	 */
@@ -72,9 +73,11 @@ public class BusinessTarget2Controller extends BaseController {
 	 * 查询列表
 	 */
 	@RequiresPermissions("businesstarget2:businessTarget2:view")
-	@RequestMapping(value = {"treeList", ""})
-	public String treeList(BusinessTarget2 businessTarget2, Model model) {
+	@RequestMapping(value = {"treeList/{checkPlanId}", ""})
+	public String treeList(@PathVariable String checkPlanId, BusinessTarget2 businessTarget2, Model model) {
+		BusinessCheckPlan businessCheckPlan = businessCheckPlanService.get(checkPlanId);
 		model.addAttribute("businessTarget2", businessTarget2);
+		model.addAttribute("businessCheckPlan",businessCheckPlan);
 		return "modules/businesstarget2/businessTreeList";
 	}
 
@@ -82,8 +85,11 @@ public class BusinessTarget2Controller extends BaseController {
 	 * 查询列表
 	 */
 	@RequiresPermissions("businesstarget2:businessTarget2:view")
-	@RequestMapping(value = {"list"})
-	public String list(BusinessTarget2 businessTarget2, Model model) {
+	@RequestMapping(value = {"list/{checkPlanId}"})
+	public String list(@PathVariable String checkPlanId,BusinessTarget2 businessTarget2, Model model) {
+		BusinessTargetType businessTargetType = new BusinessTargetType();
+		businessTargetType.setCheckPlanId(checkPlanId);
+		businessTarget2.setBusinessTargetType(businessTargetType);
 		model.addAttribute("businessTarget2", businessTarget2);
 		return "modules/businesstarget2/businessTarget2List";
 	}
@@ -104,13 +110,16 @@ public class BusinessTarget2Controller extends BaseController {
 	 * 查看编辑表单
 	 */
 	@RequiresPermissions("businesstarget2:businessTarget2:view")
-	@RequestMapping(value = "form")
-	public String form(BusinessTarget businessTarget, Office office, BusinessTargetType businessTargetType, Model model) {
-		model.addAttribute("businessTarget", businessTarget);
+	@RequestMapping(value = "form/{checkPlanId}")
+	public String form(@PathVariable String checkPlanId, BusinessTarget2 businessTarget2, Office office, BusinessTargetType businessTargetType, Model model) {
+		BusinessTargetType businessTargetType2 = new BusinessTargetType();
+		businessTargetType2.setCheckPlanId(checkPlanId);
+		businessTarget2.setBusinessTargetType(businessTargetType2);
+		model.addAttribute("businessTarget2", businessTarget2);
 		List<BusinessTargetType> targetTypeList = targetTypeService.findList(businessTargetType);
-		if (targetTypeList.size() == 0) {
-			targetTypeList = targetTypeService.findList();
-		}
+//		if (targetTypeList.size() == 0) {
+//			targetTypeList = targetTypeService.findList();
+//		}
 		model.addAttribute("targetTypeList", targetTypeList);
 
 		// 创建并初始化下一个节点信息

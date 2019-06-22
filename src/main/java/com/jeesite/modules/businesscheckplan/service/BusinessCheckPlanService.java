@@ -13,7 +13,7 @@ import com.jeesite.modules.businessjob.service.BusinessJobService;
 import com.jeesite.modules.businesstarget.service.BusinessTargetService;
 import com.jeesite.modules.businesstarget2.entity.BusinessTarget2;
 import com.jeesite.modules.businesstarget2.service.BusinessTarget2Service;
-import com.jeesite.modules.businesstargettypetree.entity.BusinessTargetTypeTree;
+import com.jeesite.modules.businesstargettype.entity.BusinessTargetType;
 import com.jeesite.modules.sys.service.UserService;
 import org.quartz.JobDataMap;
 import org.quartz.SchedulerException;
@@ -103,7 +103,8 @@ public class BusinessCheckPlanService extends CrudService<BusinessCheckPlanDao, 
 	private BusinessTarget2Service businessTarget2Service;
 	private void addJob(BusinessCheckPlan businessCheckPlan) {
 		//考核模板
-		BusinessTargetTypeTree businessTargetTypeTree = businessCheckPlan.getBusinessTargetTypeTree();
+
+		BusinessTargetType businessTargetTypeTree = businessCheckPlan.getBusinessTargetType();
 		String targetTypeCode = businessTargetTypeTree.getTargetTypeCode();
 		//根据考核模板获取 考核细则
 		List<BusinessTarget2> businessTarget2List = businessTarget2Service.findByTypeCode(targetTypeCode);

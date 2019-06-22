@@ -9,7 +9,7 @@ import com.jeesite.common.mybatis.annotation.Column;
 import com.jeesite.common.mybatis.annotation.JoinTable;
 import com.jeesite.common.mybatis.annotation.Table;
 import com.jeesite.common.mybatis.mapper.query.QueryType;
-import com.jeesite.modules.businesstargettypetree.entity.BusinessTargetTypeTree;
+import com.jeesite.modules.businesstargettype.entity.BusinessTargetType;
 import com.jeesite.modules.sys.entity.Office;
 import lombok.Getter;
 import lombok.Setter;
@@ -52,9 +52,9 @@ import java.util.List;
 		@JoinTable(type= JoinTable.Type.LEFT_JOIN, entity=Office.class, alias="jointWorkDepartmentOffice",
 				on="jointWorkDepartmentOffice.office_code = a.target_join_dep_id", attrName = "jointWorkDepartments",
 				columns={@Column(includeEntity=Office.class)}),
-		@JoinTable(type= JoinTable.Type.LEFT_JOIN, entity= BusinessTargetTypeTree.class, alias="businessTargetType",
+		@JoinTable(type= JoinTable.Type.LEFT_JOIN, entity= BusinessTargetType.class, alias="businessTargetType",
 				on="businessTargetType.target_type_code = a.target_type_id", attrName = "businessTargetType",
-				columns={@Column(includeEntity=BusinessTargetTypeTree.class)}),
+				columns={@Column(includeEntity= BusinessTargetType.class)}),
 },
 		orderBy="a.update_date DESC"
 )
@@ -63,9 +63,6 @@ public class BusinessTarget2 extends DataEntity<BusinessTarget2> {
 	private static final long serialVersionUID = 1L;
 	@NotNull(message = "考核细则名称必填!")
 	private String targetName;		// 指标名称
-	@Getter
-	@Setter
-	private BusinessTargetTypeTree businessTargetType;		// 关联分类ID
 	@NotNull(message = "考核周期必填!")
 	private String targetCheckCycle;		// 目标考核周期 周、半月、月、季度、半年、年 ，定时任务关联
 	private String targetCheckBasic;		// 考核依据
@@ -102,6 +99,9 @@ public class BusinessTarget2 extends DataEntity<BusinessTarget2> {
 	private Office jointWorkDepartments;		// 协同部门
 	private String targetResultExpression;		// 目标结果计算公式
 
+	@Getter
+	@Setter
+	private BusinessTargetType businessTargetType;
 	/**
 	 *  计算公式状态：0 未设置公式
 	 *  1 公式校验未通过

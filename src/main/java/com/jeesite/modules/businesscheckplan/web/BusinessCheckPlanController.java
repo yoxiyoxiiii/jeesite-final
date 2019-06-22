@@ -91,7 +91,7 @@ public class BusinessCheckPlanController extends BaseController {
 	@ResponseBody
 	public String save(@Validated BusinessCheckPlan businessCheckPlan) {
 		businessCheckPlan.setPlanStatus(1);//未启动
-		String targetTypeCode = businessCheckPlan.getBusinessTargetTypeTree().getTargetTypeCode();
+		String targetTypeCode = businessCheckPlan.getBusinessTargetType().getTargetTypeCode();
 		List<BusinessTarget2> businessTarget2List = businessTarget2Service.findByTypeCode(targetTypeCode);
 		if (StringUtils.isEmpty(businessTarget2List) || businessTarget2List.size() == 0) {return renderResult(Global.FALSE, text("该考核模板下不存在考核细则或模板层级错误!")); }
 		if (StringUtils.isEmpty(targetTypeCode)) {return renderResult(Global.FALSE, text("考核模板必填!"));}

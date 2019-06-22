@@ -23,7 +23,7 @@
 </div>
 <div class="ui-layout-center">
 	<iframe id="mainFrame" name="mainFrame" class="ui-layout-content p0"
-		src="${ctx}/businesstarget2/businessTarget2/list"></iframe>
+		src="${ctx}/businesstarget2/businessTarget2/list/${checkPlanId}"></iframe>
 </div>
 <% } %>
 <script>
@@ -50,7 +50,7 @@ var setting = {
 		win.page();
 	}}
 }, tree, loadTree = function(){
-	js.ajaxSubmit("${ctx}/businesstargettypetree/businessTargetTypeTree/treeData?___t=" + new Date().getTime(), {ctrlPermi:'2'/*1拥有的权限 2管理的权限*/}, function(data){
+	js.ajaxSubmit("${ctx}/businesstargettype/businessTargetType/treeData/${checkPlanId}?___t=" + new Date().getTime(), {ctrlPermi:'2'/*1拥有的权限 2管理的权限*/}, function(data){
 		tree = $.fn.zTree.init($("#tree"), setting, data);//.expandAll(true);
 		// 展开第一级节点
 		var nodes = tree.getNodesByParam("level", 0);

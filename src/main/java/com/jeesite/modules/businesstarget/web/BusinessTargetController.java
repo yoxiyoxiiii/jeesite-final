@@ -94,9 +94,9 @@ public class BusinessTargetController extends BaseController {
 	public String form(BusinessTarget businessTarget, Office office, BusinessTargetType businessTargetType, Model model) {
 		model.addAttribute("businessTarget", businessTarget);
         List<BusinessTargetType> targetTypeList = targetTypeService.findList(businessTargetType);
-        if (targetTypeList.size() == 0) {
-            targetTypeList = targetTypeService.findList();
-        }
+//        if (targetTypeList.size() == 0) {
+//            targetTypeList = targetTypeService.findList();
+//        }
         model.addAttribute("targetTypeList", targetTypeList);
 
         // 创建并初始化下一个节点信息

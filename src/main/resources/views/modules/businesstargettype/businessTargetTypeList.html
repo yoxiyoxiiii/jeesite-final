@@ -1,36 +1,47 @@
-<% layout('/layouts/default.html', {title: '指标分类管理', libs: ['dataGrid']}){ %>
+<% layout('/layouts/default.html', {title: '目标分类管理', libs: ['dataGrid']}){ %>
 <div class="main-content">
 	<div class="box box-main">
 		<div class="box-header">
 			<div class="box-title">
-				<i class="fa fa-list-alt"></i> ${text('指标分类管理')}
+				<i class="fa fa-list-alt"></i> ${text('目标分类管理')}
 			</div>
 			<div class="box-tools pull-right">
 				<a href="#" class="btn btn-default" id="btnSearch" title="${text('查询')}"><i class="fa fa-filter"></i> ${text('查询')}</a>
+				<a href="#" class="btn btn-default" id="btnRefreshTree" title="${text('刷新')}"><i class="fa fa-refresh"></i> ${text('刷新')}</a>
+				<a href="#" class="btn btn-default" id="btnExpandTreeNode" title="${text('展开一级')}"><i class="fa fa-angle-double-down"></i> ${text('展开')}</a>
+				<a href="#" class="btn btn-default" id="btnCollapseTreeNode" title="${text('折叠全部')}"><i class="fa fa-angle-double-up"></i> ${text('折叠')}</a>
+				<a href="#" class="btn btn-default" id="btnUpdateSort" title="保存分数和排序"><i class="fa fa-sort-amount-asc"></i> 保存</a>
 				<% if(hasPermi('businesstargettype:businessTargetType:edit')){ %>
-					<a href="${ctx}/businesstargettype/businessTargetType/form" class="btn btn-default btnTool" title="${text('新增指标分类')}"><i class="fa fa-plus"></i> ${text('新增')}</a>
+					<a href="${ctx}/businesstargettype/businessTargetType/form?checkPlanId=${businessCheckPlan.id}" class="btn btn-default btnTool" title="${text('新增目标分类')}"><i class="fa fa-plus"></i> ${text('新增')}</a>
 				<% } %>
 			</div>
 		</div>
 		<div class="box-body">
 			<#form:form id="searchForm" model="${businessTargetType}" action="${ctx}/businesstargettype/businessTargetType/listData" method="post" class="form-inline hide"
 					data-page-no="${parameter.pageNo}" data-page-size="${parameter.pageSize}" data-order-by="${parameter.orderBy}">
-				<div class="form-group">
-					<label class="control-label">${text('分类名称')}：</label>
+			<#form:hidden path="checkPlanId"/>
+			<div class="form-group">
+					<label class="control-label">${text('节点名称')}：</label>
 					<div class="control-inline">
-						<#form:input path="typeName" maxlength="255" class="form-control width-120"/>
+						<#form:input path="targetTypeName" maxlength="200" class="form-control width-120"/>
 					</div>
 				</div>
 				<div class="form-group">
-					<label class="control-label">${text('考核分类')}：</label>
+					<label class="control-label">${text('指标项分值')}：</label>
+					<div class="control-inline">
+						<#form:input path="targetTypeScore" maxlength="4" class="form-control width-120"/>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="control-label">${text('基础分类')}：</label>
 					<div class="control-inline width-120">
-						<#form:select path="type" dictType="business_target_type" blankOption="true" class="form-control"/>
+						<#form:select path="targetType" dictType="business_target_type" blankOption="true" class="form-control"/>
 					</div>
 				</div>
 				<div class="form-group">
 					<label class="control-label">${text('条线/警种')}：</label>
-					<div class="control-inline">
-						<#form:input path="policeType" maxlength="255" class="form-control width-120"/>
+					<div class="control-inline width-120">
+						<#form:select path="policeType" dictType="business_police_type" blankOption="true" class="form-control"/>
 					</div>
 				</div>
 				<div class="form-group">
@@ -40,12 +51,33 @@
 					</div>
 				</div>
 				<div class="form-group">
+					<label class="control-label">${text('状态')}：</label>
+					<div class="control-inline width-120">
+						<#form:select path="status" dictType="sys_search_status" blankOption="true" class="form-control"/>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="control-label">${text('创建时间')}：</label>
+					<div class="control-inline">
+						<#form:input path="createDate_gte" class="form-control width-60"/>
+						&nbsp;--&nbsp;
+						<#form:input path="createDate_lte" class="form-control width-60"/>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="control-label">${text('备注信息')}：</label>
+					<div class="control-inline">
+						<#form:input path="remarks" maxlength="500" class="form-control width-120"/>
+					</div>
+				</div>
+				<div class="form-group">
 					<button type="submit" class="btn btn-primary btn-sm">${text('查询')}</button>
 					<button type="reset" class="btn btn-default btn-sm">${text('重置')}</button>
 				</div>
 			</#form:form>
+			<#form:form id="dataGridForm" action="${ctx}/businesstargettype/businessTargetType/updateTreeSort" method="post">
 			<table id="dataGrid"></table>
-			<div id="dataGridPage"></div>
+			</#form:form>
 		</div>
 	</div>
 </div>
@@ -55,29 +87,106 @@
 $('#dataGrid').dataGrid({
 	searchForm: $("#searchForm"),
 	columnModel: [
-		{header:'${text("分类名称")}', name:'typeName', index:'a.type_name', width:150, align:"left", frozen:true, formatter: function(val, obj, row, act){
-			return '<a href="${ctx}/businesstargettype/businessTargetType/form?id='+row.id+'" class="btnList" data-title="${text("编辑指标分类")}">'+(val||row.id)+'</a>';
+		{header:'${text("节点名称")}', name:'targetTypeName', index:'a.target_type_name', width:300, align:"left", frozen:true, formatter: function(val, obj, row, act){
+			return '( '+row.targetTypeCode+' ) '+'<a href="${ctx}/businesstargettype/businessTargetType/form?targetTypeCode='+row.targetTypeCode+'" class="btnList" data-title="${text("编辑目标分类")}">'+(val||row.id)+'</a>';
 		}},
-		{header:'${text("考核分类")}', name:'type', index:'a.type', width:150, align:"center", formatter: function(val, obj, row, act){
+		{header:'${text("指标项分值")}', name:'targetTypeScore', index:'a.target_type_score', width:150, align:"center",formatter: function(val, obj, row, act){
+			var html = [];
+			var otherProps ="";
+			if(row.isTreeLeaf){
+				otherProps = ' onblur="ScoreCheck(\'' + row.targetTypeCode + '\', \''+ row.parentCode +'\',\''+ row.treeLevel + '\')" ';
+			}else{
+				otherProps = ' readonly="readonly" ';
+			}
+			html.push('<input name="targetTypeScores" type="text" id="' + row.targetTypeCode +'" class="required number" value="'+row.targetTypeScore +'"'+ otherProps +' style="width:50px;height:19px;margin:0;padding:0;text-align:center;border:1px solid #ddd">');
+			return html.join('');
+		}},
+		{header:'${text("基础分类")}', name:'targetType', index:'a.target_type', width:100, align:"center", formatter: function(val, obj, row, act){
 			return js.getDictLabel(${@DictUtils.getDictListJson('business_target_type')}, val, '${text("未知")}', true);
 		}},
-		{header:'${text("条线/警种")}', name:'policeType', index:'a.police_type', width:150, align:"left"},
-		{header:'${text("部门层级")}', name:'deptLevel', index:'a.dept_level', width:150, align:"center", formatter: function(val, obj, row, act){
+		{header:'${text("条线/警种")}', name:'policeType', index:'a.police_type', width:100, align:"center", formatter: function(val, obj, row, act){
+			return js.getDictLabel(${@DictUtils.getDictListJson('business_police_type')}, val, '${text("未知")}', true);
+		}},
+		{header:'${text("部门层级")}', name:'deptLevel', index:'a.dept_level', width:100, align:"center", formatter: function(val, obj, row, act){
 			return js.getDictLabel(${@DictUtils.getDictListJson('dept_level')}, val, '${text("未知")}', true);
 		}},
-		{header:'${text("更新时间")}', name:'updateDate', index:'a.update_date', width:150, align:"center"},
+		{header:'${text("状态")}', name:'status', index:'a.status', width:100, align:"center", formatter: function(val, obj, row, act){
+			return js.getDictLabel(${@DictUtils.getDictListJson('sys_search_status')}, val, '${text("未知")}', true);
+		}},
+		{header:'${text("本级排序号")}', name:'treeSort', index:'a.tree_sort', width:120, align:"center",formatter: function(val, obj, row, act){
+				var html = [];
+					html.push('<input type="hidden" name="ids" value="'+row.targetTypeCode+'"/>');
+					html.push('<input name="sorts" type="text" value="'+row.treeSort+'" style="width:50px;height:19px;margin:0;padding:0;text-align:center;border:1px solid #ddd">');
+				return html.join('');
+			}},
 		{header:'${text("操作")}', name:'actions', width:120, sortable:false, title:false, formatter: function(val, obj, row, act){
 			var actions = [];
 			<% if(hasPermi('businesstargettype:businessTargetType:edit')){ %>
-				actions.push('<a href="${ctx}/businesstargettype/businessTargetType/form?id='+row.id+'" class="btnList" title="${text("编辑指标分类")}"><i class="fa fa-pencil"></i></a>&nbsp;');
-				actions.push('<a href="${ctx}/businesstargettype/businessTargetType/delete?id='+row.id+'" class="btnList" title="${text("删除指标分类")}" data-confirm="${text("确认要删除该指标分类吗？")}"><i class="fa fa-trash-o"></i></a>&nbsp;');
+				actions.push('<a href="${ctx}/businesstargettype/businessTargetType/form?targetTypeCode='+row.targetTypeCode+'" class="btnList" title="${text("编辑目标分类")}"><i class="fa fa-pencil"></i></a>&nbsp;');
+				if (row.status == Global.STATUS_NORMAL){
+					actions.push('<a href="${ctx}/businesstargettype/businessTargetType/disable?targetTypeCode='+row.targetTypeCode+'" class="btnList" title="${text("停用目标分类")}" data-confirm="${text("确认要停用该目标分类吗？")}"><i class="glyphicon glyphicon-ban-circle"></i></a>&nbsp;');
+				}
+				if (row.status == Global.STATUS_DISABLE){
+					actions.push('<a href="${ctx}/businesstargettype/businessTargetType/enable?targetTypeCode='+row.targetTypeCode+'" class="btnList" title="${text("启用目标分类")}" data-confirm="${text("确认要启用该目标分类吗？")}"><i class="glyphicon glyphicon-ok-circle"></i></a>&nbsp;');
+				}
+				actions.push('<a href="${ctx}/businesstargettype/businessTargetType/delete?targetTypeCode='+row.targetTypeCode+'" class="btnList" title="${text("删除目标分类")}" data-confirm="${text("确认要删除该目标分类及所有子目标分类吗？")}" data-deltreenode="'+row.id+'"><i class="fa fa-trash-o"></i></a>&nbsp;');
+				actions.push('<a href="${ctx}/businesstargettype/businessTargetType/form?checkPlanId=${businessCheckPlan.id}&parentCode='+row.id+'" class="btnList" title="${text("新增下级目标分类")}"><i class="fa fa-plus-square"></i></a>&nbsp;');
 			<% } %>
 			return actions.join('');
 		}}
 	],
-	// 加载成功后执行事件
+	treeGrid: true,			// 启用树结构表格
+	defaultExpandLevel: 0,	// 默认展开的层次
+	expandNodeClearPostData: 'targetTypeName,checkPlanId,targetTypeScore,targetType,policeType,deptLevel,createDate,remarks,', // 展开节点清理请求参数数据（一般设置查询条件的字段属性，否则在查询后，不能展开子节点数据）	// 加载成功后执行事件
 	ajaxSuccess: function(data){
 		
 	}
 });
+</script>
+
+<script>
+	// 绑定更新排序按钮
+$('#btnUpdateSort').click(function(){
+	js.ajaxSubmitForm($("#dataGridForm"), function(data){
+		if(data.result == Global.TRUE){
+			$('#btnRefreshTree').click();
+		}
+		js.showMessage(data.message);
+	}, "json");
+
+   //保存时分数不平衡提示信息
+});
+
+function ScoreCheck(node, parent, treeLevel){
+	if( parent == null || parent == "" || parent == "0"){
+		//顶层指标不处理
+		if(treeLevel != '0'){
+			return;
+		}
+	}
+	var treeTotal = 0;
+	$(jsonData).each(function(index,item){
+		if(item.parentCode == parent){
+			var temp = $("input[id='"+ item.targetTypeCode + "']").val();
+			try{
+				treeTotal += parseFloat(temp);
+			}catch(e){}
+		}
+	});
+	//累加上级数据
+	var total = 0;
+	$("input[id='"+ parent + "']").val(treeTotal);
+	$(" td[aria-describedby='dataGrid_targetTypeScore']").find("input").not("[readonly='readonly']").each(function(index, con){
+		try{
+			total += parseFloat($(con).val());
+		}catch(e){}
+	});
+	/*
+	$("#totalScore").text( total )
+	if( total != 100){
+		$("#totalScore").addClass("text-danger");
+	}else{
+		$("#totalScore").removeClass("text-danger");
+	}*/
+}
 </script>

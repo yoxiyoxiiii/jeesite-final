@@ -3,7 +3,7 @@
 	<div class="box box-main">
 		<div class="box-header with-border">
 			<div class="box-title">
-				<i class="fa fa-list-alt"></i> ${text(businessTarget2.isNewRecord ? '新增指标' : '编辑指标')}
+				<i class="fa fa-list-alt"></i> ${text(businessTarget2.isNewRecord ? '新增考核细则' : '编辑考核细则')}
 			</div>
 			<div class="box-tools pull-right">
 				<button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
@@ -12,16 +12,17 @@
 		<#form:form id="inputForm" model="${businessTarget2}" action="${ctx}/businesstarget2/businessTarget2/save" method="post" class="form-horizontal">
 			<div class="box-body">
 				<div class="form-unit">${text('基本信息')}</div>
+				<#form:hidden path="businessTargetType.checkPlanId"/>
 				<#form:hidden path="id"/>
 				<div class="row">
 					<div class="col-xs-6">
 						<div class="form-group">
 							<label class="control-label col-sm-4" title="">
-								<span class="required hide">*</span> ${text('考核模板')}：<i class="fa icon-question hide"></i></label>
+								<span class="required hide">*</span> ${text('指标分类')}：<i class="fa icon-question hide"></i></label>
 							<div class="col-sm-8">
-								<#form:treeselect   model="${businessTarget2}" id="targetType" title="${text('考核模板')}"
+								<#form:treeselect   model="${businessTarget2}" id="targetType" title="${text('指标分类')}"
 								path="businessTargetType.targetTypeCode" labelPath="businessTargetType.targetTypeName"
-								url="${ctx}/businesstargettypetree/businessTargetTypeTree/treeData?excludeCode=${businessTargetType.id}&ctrlPermi=2"
+								url="${ctx}/businesstargettype/businessTargetType/treeData/${businessTarget2.businessTargetType.checkPlanId}?excludeCode=${businessTargetType.id}&ctrlPermi=2"
 								class="" allowClear="true" canSelectRoot="true" canSelectParent="true"/>
 							</div>
 						</div>
@@ -29,7 +30,7 @@
 					<div class="col-xs-6">
 						<div class="form-group">
 							<label class="control-label col-sm-4" title="">
-								<span class="required hide">*</span> ${text('考核周期')}：<i class="fa icon-question hide"></i></label>
+								<span class="required hide">*</span> ${text('采集周期')}：<i class="fa icon-question hide"></i></label>
 							<div class="col-sm-8">
 								<#form:select path="targetCheckCycle" dictType="target_check_cycle" blankOption="true" class="form-control" />
 							</div>
@@ -239,4 +240,12 @@ $("#inputForm").validate({
 		}, "json");
     }
 });
+
+$(function(){
+	$("#targetCheckCycle").change(function(){
+		$("#businessStageTarget2DataGridAddRowBtn").click();
+		$("#businessStageTarget2DataGridAddRowBtn").click();
+	});
+});
+
 </script>
