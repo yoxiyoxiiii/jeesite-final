@@ -101,8 +101,23 @@ public class BusinessTargetController extends BaseController {
 	@RequestMapping(value = "listData")
 	@ResponseBody
 	public Page<BusinessTarget2> listData(BusinessTarget2 businessTarget2, HttpServletRequest request, HttpServletResponse response) {
-		businessTarget2.setPage(new Page<>(request, response));
-		Page<BusinessTarget2> page = businessTarget2Service.findPage(businessTarget2);
+		String targetTypeCode = businessTarget2.getBusinessTargetType().getTargetTypeCode();
+		String pageNo = request.getParameter("pageNo");
+		String pageSize = request.getParameter("pageSize");
+		if (org.springframework.util.StringUtils.isEmpty(pageNo) && org.springframework.util.StringUtils.isEmpty(businessTarget2.getBusinessTargetType().getId())) {
+			businessTarget2.setPage(new Page<>(request, response));
+			return businessTarget2Service.findPage(businessTarget2);
+		}
+		int pNo = org.springframework.util.StringUtils.isEmpty(pageNo)?0:Integer.valueOf(pageNo)-1;
+		int pSize = org.springframework.util.StringUtils.isEmpty(pageSize)?20:Integer.valueOf(pageSize);
+		List<BusinessTarget2> pageList = businessTarget2Service.findByTypeCode(targetTypeCode, pNo,pSize);
+		pageList.forEach(item->{
+			Office office = new Office();
+			office.setOfficeName(item.getExecuteDepartment());
+			item.setExecuteDepartments(office);
+		});
+		Page<BusinessTarget2> page = new Page<>(request,response);
+		page.setList(pageList);
 		return page;
 	}
 

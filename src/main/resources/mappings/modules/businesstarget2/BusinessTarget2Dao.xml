@@ -31,4 +31,10 @@
         FROM ${sqlMap.table.toSql()}
         ORDER BY ${sqlMap.order.toSql()}
     </select>
+    <select id="findByTypeCodeByPage" resultType="com.jeesite.modules.entity.BusinessTarget2">
+        SELECT bt.*,o.office_code,o.office_name as executeDepartment
+        FROM   business_target bt
+        left join js_sys_office o on bt.target_execute_dep_id = o.office_code
+        where  target_type_id = #{targetTypeCode} limit #{pageNo},#{pageSize}
+    </select>
 </mapper>

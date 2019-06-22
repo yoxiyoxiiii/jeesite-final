@@ -6,6 +6,7 @@ package com.jeesite.modules.dao;
 import com.jeesite.common.dao.CrudDao;
 import com.jeesite.common.mybatis.annotation.MyBatisDao;
 import com.jeesite.modules.entity.BusinessTarget2;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
@@ -22,4 +23,8 @@ public interface BusinessTarget2Dao extends CrudDao<BusinessTarget2> {
     List<BusinessTarget2> findByTypeCode(String targetTypeCode);
 
     List<BusinessTarget2> findList();
+
+    List<BusinessTarget2> findByTypeCodeByPage(@Param(value = "targetTypeCode")String targetTypeCode,
+                                               @Param(value = "pageNo") Integer pageNo,
+                                               @Param(value = "pageSize")Integer pageSize);
 }
