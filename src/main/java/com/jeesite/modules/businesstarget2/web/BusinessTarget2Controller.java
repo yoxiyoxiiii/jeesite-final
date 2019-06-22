@@ -295,6 +295,9 @@ public class BusinessTarget2Controller extends BaseController {
 		if (allMatch) {//数据采集项都正确，再检测 公式是否能执行出结果
 			//替换中文后的公式,将所有的变量都 设置为1.
 			String expre = StringUtil.replaceChinese(targetResultExpression, "#");
+			//替换AND OR
+			if (expre.contains("AND")) {expre.replace("AND","&&");}
+			if (expre.contains("OR")) {expre.replace("OR","||");}
 			Interpreter bsh = new Interpreter();
 
 			//动态执行 计算公式

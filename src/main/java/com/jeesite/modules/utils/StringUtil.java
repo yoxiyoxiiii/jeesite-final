@@ -25,9 +25,19 @@ public class StringUtil {
 
     public static List<String> getChiness(String str) {
         List<String> result = new ArrayList<>();
-        String regEx = "[`~!@#$%^&*()+=|{}':;',\\[\\].<>/?~！@#￥%……&*（）——+|{}【】‘；：”“’。，、？-]";
-        String[] split = str.split(regEx);
-
+        StringBuffer stringBuffer = new StringBuffer();
+        char[] chars = str.toCharArray();
+        for (int i = 0;i<chars.length; i++) {
+            int x = chars[i];
+            if (x!=65310 && x!=65308) {//处理> <
+                stringBuffer.append(chars[i]);
+            }else {
+                x = x - 65248;
+                stringBuffer.append((char)x);
+            }
+        }
+        String regEx = "[/>=/,/<=/,`,~,!,@,#,$%^&*()+,=|{}':;',\\[\\]./>/,/</,/?~！@#￥%……&*（）——+|{}【】‘；：”“’。，、？>= <= - \"\\\\\",\"$\",\"(\",\")\",\"*\",\"+\",\".\",\"[\", \"]\",\"?\",\"^\",\"{\",\"}\",\"|\",\"'\",\"%\"]";
+        String[] split = stringBuffer.toString().split(regEx);
         //是否是中文
         String reg = "[\u4e00-\u9fa5]";
         Pattern pat = Pattern.compile(reg);
@@ -41,8 +51,12 @@ public class StringUtil {
     }
 
     public static void main(String[] args) {
-        String item = "(100-数据次啊及)*数据";
-        List<String> chiness = getChiness(item);
-        System.out.println(chiness);
+//        String item = "(100-数据次啊及)*数据";
+////        List<String> chiness = getChiness(item);
+////        System.out.println(chiness);
+////
+
+        String text = "if(鸟>0)".replaceAll(">","");
+        System.out.println(text);
     }
 }

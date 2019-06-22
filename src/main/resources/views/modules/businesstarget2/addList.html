@@ -182,8 +182,7 @@ $("#check").click(function () {
 	var  id = $("#businessTargetId").val();
 	console.log(expr);
 	$.getJSON("check",{targetResultExpression:expr,businessTargetId:id},function (data) {
-		console.log(data);
-		js.showErrorMessage("计算公式有错");
+		js.showErrorMessage(data.message);
 	});
 });
 </script>
