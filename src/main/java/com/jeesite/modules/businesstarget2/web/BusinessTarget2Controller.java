@@ -14,7 +14,6 @@ import com.jeesite.common.mapper.JsonMapper;
 import com.jeesite.common.web.BaseController;
 import com.jeesite.modules.businesscheckplan.entity.BusinessCheckPlan;
 import com.jeesite.modules.businesscheckplan.service.BusinessCheckPlanService;
-import com.jeesite.modules.businesstarget.entity.BusinessTarget;
 import com.jeesite.modules.businesstarget2.entity.BusinessTarget2;
 import com.jeesite.modules.businesstarget2.entity.BusinessTargetDataItem2;
 import com.jeesite.modules.businesstarget2.service.BusinessTarget2Service;
@@ -218,7 +217,7 @@ public class BusinessTarget2Controller extends BaseController {
 	}
 
 	@RequestMapping({"listSelect"})
-	public String listSelect(BusinessTarget businessTarget, String selectData, Model model) {
+	public String listSelect(BusinessTarget2 businessTarget, String selectData, Model model) {
 		String selectDataJson = EncodeUtils.decodeUrl(selectData);
 		if (JsonMapper.fromJson(selectDataJson, Map.class) != null) {
 			model.addAttribute("selectData", selectDataJson);

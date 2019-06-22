@@ -8,8 +8,8 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.jeesite.common.codec.EncodeUtils;
 import com.jeesite.common.mapper.JsonMapper;
-import com.jeesite.modules.businesstarget.entity.BusinessTarget;
-import com.jeesite.modules.businesstarget.service.BusinessTargetService;
+import com.jeesite.modules.businesstarget2.entity.BusinessTarget2;
+import com.jeesite.modules.businesstarget2.service.BusinessTarget2Service;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -42,7 +42,7 @@ public class StageTargetController extends BaseController {
 	private StageTargetService stageTargetService;
 
 	@Autowired
-	private BusinessTargetService businessTargetService;
+	private BusinessTarget2Service businessTargetService;
 	
 	/**
 	 * 获取数据
@@ -79,10 +79,10 @@ public class StageTargetController extends BaseController {
 	 */
 	@RequiresPermissions("stagetarget:stagetarget:stageTarget:view")
 	@RequestMapping(value = "form")
-	public String form(StageTarget stageTarget, BusinessTarget businessTarget, Model model) {
+	public String form(StageTarget stageTarget, BusinessTarget2 businessTarget, Model model) {
 
 
-		List<BusinessTarget> businessTargetList = businessTargetService.findList(businessTarget);
+		List<BusinessTarget2> businessTargetList = businessTargetService.findList(businessTarget);
 		if (businessTargetList.size() == 0) {
 			businessTargetService.findList();
 		}

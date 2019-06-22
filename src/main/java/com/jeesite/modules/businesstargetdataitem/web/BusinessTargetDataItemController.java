@@ -8,8 +8,8 @@ import com.jeesite.common.config.Global;
 import com.jeesite.common.entity.Page;
 import com.jeesite.common.mapper.JsonMapper;
 import com.jeesite.common.web.BaseController;
-import com.jeesite.modules.businesstarget.entity.BusinessTarget;
-import com.jeesite.modules.businesstarget.service.BusinessTargetService;
+import com.jeesite.modules.businesstarget2.entity.BusinessTarget2;
+import com.jeesite.modules.businesstarget2.service.BusinessTarget2Service;
 import com.jeesite.modules.businesstargetdataitem.entity.BusinessTargetDataItem;
 import com.jeesite.modules.businesstargetdataitem.service.BusinessTargetDataItemService;
 import com.jeesite.modules.stagetarget.entity.stagetarget.StageTarget;
@@ -39,7 +39,7 @@ public class BusinessTargetDataItemController extends BaseController {
 	private BusinessTargetDataItemService businessTargetDataItemService;
 
 	@Autowired
-	private BusinessTargetService businessTargetService;
+	private BusinessTarget2Service businessTargetService;
 
 	@Autowired
 	private StageTargetService stageTargetService;
@@ -79,14 +79,14 @@ public class BusinessTargetDataItemController extends BaseController {
 	 */
 	@RequiresPermissions("businesstargetdataitem:businessTargetDataItem:view")
 	@RequestMapping(value = "form")
-	public String form(BusinessTargetDataItem businessTargetDataItem, String stageId, BusinessTarget businessTarget, StageTarget stageTarget, Model model) {
+	public String form(BusinessTargetDataItem businessTargetDataItem, String stageId, BusinessTarget2 businessTarget, StageTarget stageTarget, Model model) {
 		if (stageId != null) {
 			stageTarget = stageTargetService.get(stageId);
 			businessTargetDataItem.setStageTargets(stageTarget);
 			model.addAttribute("businessTargetDataItem", businessTargetDataItem);
 			return "modules/businesstargetdataitem/businessTargetDataItemFormHasStageTarget";
 		}
-		List<BusinessTarget> businessTargetList = businessTargetService.findList(businessTarget);
+		List<BusinessTarget2> businessTargetList = businessTargetService.findList(businessTarget);
 		List<StageTarget> stageTargetList = stageTargetService.findList(stageTarget);
 		if (businessTargetList.size() == 0) {
 			businessTargetList = businessTargetService.findList();
@@ -158,7 +158,7 @@ public class BusinessTargetDataItemController extends BaseController {
 	}
 
 	@RequestMapping({"listSelect"})
-	public String listSelect(BusinessTarget businessTarget, String selectData, Model model) {
+	public String listSelect(BusinessTarget2 businessTarget, String selectData, Model model) {
 		String selectDataJson = EncodeUtils.decodeUrl(selectData);
 		if (JsonMapper.fromJson(selectDataJson, Map.class) != null) {
 			model.addAttribute("selectData", selectDataJson);

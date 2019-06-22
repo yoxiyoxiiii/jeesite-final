@@ -5,7 +5,7 @@ package com.jeesite.modules.businesstargetdataitem.service;
 
 import java.util.List;
 
-import com.jeesite.modules.businesstarget.entity.BusinessTarget;
+import com.jeesite.modules.businesstarget2.entity.BusinessTarget2;
 import com.jeesite.modules.stagetarget.service.stagetarget.StageTargetService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -57,7 +57,7 @@ public class BusinessTargetDataItemService extends CrudService<BusinessTargetDat
 	@Transactional(readOnly=false)
 	public void save(BusinessTargetDataItem businessTargetDataItem) {
 		String stageId = businessTargetDataItem.getStagetargetId();
-		BusinessTarget businessTargets = stageTargetService.get(stageId).getBusinessTargets();
+		BusinessTarget2 businessTargets = stageTargetService.get(stageId).getBusinessTargets();
 		businessTargetDataItem.setTargetId(businessTargets);
 		super.save(businessTargetDataItem);
 		// 保存上传图片

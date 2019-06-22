@@ -4,7 +4,7 @@
 package com.jeesite.modules.businesstargetdataitem.entity;
 
 import com.jeesite.common.mybatis.annotation.JoinTable;
-import com.jeesite.modules.businesstarget.entity.BusinessTarget;
+import com.jeesite.modules.businesstarget2.entity.BusinessTarget2;
 import com.jeesite.modules.stagetarget.entity.stagetarget.StageTarget;
 import lombok.Getter;
 import lombok.Setter;
@@ -31,9 +31,9 @@ import com.jeesite.common.mybatis.mapper.query.QueryType;
 		@Column(name="create_date", attrName="createDate", label="创建时间", isUpdate=false, isQuery=false),
 		@Column(name="update_date", attrName="updateDate", label="更新时间", isQuery=false),
 	}, joinTable = {
-		@JoinTable(type = JoinTable.Type.LEFT_JOIN, entity = BusinessTarget.class, alias = "businessTargets",
+		@JoinTable(type = JoinTable.Type.LEFT_JOIN, entity = BusinessTarget2.class, alias = "businessTargets",
 				on = "businessTargets.id = a.target_id", attrName = "businessTargets",
-				columns = {@Column(includeEntity = BusinessTarget.class)}),
+				columns = {@Column(includeEntity = BusinessTarget2.class)}),
 		@JoinTable(type = JoinTable.Type.LEFT_JOIN, entity = StageTarget.class, alias = "stageTargets",
 				on = "stageTargets.id = a.stage_target_id", attrName = "stageTargets",
 				columns = {@Column(includeEntity = StageTarget.class)}),
@@ -43,7 +43,7 @@ import com.jeesite.common.mybatis.mapper.query.QueryType;
 public class BusinessTargetDataItem extends DataEntity<BusinessTargetDataItem> {
 	
 	private static final long serialVersionUID = 1L;
-	private BusinessTarget businessTargets;		// 上级目标
+	private BusinessTarget2 businessTargets;		// 上级目标
 	private StageTarget stageTargets;		// 阶段目标
 	private String itemName;		// 采集数据项
 	private Integer itemWeight;		// 数据项权重
@@ -61,11 +61,11 @@ public class BusinessTargetDataItem extends DataEntity<BusinessTargetDataItem> {
 		super(id);
 	}
 	
-	public BusinessTarget getBusinessTargets() {
+	public BusinessTarget2 getBusinessTargets() {
 		return businessTargets;
 	}
 
-	public void setTargetId(BusinessTarget businessTargets) {
+	public void setTargetId(BusinessTarget2 businessTargets) {
 		this.businessTargets = businessTargets;
 	}
 	

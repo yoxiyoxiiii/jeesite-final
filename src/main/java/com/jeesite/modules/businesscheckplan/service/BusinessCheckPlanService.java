@@ -7,10 +7,8 @@ import com.jeesite.common.entity.Page;
 import com.jeesite.common.service.CrudService;
 import com.jeesite.modules.businesscheckplan.dao.BusinessCheckPlanDao;
 import com.jeesite.modules.businesscheckplan.entity.BusinessCheckPlan;
-import com.jeesite.modules.businesschecktemplateinfo.service.BusinessCheckTemplateInfoService;
 import com.jeesite.modules.businessjob.entity.BusinessJob;
 import com.jeesite.modules.businessjob.service.BusinessJobService;
-import com.jeesite.modules.businesstarget.service.BusinessTargetService;
 import com.jeesite.modules.businesstarget2.entity.BusinessTarget2;
 import com.jeesite.modules.businesstarget2.service.BusinessTarget2Service;
 import com.jeesite.modules.businesstargettype.entity.BusinessTargetType;
@@ -41,10 +39,8 @@ public class BusinessCheckPlanService extends CrudService<BusinessCheckPlanDao, 
 	private BusinessJobService businessJobService;
 
 	@Autowired
-	private BusinessTargetService businessTargetService;
+	private BusinessTarget2Service businessTargetService;
 
-	@Autowired
-	private BusinessCheckTemplateInfoService businessCheckTemplateInfoService;
 
 
 	/**
