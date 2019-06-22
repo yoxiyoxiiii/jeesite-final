@@ -18,6 +18,7 @@ import com.jeesite.modules.service.BusinessTarget2Service;
 import com.jeesite.modules.service.BusinessTargetDataItemService;
 import com.jeesite.modules.service.BusinessTargetTypeService;
 import com.jeesite.modules.sys.entity.Office;
+import com.jeesite.modules.sys.service.DictDataService;
 import com.jeesite.modules.sys.service.OfficeService;
 import com.jeesite.modules.utils.StringUtil;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
@@ -55,6 +56,9 @@ public class BusinessTargetController extends BaseController {
 
 	@Autowired
 	private BusinessCheckPlanService businessCheckPlanService;
+	//数据库字典
+	@Autowired
+	private DictDataService dictDataService;
 	/**
 	 * 获取数据
 	 */
@@ -86,6 +90,7 @@ public class BusinessTargetController extends BaseController {
 		businessTargetType.setCheckPlanId(checkPlanId);
 		businessTarget2.setBusinessTargetType(businessTargetType);
 		model.addAttribute("businessTarget2", businessTarget2);
+		model.addAttribute("checkPlanId", checkPlanId);
 		return "modules/businesstarget2/businessTarget2List";
 	}
 	
@@ -134,7 +139,12 @@ public class BusinessTargetController extends BaseController {
 				office.setViewCode(office.getParent().getViewCode() + "001");
 			}
 		}
+		BusinessCheckPlan businessCheckPlan = businessCheckPlanService.get(checkPlanId);
+		String checkCycle = businessCheckPlan.getCheckCycle();
+		//得到考核周期对应的 周
+
 		model.addAttribute("office", office);
+		model.addAttribute("checkCycle", checkCycle);
 
 		return "modules/businesstarget2/businessTarget2Form";
 	}
@@ -168,7 +178,11 @@ public class BusinessTargetController extends BaseController {
 	@RequiresPermissions("businesstarget2:businessTarget2:edit")
 	@PostMapping(value = "save")
 	@ResponseBody
-	public String save(@Validated BusinessTarget2 businessTarget2) {
+	public String save(@Validated BusinessTarget2 businessTarget2, String checkCycle) {
+		//数据采集周期
+		String targetCheckCycle = businessTarget2.getTargetCheckCycle();
+		int stages = Integer.valueOf(checkCycle)/Integer.valueOf(targetCheckCycle);
+		if(businessTarget2.getBusinessStageTarget2List().size() != stages){return renderResult(Global.FALSE, text("阶段目标期数错误："+stages)); }
 		businessTarget2.setExpressionStatus(0);//设置公式状态：未设置公式
 		if(businessTarget2.getTargetScore().doubleValue()<=0) {return renderResult(Global.FALSE, text("单位分值不合理！"));}
 		if(org.springframework.util.StringUtils.isEmpty(businessTarget2.getExecuteDepartments().getId())) {return renderResult(Global.FALSE, text("执行部门未设置！"));}

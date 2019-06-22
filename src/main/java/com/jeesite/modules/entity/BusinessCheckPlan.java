@@ -36,7 +36,7 @@ import java.util.Date;
 		@Column(name="plan_check_user_id", attrName="planCheckUser.userCode", label="负责人"),
 		@Column(name="plan_duty_user_id", attrName="planDutyUser.userCode", label="责任人"),
 		@Column(name="plan_work_results", attrName="planWorkResults", label="工作成果"),
-		@Column(name="check_cycle", attrName="check_cycle", label="考核周期"),
+		@Column(name="check_cycle", attrName="checkCycle", label="考核周期"),
 		@Column(name="plan_key", attrName="planKey", label="关键措施分析"),
 		@Column(name="plan_status", attrName="planStatus", label="状态"),
 		@Column(name="plan_weight", attrName="planWeight", label="权重%"),
@@ -83,6 +83,9 @@ public class BusinessCheckPlan extends DataEntity<BusinessCheckPlan> {
 	private String planKey;		// 关键措施分析
 	private Integer planStatus;		// 状态
 	private Integer planWeight;		// 权重%
+	@Getter
+	@Setter
+	private String checkCycle;		// 考核周期
 	@Getter
 	@Setter
 	private Integer isUpdate;		// isUpdate

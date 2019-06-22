@@ -9,8 +9,8 @@ import com.jeesite.common.idgen.IdGen;
 import com.jeesite.common.lang.StringUtils;
 import com.jeesite.common.web.BaseController;
 import com.jeesite.modules.entity.BusinessCheckPlan;
-import com.jeesite.modules.service.BusinessCheckPlanService;
 import com.jeesite.modules.entity.BusinessTargetType;
+import com.jeesite.modules.service.BusinessCheckPlanService;
 import com.jeesite.modules.service.BusinessTargetTypeService;
 import com.jeesite.modules.sys.utils.UserUtils;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
@@ -223,6 +223,26 @@ public class BusinessTargetTypeController extends BaseController {
 			map.put("id", e.getId());
 			map.put("pId", e.getParentCode());
 			map.put("name", StringUtils.getTreeNodeName(isShowCode, e.getTargetTypeCode(), e.getTargetTypeName()));
+			mapList.add(map);
+		}
+		return mapList;
+	}
+
+	@RequestMapping(value = "tree")
+	@ResponseBody
+	public List<Map<String, Object>> tree() {
+		List<Map<String, Object>> mapList = ListUtils.newArrayList();
+		List<BusinessTargetType> list = businessTargetTypeService.findList(new BusinessTargetType());
+		for (int i=0; i<list.size(); i++){
+			BusinessTargetType e = list.get(i);
+			// 过滤非正常的数据
+			if (!BusinessTargetType.STATUS_NORMAL.equals(e.getStatus())){
+				continue;
+			}
+			Map<String, Object> map = MapUtils.newHashMap();
+			map.put("id", e.getId());
+			map.put("pId", e.getParentCode());
+			map.put("name", StringUtils.getTreeNodeName(null,e.getTargetTypeCode(), e.getTargetTypeName()));
 			mapList.add(map);
 		}
 		return mapList;

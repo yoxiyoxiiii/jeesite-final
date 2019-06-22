@@ -82,18 +82,5 @@ $('#btnRefresh').click(function(){
 function page(){
 	win.page();
 }
-function addHoverDom(treeId, treeNode) {
-	var sObj = $("#" + treeNode.tId + "_span");
-	if (treeNode.editNameFlag || $("#addBtn_"+treeNode.id).length>0) return;
-	var addStr = "<span class='button add' id='addBtn_" + treeNode.id
-			+ "' title='add node' onfocus='this.blur();'></span>";
-	sObj.after(addStr);
-	var btn = $("#addBtn_"+treeNode.id);
-	if (btn) btn.bind("click", function(){
-		var zTree = $.fn.zTree.getZTreeObj("tree");
-		zTree.addNodes(treeNode, {name:"市公安局部门", pId:treeNode.id, id:"new node",title:"绵阳市公安局市局部门x"});
-		return false;
-	});
-}
 
 </script>

@@ -28,7 +28,7 @@ import java.util.List;
 @Table(name="business_target", alias="a", columns={
 		@Column(name="id", attrName="id", label="id", isPK=true),
 		@Column(name="target_name", attrName="targetName", label="指标名称", queryType=QueryType.LIKE),
-		@Column(name="target_type_id", attrName="businessTargetType.id", label="关联分类ID"),
+		@Column(name="target_type_id", attrName="businessTargetType.targetTypeCode", label="关联分类ID"),
 		@Column(name="target_check_cycle", attrName="targetCheckCycle", label="目标考核周期 周、半月、月、季度、半年、年 ，定时任务关联"),
 		@Column(name="target_check_basic", attrName="targetCheckBasic", label="考核依据"),
 		@Column(name="target_content", attrName="targetContent", label="考核细则"),
@@ -60,7 +60,7 @@ import java.util.List;
 public class BusinessTarget2 extends DataEntity<BusinessTarget2> {
 	
 	private static final long serialVersionUID = 1L;
-	@NotNull(message = "考核细则名称必填!")
+//	@NotNull(message = "考核细则名称必填!")
 	private String targetName;		// 指标名称
 	@NotNull(message = "考核周期必填!")
 	private String targetCheckCycle;		// 目标考核周期 周、半月、月、季度、半年、年 ，定时任务关联
