@@ -17,9 +17,9 @@
 					<div class="col-xs-6">
 						<div class="form-group">
 							<label class="control-label col-sm-4" title="">
-								<span class="required hide">*</span> ${text('考核模板')}：<i class="fa icon-question hide"></i></label>
+								<span class="required hide">*</span> ${text('考核分类')}：<i class="fa icon-question hide"></i></label>
 							<div class="col-sm-8">
-								<#form:treeselect  id="targetType" title="${text('考核模板')}"
+								<#form:treeselect  id="targetType" title="${text('考核分类')}"
 								path="businessTargetType.targetTypeCode" labelPath="businessTargetType.targetTypeName"
 								url="${ctx}/businessTargetType/businessTargetType/treeData?ctrlPermi=2"
 								class="" allowClear="true" canSelectRoot="true" canSelectParent="true"/>
@@ -49,15 +49,24 @@
 					<div class="col-xs-6">
 						<div class="form-group">
 							<label class="control-label col-sm-4" title="">
-								<span class="required hide">*</span> ${text('开始时间')}：<i class="fa icon-question hide"></i></label>
+								<span class="required hide">*</span> ${text('考核周期')}：<i class="fa icon-question hide"></i></label>
 							<div class="col-sm-8">
-								<#form:input path="planStartTime" readonly="true" maxlength="20" class="form-control Wdate"
-									dataFormat="datetime" onclick="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm',isShowClear:true});"/>
+								<#form:select path="checkCycle" dictType="target_check_cycle" blankOption="true" class="form-control" />
 							</div>
 						</div>
 					</div>
 				</div>
 				<div class="row">
+					<div class="col-xs-6">
+						<div class="form-group">
+							<label class="control-label col-sm-4" title="">
+								<span class="required hide">*</span> ${text('开始时间')}：<i class="fa icon-question hide"></i></label>
+							<div class="col-sm-8">
+								<#form:input path="planStartTime" readonly="true" maxlength="20" class="form-control Wdate"
+								dataFormat="datetime" onclick="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm',isShowClear:true});"/>
+							</div>
+						</div>
+					</div>
 					<div class="col-xs-6">
 						<div class="form-group">
 							<label class="control-label col-sm-4" title="">
@@ -68,18 +77,18 @@
 							</div>
 						</div>
 					</div>
+				</div>
+				<div class="row">
 					<div class="col-xs-6">
 						<div class="form-group">
 							<label class="control-label col-sm-4" title="">
 								<span class="required hide">*</span> ${text('评分开始时间')}：<i class="fa icon-question hide"></i></label>
 							<div class="col-sm-8">
 								<#form:input path="planScoringStartTime" readonly="true" maxlength="20" class="form-control Wdate"
-									dataFormat="datetime" onclick="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm',isShowClear:true});"/>
+								dataFormat="datetime" onclick="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm',isShowClear:true});"/>
 							</div>
 						</div>
 					</div>
-				</div>
-				<div class="row">
 					<div class="col-xs-6">
 						<div class="form-group">
 							<label class="control-label col-sm-4" title="">
@@ -88,18 +97,6 @@
 								<#form:input path="planScoringEndTime" readonly="true" maxlength="20" class="form-control Wdate"
 									dataFormat="datetime" onclick="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm',isShowClear:true});"/>
 							</div>
-						</div>
-					</div>
-					<div class="col-xs-6">
-						<div class="form-group">
-							<label class="control-label col-sm-4" title="">
-								<span class="required hide">*</span> ${text('负责人')}：<i class="fa icon-question hide"></i></label>
-							<div class="col-sm-8">
-								<#form:listselect id="planCheckUserIdselect" title="负责人"
-								url="${ctx}/sys/user/userSelect" allowClear="false"
-								path="planCheckUser.userCode"  labelPath="planCheckUser.userName" value= "userCode" checkbox="false" itemCode="userCode" itemName="userName"/>
-							</div>
-
 						</div>
 					</div>
 				</div>
@@ -112,6 +109,17 @@
 								<#form:listselect id="planDutyUserIdSelect" title="责任人"
 								url="${ctx}/sys/user/userSelect" allowClear="false"
 								path="planDutyUser.userCode"  labelPath="planDutyUser.userName" name="planDutyUserCode" value= "userCode" checkbox="false" itemCode="userCode" itemName="userName"/>
+							</div>
+						</div>
+					</div>
+					<div class="col-xs-6">
+						<div class="form-group">
+							<label class="control-label col-sm-4" title="">
+								<span class="required hide">*</span> ${text('负责人')}：<i class="fa icon-question hide"></i></label>
+							<div class="col-sm-8">
+								<#form:listselect id="planCheckUserIdselect" title="负责人"
+								url="${ctx}/sys/user/userSelect" allowClear="false"
+								path="planCheckUser.userCode"  labelPath="planCheckUser.userName" value= "userCode" checkbox="false" itemCode="userCode" itemName="userName"/>
 							</div>
 						</div>
 					</div>
