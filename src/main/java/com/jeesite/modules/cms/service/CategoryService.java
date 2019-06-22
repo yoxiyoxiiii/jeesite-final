@@ -10,12 +10,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.jeesite.common.collect.ListUtils;
-import com.jeesite.common.entity.Page;
 import com.jeesite.common.lang.StringUtils;
 import com.jeesite.common.service.TreeService;
 import com.jeesite.modules.cms.entity.Category;
 import com.jeesite.modules.cms.utils.CmsUtils;
-import com.jeesite.modules.cms.dao.CategoryDao;
+import com.jeesite.modules.dao.CategoryDao;
 import com.jeesite.modules.file.utils.FileUploadUtils;
 import com.jeesite.modules.sys.entity.Role;
 

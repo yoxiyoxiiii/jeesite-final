@@ -3,8 +3,6 @@
  */
 package com.jeesite.modules.cms.service;
 
-import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -15,7 +13,7 @@ import com.jeesite.modules.cms.entity.Article;
 import com.jeesite.modules.cms.entity.Category;
 import com.jeesite.modules.cms.entity.Site;
 import com.jeesite.modules.cms.utils.CmsUtils;
-import com.jeesite.modules.cms.dao.SiteDao;
+import com.jeesite.modules.dao.SiteDao;
 import com.jeesite.modules.file.utils.FileUploadUtils;
 
 /**

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.jeesite.modules.businessjob.dao.BusinessJobDao">
+<mapper namespace="com.jeesite.modules.dao.BusinessJobDao">
 	
 	<!-- 查询数据
 	<select id="findList" resultType="BusinessJob">
@@ -12,7 +12,7 @@
 		ORDER BY ${sqlMap.order.toSql()}
 	</select> -->
 
-    <select id="findByBusinessCheckPlanId" resultType="com.jeesite.modules.businessjob.entity.BusinessJob">
+    <select id="findByBusinessCheckPlanId" resultType="com.jeesite.modules.entity.BusinessJob">
         SELECT *
         FROM business_job
         where plan_id = #{businessCheckPlanId}

@@ -3,7 +3,6 @@
  */
 package com.jeesite.modules.cms.service;
 
-import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,9 +14,8 @@ import com.jeesite.common.lang.StringUtils;
 import com.jeesite.common.service.CrudService;
 import com.jeesite.modules.cms.entity.Article;
 import com.jeesite.modules.cms.entity.ArticleData;
-import com.jeesite.modules.cms.entity.Category;
-import com.jeesite.modules.cms.dao.ArticleDao;
-import com.jeesite.modules.cms.dao.ArticleDataDao;
+import com.jeesite.modules.dao.ArticleDao;
+import com.jeesite.modules.dao.ArticleDataDao;
 import com.jeesite.modules.file.utils.FileUploadUtils;
 
 /**
