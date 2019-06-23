@@ -88,7 +88,20 @@ public class BusinessTargetTaskMonitorController extends BaseController {
 	@RequiresPermissions("businesstargettaskmonitor:businessTargetTaskMonitor:view")
 	@RequestMapping(value = {"list", ""})
 	public String list(BusinessTargetTaskMonitor businessTargetTaskMonitor, Model model) {
+		//统计考核的部门总数
+		long countDept = businessTargetTaskMonitorService.countDept();
+		//统计完成上报数据的部门数
+		long countCompleteDept = businessTargetTaskMonitorService.countCompleteDept("3");
+		//统计上报的总的数据项
+		long countUpDataItem = businessTargetTaskMonitorService.countUpDataItem();
+		//统计完成上报的数据项
+		long countCompleteDataItem = businessTargetTaskMonitorService.countCompleteDataItem();
+
 		model.addAttribute("businessTargetTaskMonitor", businessTargetTaskMonitor);
+		model.addAttribute("countDept", countDept);
+		model.addAttribute("countCompleteDept", countCompleteDept);
+		model.addAttribute("countUpDataItem", countUpDataItem);
+		model.addAttribute("countCompleteDataItem", countCompleteDataItem);
 		return "modules/businesstargettaskmonitor/businessTargetTaskMonitorList";
 	}
 	
