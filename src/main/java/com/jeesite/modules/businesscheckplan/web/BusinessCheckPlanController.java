@@ -90,14 +90,19 @@ public class BusinessCheckPlanController extends BaseController {
 	@PostMapping(value = "save")
 	@ResponseBody
 	public String save(@Validated BusinessCheckPlan businessCheckPlan) {
+		//只要修改过,就重走流程
+		businessCheckPlan.setStatus( BusinessCheckPlan.STATUS_DRAFT);
+		businessCheckPlanService.updateStatus(businessCheckPlan);
+
 		businessCheckPlan.setPlanStatus(1);//未启动
+		/*  sanye: 必填项应该在实体里面约束
 		String targetTypeCode = businessCheckPlan.getBusinessTargetType().getTargetTypeCode();
 		List<BusinessTarget2> businessTarget2List = businessTarget2Service.findByTypeCode(targetTypeCode);
 		if (StringUtils.isEmpty(businessTarget2List) || businessTarget2List.size() == 0) {return renderResult(Global.FALSE, text("该考核模板下不存在考核细则或模板层级错误!")); }
 		if (StringUtils.isEmpty(targetTypeCode)) {return renderResult(Global.FALSE, text("考核模板必填!"));}
 		if (StringUtils.isEmpty(businessCheckPlan.getPlanCheckUser().getUserCode())) {return renderResult(Global.FALSE, text("负责人必填!"));}
 		if (StringUtils.isEmpty(businessCheckPlan.getPlanDutyUser().getUserCode())) {return renderResult(Global.FALSE, text("责任人必填!"));}
-
+		*/
 		businessCheckPlanService.save(businessCheckPlan);
 		return renderResult(Global.TRUE, text("保存考核计划成功！"));
 	}
@@ -109,7 +114,8 @@ public class BusinessCheckPlanController extends BaseController {
 	@RequestMapping(value = "disable")
 	@ResponseBody
 	public String disable(BusinessCheckPlan businessCheckPlan) {
-		businessCheckPlan.setPlanStatus(5);
+		businessCheckPlan.setStatus(BusinessCheckPlan.STATUS_DISABLE);
+		businessCheckPlanService.updateStatus(businessCheckPlan);
 		businessCheckPlanService.stop(businessCheckPlan);
 		return renderResult(Global.TRUE, text("停用考核计划成功"));
 	}
@@ -122,7 +128,8 @@ public class BusinessCheckPlanController extends BaseController {
 	@RequestMapping(value = "enable")
 	@ResponseBody
 	public String enable(BusinessCheckPlan businessCheckPlan) throws ClassNotFoundException, SchedulerException {
-		businessCheckPlan.setPlanStatus(2);
+		businessCheckPlan.setStatus(BusinessCheckPlan.STATUS_NORMAL);
+		businessCheckPlanService.updateStatus(businessCheckPlan);	
 		businessCheckPlanService.start(businessCheckPlan);
 		return renderResult(Global.TRUE, text("启用考核计划成功"));
 	}
@@ -148,6 +155,18 @@ public class BusinessCheckPlanController extends BaseController {
 		return "modules/businesscheckplan/listSelect";
 	}
 
+	/**
+	 * 审批奖扣类型
+	 */
+	@RequiresPermissions("businesscheckplan:businessCheckPlan:edit")
+	@RequestMapping(value = "audit")
+	@ResponseBody
+	public String audit(BusinessCheckPlan businessCheckPlan, String status) {
+		businessCheckPlan.setStatus(status);
+		businessCheckPlanService.updateStatus(businessCheckPlan);
+		return renderResult(Global.TRUE, text("考核计划流程操作成功"));
+		//todo:流程状态需要内部控制
+	}
 
 
 }

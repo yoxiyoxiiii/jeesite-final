@@ -80,8 +80,7 @@ public class BusinessCheckPlanService extends CrudService<BusinessCheckPlanDao, 
 	@Override
 	@Transactional(readOnly=false)
 	public void updateStatus(BusinessCheckPlan businessCheckPlan) {
-//		super.updateStatus(businessCheckPlan);
-		super.dao.update(businessCheckPlan);
+		super.updateStatus(businessCheckPlan);
 	}
 
 	/**
@@ -90,7 +89,7 @@ public class BusinessCheckPlanService extends CrudService<BusinessCheckPlanDao, 
 	 */
 	@Transactional(readOnly=false,rollbackFor = Exception.class,propagation = Propagation.REQUIRED)
 	public void start(BusinessCheckPlan businessCheckPlan) throws SchedulerException, ClassNotFoundException {
-		this.updateStatus(businessCheckPlan);
+		//this.updateStatus(businessCheckPlan);
 		addJob(businessCheckPlan);//一个考核计划一个job
 	}
 
@@ -121,7 +120,7 @@ public class BusinessCheckPlanService extends CrudService<BusinessCheckPlanDao, 
 	 */
 	@Transactional(readOnly=false,rollbackFor = Exception.class,propagation = Propagation.REQUIRED)
 	public void stop(BusinessCheckPlan businessCheckPlan)  {
-		this.updateStatus(businessCheckPlan);
+		//this.updateStatus(businessCheckPlan);
 		List<BusinessJob> businessJobs = businessJobService.findByBusinessCheckPlanId(businessCheckPlan.getId());
 		businessJobs.forEach(businessJob -> {
 			businessJobService.delete(businessJob);

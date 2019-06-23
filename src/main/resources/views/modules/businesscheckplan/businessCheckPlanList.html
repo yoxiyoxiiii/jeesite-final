@@ -16,9 +16,9 @@
 			<#form:form id="searchForm" model="${businessCheckPlan}" action="${ctx}/businesscheckplan/businessCheckPlan/listData" method="post" class="form-inline hide"
 					data-page-no="${parameter.pageNo}" data-page-size="${parameter.pageSize}" data-order-by="${parameter.orderBy}">
 				<div class="form-group">
-					<label class="control-label">${text('模板')}：</label>
-					<div class="control-inline">
-						<#form:input path="tempId" maxlength="50" class="form-control width-120"/>
+					<label class="control-label">${text('考核周期')}：</label>
+					<div class="control-inline width-120">
+						<#form:select path="checkCycle" dictType="plan_period" blankOption="true" class="form-control" />
 					</div>
 				</div>
 				<div class="form-group">
@@ -34,33 +34,16 @@
 					</div>
 				</div>
 				<div class="form-group">
-					<label class="control-label">${text('开始时间')}：</label>
-					<div class="control-inline">
-						<#form:input path="planStartTime" readonly="true" maxlength="20" class="form-control Wdate-datetime"
-							dataFormat="datetime" onclick="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm',isShowClear:false});"/>
+					<label class="control-label ">${text('开始时间')}：</label>
+					<div class="control-inline ">					
+						<#form:input path="planStartTime_gte" readonly="true" maxlength="20" class="form-control Wdate-date"
+							dataFormat="date" onclick="WdatePicker({dateFmt:'yyyy-MM-dd',isShowClear:false,onpicked:function(){prizeDate_lte.click()}});"/>
+							--
+						<#form:input path="planStartTime_lte" readonly="true" maxlength="20" class="form-control Wdate-date"
+						   dataFormat="date" onclick="WdatePicker({dateFmt:'yyyy-MM-dd',isShowClear:false});"/>
 					</div>
 				</div>
-				<div class="form-group">
-					<label class="control-label">${text('结束时间')}：</label>
-					<div class="control-inline">
-						<#form:input path="planEndTime" readonly="true" maxlength="20" class="form-control Wdate-datetime"
-							dataFormat="datetime" onclick="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm',isShowClear:false});"/>
-					</div>
-				</div>
-				<div class="form-group">
-					<label class="control-label">${text('评分开始时间')}：</label>
-					<div class="control-inline">
-						<#form:input path="planScoringStartTime" readonly="true" maxlength="20" class="form-control Wdate-datetime"
-							dataFormat="datetime" onclick="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm',isShowClear:false});"/>
-					</div>
-				</div>
-				<div class="form-group">
-					<label class="control-label">${text('评分结束时间')}：</label>
-					<div class="control-inline">
-						<#form:input path="planScoringEndTime" readonly="true" maxlength="20" class="form-control Wdate-datetime"
-							dataFormat="datetime" onclick="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm',isShowClear:false});"/>
-					</div>
-				</div>
+				
 				<div class="form-group">
 					<label class="control-label">${text('负责人')}：</label>
 					<div class="control-inline">
@@ -72,31 +55,13 @@
 					<div class="control-inline">
 						<#form:input path="planDutyUserId" maxlength="50" class="form-control width-120"/>
 					</div>
-				</div>
-				<div class="form-group">
-					<label class="control-label">${text('工作成果')}：</label>
-					<div class="control-inline">
-						<#form:input path="planWorkResults" maxlength="255" class="form-control width-120"/>
-					</div>
-				</div>
-				<div class="form-group">
-					<label class="control-label">${text('关键措施分析')}：</label>
-					<div class="control-inline">
-						<#form:input path="planKey" maxlength="255" class="form-control width-120"/>
-					</div>
-				</div>
+				</div>				
 				<div class="form-group">
 					<label class="control-label">${text('状态')}：</label>
-					<div class="control-inline">
-						<#form:input path="planStatus" maxlength="2" class="form-control width-120"/>
+					<div class="control-inline width-120">
+						<#form:select path="status" dictType="sys_status" blankOption="true" class="form-control"/>
 					</div>
-				</div>
-				<div class="form-group">
-					<label class="control-label">${text('权重%')}：</label>
-					<div class="control-inline">
-						<#form:input path="planWeight" maxlength="4" class="form-control width-120"/>
-					</div>
-				</div>
+				</div>				
 				<div class="form-group">
 					<button type="submit" class="btn btn-primary btn-sm">${text('查询')}</button>
 					<button type="reset" class="btn btn-default btn-sm">${text('重置')}</button>
@@ -131,24 +96,52 @@ $('#dataGrid').dataGrid({
 		//{header:'${text("工作成果")}', name:'planWorkResults', index:'a.plan_work_results', width:150, align:"left"},
 		//{header:'${text("关键措施分析")}', name:'planKey', index:'a.plan_key', width:150, align:"left"},
 		// {header:'${text("更新时间")}', name:'updateDate', index:'a.update_date', width:150, align:"center"},
-		{header:'${text("状态")}', name:'planStatus', index:'a.plan_status', width:100, align:"center",formatter: function(val, obj, row, act){
-				return js.getDictLabel(${@DictUtils.getDictListJson('plan_status')}, val, '${text("未知")}', true);
+		{header:'${text("状态")}', name:'status', index:'a.status', width:100, align:"center",formatter: function(val, obj, row, act){
+				return js.getDictLabel(${@DictUtils.getDictListJson('sys_status')}, val, '${text("未知")}', true);
 		}},
 
 		{header:'${text("操作")}', name:'actions', width:120, sortable:false, title:false, formatter: function(val, obj, row, act){
-			var actions = [];
-			<% if(hasPermi('businesscheckplan:businessCheckPlan:edit')){ %>
-				actions.push('<a href="${ctx}/businesscheckplan/businessCheckPlan/form?id='+row.id+'" class="btnList" title="${text("编辑考核计划")}"><i class="fa fa-pencil"></i></a>&nbsp;');
-				if (row.planStatus == "5" || row.planStatus == "1"){
-					actions.push('<a href="${ctx}/businesscheckplan/businessCheckPlan/enable?id='+row.id+'" class="btnList" title="${text("启用考核计划")}" data-confirm="${text("确认要启用该考核计划吗？")}"><i class="glyphicon glyphicon-ok-circle"></i></a>&nbsp;');
-				}else {
-                    actions.push('<a href="${ctx}/businesscheckplan/businessCheckPlan/disable?id='+row.id+'" class="btnList" title="${text("停用考核计划")}" data-confirm="${text("确认要停用该考核计划吗？")}"><i class="glyphicon glyphicon-ban-circle"></i></a>&nbsp;');
-                }
-                actions.push('<a href="${ctx}/businesstargettype/businessTargetType/list/'+row.id+'" class="btnList" title="${text("指标分类管理")}"><i class="fa fa-list-ol"></i></a>&nbsp;');
-                actions.push('<a href="${ctx}/businesstarget2/businessTarget2/treeList/'+row.id+'" class="btnList" title="${text("考核明细管理")}"><i class="fa fa-tasks"></i></a>&nbsp;');
-				actions.push('<a href="${ctx}/businesscheckplan/businessCheckPlan/delete?id='+row.id+'" class="btnList" title="${text("删除考核计划")}" data-confirm="${text("确认要删除该考核计划吗？")}"><i class="fa fa-trash-o"></i></a>&nbsp;');
+			var actions = [];			
+			<% if(hasPermi('businesscheckplan:businessCheckPlan:audit') ){ %>
+				if ( row.status == Global.STATUS_AUDIT ){
+					actions.push('<a href="${ctx}/businesscheckplan/businessCheckPlan/audit?id='+row.id+'&status=0" class="btnList" title="${text("审批通过")}" data-confirm="${text("确认要审批通过该考核计划吗？")}"><i class="fa fa-gavel"></i></a>&nbsp;');
+					actions.push('<a href="${ctx}/businesscheckplan/businessCheckPlan/audit?id='+row.id+'&status=5" class="btnList" title="${text("审批不通过考核计划")}" data-confirm="${text("确认审批不通过该考核计划吗？")}"><i class="fa fa-lock text-danger"></i></a>&nbsp;');
+				}
 
+				//有审核权限,切审批通过,进行"启动"
+				if(row.status == Global.STATUS_NORMAL){
+					actions.push('<a href="${ctx}/businesscheckplan/businessCheckPlan/audit?id='+row.id+'&status=100" class="btnList"  title="${text("启动考核")}" data-confirm="${text("启动考核后,考核开始!各单位将接收到考核任务.你确定吗？")}"><i class="fa fa-fire"></i></a>&nbsp;');
+				}else if(row.status == 100){
+					actions.push('<a href="${ctx}/businesscheckplan/businessCheckPlan/audit?id='+row.id+'&status=110" class="btnList"  title="${text("数据采集截止")}" data-confirm="${text("数据采集截止后该考核不再接受新数据证据.你确定吗？")}"><i class="fa fa-object-group"></i></a>&nbsp;');
+				}else if(row.status == 110){
+					actions.push('<a href="${ctx}/businesscheckplan/businessCheckPlan/audit?id='+row.id+'&status=120" class="btnList"  title="${text("启动评分")}" data-confirm="${text("启动评分后,配合民主测评和奖扣数据对单位得分情况分析.你确定吗？")}"><i class="fa fa-wrench"></i></a>&nbsp;');
+				}else if(row.status == 120){
+					actions.push('<a href="${ctx}/businesscheckplan/businessCheckPlan/audit?id='+row.id+'&status=130" class="btnList"  title="${text("评分结束")}" data-confirm="${text("评分结束后,该考核不再接收其他数据证据.你确定吗？")}"><i class="fa fa-tint"></i></a>&nbsp;');
+				}else if(row.status == 130){
+					actions.push('<a href="${ctx}/businesscheckplan/businessCheckPlan/audit?id='+row.id+'&status=140" class="btnList"  title="${text("预公布结果")}" data-confirm="${text("预公布结果后,各单位能查看基本考评数据,如有异议,可提起申诉.你确定吗？")}"><i class="fa fa-newspaper-o"></i></a>&nbsp;');
+				}else if(row.status == 140){
+					actions.push('<a href="${ctx}/businesscheckplan/businessCheckPlan/audit?id='+row.id+'&status=150" class="btnList"  title="${text("公布结果报告")}" data-confirm="${text("公布结果报告后各单位可查看评分结果/排名.你确定吗？")}"><i class="fa fa-trophy"></i></a>&nbsp;');
+				}
 			<% } %>
+
+			<% if(hasPermi('businesscheckplan:businessCheckPlan:edit')){ %>
+			    if ( row.status == Global.STATUS_DRAFT ||  row.status == Global.STATUS_AUDIT_BACK ){
+
+					actions.push('<a href="${ctx}/businesscheckplan/businessCheckPlan/form?id='+row.id+'" class="btnList" title="${text("编辑考核计划")}"><i class="fa fa-pencil"></i></a>&nbsp;');
+					actions.push('<a href="${ctx}/businesstargettype/businessTargetType/list/'+row.id+'" class="btnList" title="${text("指标分类管理")}"><i class="fa fa-list-ol"></i></a>&nbsp;');
+					actions.push('<a href="${ctx}/businesstarget2/businessTarget2/treeList/'+row.id+'" class="btnList" title="${text("考核明细管理")}"><i class="fa fa-tasks"></i></a>&nbsp;');
+					actions.push('<a href="${ctx}/businesscheckplan/businessCheckPlan/delete?id='+row.id+'" class="btnList" title="${text("删除考核计划")}" data-confirm="${text("确认要删除该考核计划吗？")}"><i class="fa fa-trash-o"></i></a>&nbsp;');
+
+					actions.push('<a href="${ctx}/businesscheckplan/businessCheckPlan/audit?id='+row.id+'&status=4" class="btnList"  title="${text("提交审批")}" data-confirm="${text("确认要提交到审批吗？")}"><i class="fa fa-magic"></i></a>&nbsp;');
+				}
+
+				//只有审批完成后才能启动考核
+				if (row.status == "5" || row.status == "0"){
+						actions.push('<a href="${ctx}/businesscheckplan/businessCheckPlan/enable?id='+row.id+'" class="btnList" title="${text("启用考核计划")}" data-confirm="${text("确认要启用该考核计划吗？")}"><i class="glyphicon glyphicon-ok-circle"></i></a>&nbsp;');
+					}else {
+						actions.push('<a href="${ctx}/businesscheckplan/businessCheckPlan/disable?id='+row.id+'" class="btnList" title="${text("废弃考核计划")}" data-confirm="${text("确认要废弃该考核计划吗？")}"><i class="glyphicon glyphicon-ban-circle"></i></a>&nbsp;');
+				}
+			<% } %>	
 			return actions.join('');
 		}}
 	],

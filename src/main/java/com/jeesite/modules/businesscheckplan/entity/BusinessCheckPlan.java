@@ -28,8 +28,7 @@ import java.util.Date;
 		@Column(name="temp_id", attrName="businessTargetType.id", label="模板"),
 		@Column(name="plan_major_type", attrName="planMajorType", label="专业类型"),
 		@Column(name="plan_name", attrName="planName", label="计划名称", queryType=QueryType.LIKE),
-		@Column(name="create_date", attrName="createDate", label="创建时间", isUpdate=false, isQuery=false),
-		@Column(name="update_date", attrName="updateDate", label="更新时间", isQuery=false),
+		@Column(includeEntity=DataEntity.class),
 		@Column(name="plan_start_time", attrName="planStartTime", label="开始时间"),
 		@Column(name="plan_end_time", attrName="planEndTime", label="结束时间"),
 		@Column(name="plan_scoring_start_time", attrName="planScoringStartTime", label="评分开始时间"),
@@ -41,6 +40,9 @@ import java.util.Date;
 		@Column(name="plan_status", attrName="planStatus", label="状态"),
 		@Column(name="plan_weight", attrName="planWeight", label="权重%"),
 		@Column(name="is_update", attrName="isUpdate", label="isUpdate"),
+		@Column(name="audit_by", attrName="auditBy", label="审批者"),
+		@Column(name="audit_date", attrName="auditDate", label="审批时间"),
+		@Column(name="check_cycle",attrName="checkCycle", label="考核周期"),
 	},
 		joinTable = {
 				@JoinTable(type = JoinTable.Type.LEFT_JOIN, entity = BusinessTargetType.class, alias = "businessTargetType",
@@ -87,6 +89,12 @@ public class BusinessCheckPlan extends DataEntity<BusinessCheckPlan> {
 	@Setter
 	private Integer isUpdate;		// isUpdate
 
+    private String auditBy;		// 审批者
+	private Date auditDate;		// 审批时间
+
+	@Getter
+	@Setter
+	private String checkCycle; //考核周期
 	public BusinessCheckPlan() {
 		this(null);
 	}
@@ -200,4 +208,31 @@ public class BusinessCheckPlan extends DataEntity<BusinessCheckPlan> {
 		this.planWeight = planWeight;
 	}
 	
+	public Integer getIsUpdate() {
+		return isUpdate;
+	}
+
+	public void setIsUpdate(Integer isUpdate) {
+		this.isUpdate = isUpdate;
+	}
+	
+	@Length(min=0, max=64, message="审批者长度不能超过 64 个字符")
+	public String getAuditBy() {
+		return auditBy;
+	}
+
+	public void setAuditBy(String auditBy) {
+		this.auditBy = auditBy;
+	}
+	
+	@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+	public Date getAuditDate() {
+		return auditDate;
+	}
+
+	public void setAuditDate(Date auditDate) {
+		this.auditDate = auditDate;
+	}
+
+
 }
