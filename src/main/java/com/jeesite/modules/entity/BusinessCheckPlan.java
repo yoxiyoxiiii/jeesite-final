@@ -42,7 +42,6 @@ import java.util.Date;
 		@Column(name="is_update", attrName="isUpdate", label="isUpdate"),
 		@Column(name="audit_by", attrName="auditBy", label="审批者"),
 		@Column(name="audit_date", attrName="auditDate", label="审批时间"),
-		@Column(name="check_cycle",attrName="checkCycle", label="考核周期"),
 	},
 		joinTable = {
 				@JoinTable(type = JoinTable.Type.LEFT_JOIN, entity = BusinessTargetType.class, alias = "businessTargetType",
@@ -96,9 +95,7 @@ public class BusinessCheckPlan extends DataEntity<BusinessCheckPlan> {
     private String auditBy;		// 审批者
 	private Date auditDate;		// 审批时间
 
-	@Getter
-	@Setter
-	private String checkCycle; //考核周期
+
 	public BusinessCheckPlan() {
 		this(null);
 	}

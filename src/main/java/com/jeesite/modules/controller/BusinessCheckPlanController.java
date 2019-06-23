@@ -146,12 +146,12 @@ public class BusinessCheckPlanController extends BaseController {
 	}
 
 	@RequestMapping({"listSelect"})
-	public String listSelect(BusinessCheckTemplate businessCheckTemplate, String selectData, Model model) {
+	public String listSelect(BusinessCheckPlan businessCheckPlan, String selectData, Model model) {
 		String selectDataJson = EncodeUtils.decodeUrl(selectData);
 		if (JsonMapper.fromJson(selectDataJson, Map.class) != null) {
 			model.addAttribute("selectData", selectDataJson);
 		}
-		model.addAttribute("businessCheckTemplate", businessCheckTemplate);
+		model.addAttribute("businessCheckPlan", businessCheckPlan);
 		return "modules/businesscheckplan/listSelect";
 	}
 
