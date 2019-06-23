@@ -118,6 +118,7 @@ public class BusinessTargetController extends BaseController {
 		});
 		Page<BusinessTarget2> page = new Page<>(request,response);
 		page.setList(pageList);
+		page.setCount(pageList.size());
 		return page;
 	}
 
@@ -304,7 +305,7 @@ public class BusinessTargetController extends BaseController {
 	@RequestMapping("/check")
     @ResponseBody
 	public String check(String targetResultExpression, String businessTargetId) {
-
+		if (org.springframework.util.StringUtils.isEmpty(targetResultExpression)) {return renderResult(Global.FALSE, text("公式必填！"));}
 		BusinessTarget2 businessTarget2 = businessTarget2Service.get(businessTargetId);
 		if ("2".equals(businessTarget2.getTargetAttribute())) {
 			return renderResult(Global.FALSE, text("定性指标不能设置公式！"));

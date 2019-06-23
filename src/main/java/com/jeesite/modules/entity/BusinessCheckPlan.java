@@ -60,7 +60,7 @@ public class BusinessCheckPlan extends DataEntity<BusinessCheckPlan> {
 	private static final long serialVersionUID = 1L;
 	@Getter
 	@Setter
-	@NotNull(message = "专业类型必填")
+//	@NotNull(message = "专业类型必填")
 	private BusinessTargetType businessTargetType;		// 模板
 
 	private Integer planMajorType;		// 专业类型

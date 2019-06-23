@@ -89,6 +89,8 @@ public class BusinessCheckPlanController extends BaseController {
 	@PostMapping(value = "save")
 	@ResponseBody
 	public String save(@Validated BusinessCheckPlan businessCheckPlan) {
+		if(businessCheckPlan.getPlanEndTime().getTime()<=businessCheckPlan.getPlanStartTime().getTime()) {return renderResult(Global.FALSE, text("计划时间设置不合理!"));};
+		if(businessCheckPlan.getPlanScoringEndTime().getTime()<=businessCheckPlan.getPlanScoringStartTime().getTime()) {return renderResult(Global.FALSE, text("评分时间设置不合理!"));};
 		businessCheckPlan.setPlanStatus(1);//未启动
 		String targetTypeCode = businessCheckPlan.getBusinessTargetType().getTargetTypeCode();
 		List<BusinessTarget2> businessTarget2List = businessTarget2Service.findByTypeCode(targetTypeCode);
