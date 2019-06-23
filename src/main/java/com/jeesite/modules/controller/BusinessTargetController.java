@@ -143,10 +143,13 @@ public class BusinessTargetController extends BaseController {
 	 */
 	@RequiresPermissions("businesstarget2:businessTarget2:view")
 	@RequestMapping(value = "form/{checkPlanId}")
-	public String form(@PathVariable String checkPlanId, BusinessTarget2 businessTarget2, Office office, BusinessTargetType businessTargetType, Model model) {
+	public String form(@PathVariable String checkPlanId, String id ,BusinessTarget2 businessTarget2, Office office, BusinessTargetType businessTargetType, Model model) {
 		BusinessTargetType businessTargetType2 = new BusinessTargetType();
 		businessTargetType2.setCheckPlanId(checkPlanId);
 		businessTarget2.setBusinessTargetType(businessTargetType2);
+		if (!org.springframework.util.StringUtils.isEmpty(id)) {
+			businessTarget2 = businessTarget2Service.get(id);
+		}
 		model.addAttribute("businessTarget2", businessTarget2);
 		List<BusinessTargetType> targetTypeList = targetTypeService.findList(businessTargetType);
 //		if (targetTypeList.size() == 0) {

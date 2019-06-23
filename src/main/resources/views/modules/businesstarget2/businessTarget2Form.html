@@ -236,15 +236,15 @@ $("#inputForm").validate({
 
 $(function(){
 	$("#targetCheckCycle").change(function() {
+		//计划考核周期
+		var  value = $("#checkCycle").val();
+		var selectValue = $("#targetCheckCycle").val();
+		if (selectValue>value) {js.showErrorMessage("采集周不能大于考核周期"); return;}
 		var  grid = $('#businessStageTarget2DataGrid');
 		var ids = grid.dataGrid('getDataIDs');
 		for (var i = 0; i < ids.length; i++) {//循环删除dataGrid 中的行
 			grid.dataGrid('delRowData', ids[i]);
 		}
-		//计划考核周期
-		var  value = $("#checkCycle").val();
-		var selectValue = $("#targetCheckCycle").val();
-		if (selectValue>value) {js.showErrorMessage("采集周不能大于考核周期"); return;}
 		var  addBtn = $("#businessStageTarget2DataGridAddRowBtn");
 		for(var i= 0;i<value/selectValue;i++) {//根据考核周期和数据采集周期动态生成目标期数
 			addBtn.click();
