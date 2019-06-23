@@ -19,8 +19,6 @@ public class Main {
         System.out.println(chinese);
         Object eval2 = bsh.eval(chinese);
         System.out.println(eval2);
-
-
     }
 
 

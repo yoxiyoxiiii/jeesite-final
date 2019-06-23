@@ -14,6 +14,8 @@
 				<div class="form-unit">${text('基本信息')}</div>
 				<#form:hidden path="businessTargetType.checkPlanId"/>
 				<#form:hidden path="id"/>
+				<input value="${checkCycle}" id="checkCycle" hidden name="checkCycle">
+				<input value="${checkPlanId}" id="checkPlanId" hidden name="checkPlanId">
 				<div class="row">
 					<div class="col-xs-6">
 						<div class="form-group">
@@ -111,7 +113,7 @@
 				<div class="ml10 mr10">
 					<table id="businessStageTarget2DataGrid"></table>
 					<% if (hasPermi('businesstarget2:businessTarget2:edit')){ %>
-						<a href="#" id="businessStageTarget2DataGridAddRowBtn" class="btn btn-primary btn-sm mt10 mb10"><i class="fa fa-plus"></i> ${text('增行')}</a>
+						<a href="#" id="businessStageTarget2DataGridAddRowBtn"  style="display: none" class="btn btn-primary btn-sm mt10 mb10"><i class="fa fa-plus"></i> ${text('增行')}</a>
 					<% } %>
 				</div>
 				<h4 class="form-unit">${text('数据采集项')}</h4>
@@ -200,15 +202,6 @@ $("#businessStageTarget2DataGrid").dataGrid({
 		{header:'${text("权重%")}', name:'stageWeight', width:150, editable:true, edittype:'text', editoptions:{'maxlength':'4', 'class':'form-control digits'}},
 		{header:'${text("争创值")}', name:'stageTryHardValue', width:150, editable:true, edittype:'text', editoptions:{'maxlength':'255', 'class':'form-control'}},
 		// {header:'${text("阶段目标名称")}', name:'stageName', width:150, editable:true, edittype:'text', editoptions:{'maxlength':'255', 'class':'form-control'}},
-		{header:'${text("操作")}', name:'actions', width:80, sortable:false, fixed:true, formatter: function(val, obj, row, act){
-			var actions = [];
-			if (val == 'new'){
-				actions.push('<a href="#" onclick="js.confirm(\'${text("你确认要删除这条数据吗？")}\', function(){$(\'#businessStageTarget2DataGrid\').dataGrid(\'delRowData\',\''+obj.rowId+'\')});return false;"><i class="fa fa-trash-o"></i></a>&nbsp;');
-			}else{
-				actions.push('<a href="#" onclick="js.confirm(\'${text("你确认要删除这条数据吗？")}\', function(){$(\'#businessStageTarget2DataGrid\').dataGrid(\'setRowData\',\''+obj.rowId+'\',null,{display:\'none\'});$(\'#'+obj.rowId+'_status\').val(\''+Global.STATUS_DELETE+'\');});return false;"><i class="fa fa-trash-o"></i></a>&nbsp;');
-			}
-			return actions.join('');
-		}, editoptions: {defaultValue: 'new'}}
 	],
 
 	// 编辑表格参数
@@ -242,9 +235,22 @@ $("#inputForm").validate({
 });
 
 $(function(){
-	$("#targetCheckCycle").change(function(){
-		$("#businessStageTarget2DataGridAddRowBtn").click();
-		$("#businessStageTarget2DataGridAddRowBtn").click();
+	$("#targetCheckCycle").change(function() {
+		//计划考核周期
+		var  value = $("#checkCycle").val();
+		var selectValue = $("#targetCheckCycle").val();
+		if (selectValue>value) {js.showErrorMessage("采集周不能大于考核周期"); return;}
+		var  grid = $('#businessStageTarget2DataGrid');
+		var ids = grid.dataGrid('getDataIDs');
+		for (var i = 0; i < ids.length; i++) {//循环删除dataGrid 中的行
+			grid.dataGrid('delRowData', ids[i]);
+		}
+		var  addBtn = $("#businessStageTarget2DataGridAddRowBtn");
+		for(var i= 0;i<value/selectValue;i++) {//根据考核周期和数据采集周期动态生成目标期数
+			addBtn.click();
+		}
+
+
 	});
 });
 

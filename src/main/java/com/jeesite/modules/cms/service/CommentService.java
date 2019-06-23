@@ -3,15 +3,13 @@
  */
 package com.jeesite.modules.cms.service;
 
-import java.util.List;
-
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.jeesite.common.entity.Page;
 import com.jeesite.common.service.CrudService;
 import com.jeesite.modules.cms.entity.Comment;
-import com.jeesite.modules.cms.dao.CommentDao;
+import com.jeesite.modules.dao.CommentDao;
 import com.jeesite.modules.file.utils.FileUploadUtils;
 
 /**

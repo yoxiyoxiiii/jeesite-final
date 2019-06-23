@@ -10,7 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.jeesite.common.entity.Page;
 import com.jeesite.common.service.CrudService;
 import com.jeesite.modules.cms.entity.Report;
-import com.jeesite.modules.cms.dao.ReportDao;
+import com.jeesite.modules.dao.ReportDao;
 import com.jeesite.modules.file.utils.FileUploadUtils;
 
 /**

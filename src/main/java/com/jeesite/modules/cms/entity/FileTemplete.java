@@ -10,8 +10,7 @@ import java.util.Date;
 
 import com.jeesite.common.codec.Md5Utils;
 import com.jeesite.common.io.FileUtils;
-import com.jeesite.common.lang.StringUtils;
-import com.jeesite.modules.cms.utils.FilesTempleteUtils;
+import com.jeesite.modules.utils.FilesTempleteUtils;
 
 /**
  * CMS模块-模版文件实体

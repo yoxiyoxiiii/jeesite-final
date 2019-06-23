@@ -85,6 +85,9 @@ $('#dataGrid').dataGrid({
 		{header:'${text("专业类型")}', name:'planMajorType', index:'a.plan_major_type', width:100, align:"center",formatter: function(val, obj, row, act){
 				return js.getDictLabel(${@DictUtils.getDictListJson('plan_major_type')}, val, '${text("未知")}', true);
 		}},
+		{header:'${text("考核周期")}', name:'checkCycle', index:'a.check_cycle', width:55, align:"center",formatter: function(val, obj, row, act){
+				return js.getDictLabel(${@DictUtils.getDictListJson('target_check_cycle')}, val, '${text("未知")}', true);
+		}},
 		//{header:'${text("权重%")}', name:'planWeight', index:'a.plan_weight', width:150, align:"center"},
 		{header:'${text("负责人")}', name:'planCheckUser.userName', index:'a.plan_check_user_id', width:100, align:"center"},
 		{header:'${text("责任人")}', name:'planDutyUser.userName', index:'a.plan_duty_user_id', width:100, align:"center"},

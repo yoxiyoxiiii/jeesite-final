@@ -14,7 +14,7 @@ import com.jeesite.modules.cms.entity.Site;
 import com.beust.jcommander.internal.Lists;
 import com.jeesite.modules.cms.entity.FileTemplete;
 import com.jeesite.modules.cms.utils.CmsUtils;
-import com.jeesite.modules.cms.utils.FilesTempleteUtils;
+import com.jeesite.modules.utils.FilesTempleteUtils;
 import com.jeesite.modules.sys.entity.DictData;
 
 /**

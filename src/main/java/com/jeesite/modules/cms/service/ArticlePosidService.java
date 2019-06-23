@@ -10,7 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.jeesite.common.entity.Page;
 import com.jeesite.common.service.CrudService;
 import com.jeesite.modules.cms.entity.ArticlePosid;
-import com.jeesite.modules.cms.dao.ArticlePosidDao;
+import com.jeesite.modules.dao.ArticlePosidDao;
 
 /**
  * 文章推荐位Service

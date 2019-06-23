@@ -51,13 +51,21 @@ $('#dataGrid').dataGrid({
 			return '<a href="${ctx}/businesscheckplanuser/businessCheckPlanUser/form?id='+row.id+'" class="btnList" data-title="${text("编辑考核名单")}">'+(val||row.id)+'</a>';
 		}},
 		{header:'${text("考核计划")}', name:'businessCheckPlan.planName', index:'a.user_id', width:150, align:"left"},
+		{header:'${text("状态")}', name:'planUserStatus', index:'a.plan_user_status', width:50 ,align:"center" ,formatter: function(val, obj, row, act){
+				return js.getDictLabel(${@DictUtils.getDictListJson('plan_user_status')}, val, '${text("未知")}', true);
+		}},
 		{header:'${text("更新时间")}', name:'updateDate', index:'a.update_date', width:150, align:"center"},
 		{header:'${text("操作")}', name:'actions', width:120, sortable:false, title:false, formatter: function(val, obj, row, act){
 			var actions = [];
 			<% if(hasPermi('businesscheckplanuser:businessCheckPlanUser:edit')){ %>
-				actions.push('<a href="${ctx}/businesscheckplanuser/businessCheckPlanUser/form?id='+row.id+'" class="btnList" title="${text("编辑考核名单")}"><i class="fa fa-pencil"></i></a>&nbsp;');
-				actions.push('<a href="${ctx}/businesscheckplanuser/businessCheckPlanUser/delete?id='+row.id+'" class="btnList" title="${text("删除考核名单")}" data-confirm="${text("确认要删除该考核名单吗？")}"><i class="fa fa-trash-o"></i></a>&nbsp;');
-				actions.push('<a href="${ctx}/businesscheckplanuser/businessCheckPlanUser/view?id='+row.id+'" class="btnList" title="${text("查看名单")}"><i class="fa glyphicon glyphicon-eye-open"></i></a>&nbsp;');
+					if(row.planUserStatus == 1) {
+						actions.push('<a href="${ctx}/businesscheckplanuser/businessCheckPlanUser/form?id='+row.id+'" class="btnList" title="${text("编辑考核名单")}"><i class="fa fa-pencil"></i></a>&nbsp;');
+						actions.push('<a href="${ctx}/businesscheckplanuser/businessCheckPlanUser/delete?id='+row.id+'" class="btnList" title="${text("删除考核名单")}" data-confirm="${text("确认要删除该考核名单吗？")}"><i class="fa fa-trash-o"></i></a>&nbsp;');
+						actions.push('<a href="${ctx}/businesscheckplanuser/businessCheckPlanUser/view?id='+row.id+'" class="btnList" title="${text("查看名单")}"><i class="fa glyphicon glyphicon-eye-open"></i></a>&nbsp;');
+					}
+					if(row.planUserStatus !=1) {
+						actions.push('<a href="${ctx}/businesscheckplanuser/businessCheckPlanUser/view?id='+row.id+'" class="btnList" title="${text("查看名单")}"><i class="fa glyphicon glyphicon-eye-open"></i></a>&nbsp;');
+					}
 			<% } %>
 			return actions.join('');
 		}}
