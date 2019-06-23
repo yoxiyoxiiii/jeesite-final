@@ -17,6 +17,7 @@
 			<#form:form id="searchForm" model="${businessTarget2}" action="${ctx}/businesstarget2/businessTarget2/listData" method="post" class="form-inline hide"
 					data-page-no="${parameter.pageNo}" data-page-size="${parameter.pageSize}" data-order-by="${parameter.orderBy}">
 					<#form:hidden  path="businessTargetType.checkPlanId"/>
+			     <input value="${checkPlanId}" id="checkPlanId" hidden name="checkPlanId">
 				<div class="form-group">
 					<label class="control-label">${text('考核模板')}：</label>
 					<div class="control-inline col-sm-8">

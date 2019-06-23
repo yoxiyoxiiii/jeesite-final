@@ -27,4 +27,8 @@ public interface BusinessTarget2Dao extends CrudDao<BusinessTarget2> {
     List<BusinessTarget2> findByTypeCodeByPage(@Param(value = "targetTypeCode")String targetTypeCode,
                                                @Param(value = "pageNo") Integer pageNo,
                                                @Param(value = "pageSize")Integer pageSize);
+
+    List<BusinessTarget2> findPageByCheckPlanId(@Param(value = "checkPlanId")String checkPlanId,
+                                                @Param(value = "pageNo") Integer pageNo,
+                                                @Param(value = "pageSize") Integer pageSize);
 }

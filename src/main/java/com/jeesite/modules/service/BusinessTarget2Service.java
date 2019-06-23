@@ -143,4 +143,8 @@ public class BusinessTarget2Service extends CrudService<BusinessTarget2Dao, Busi
 	public List<BusinessTarget2> findByTypeCode(String targetTypeCode, Integer pageNo, Integer pageSize) {
 		return super.dao.findByTypeCodeByPage(targetTypeCode, pageNo, pageSize);
 	}
+
+	public List<BusinessTarget2> findPage(String checkPlanId,Integer pageNo, Integer pageSize) {
+		return dao.findPageByCheckPlanId(checkPlanId,pageNo, pageSize);
+	}
 }

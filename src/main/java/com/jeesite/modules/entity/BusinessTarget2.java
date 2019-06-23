@@ -30,6 +30,7 @@ import java.util.List;
 		@Column(name="target_name", attrName="targetName", label="指标名称", queryType=QueryType.LIKE),
 		@Column(name="target_type_id", attrName="businessTargetType.targetTypeCode", label="关联分类ID"),
 		@Column(name="target_type_id", attrName="targeTtypeId", label="关联分类ID"),
+		@Column(name="plan_id", attrName="businessCheckPlan.id", label="关联计划ID 冗余查询"),
 		@Column(name="target_check_cycle", attrName="targetCheckCycle", label="目标考核周期 周、半月、月、季度、半年、年 ，定时任务关联"),
 		@Column(name="target_check_basic", attrName="targetCheckBasic", label="考核依据"),
 		@Column(name="target_content", attrName="targetContent", label="考核细则"),
@@ -55,6 +56,9 @@ import java.util.List;
 		@JoinTable(type= JoinTable.Type.LEFT_JOIN, entity= BusinessTargetType.class, alias="businessTargetType",
 				on="businessTargetType.target_type_code = a.target_type_id", attrName = "businessTargetType",
 				columns={@Column(includeEntity= BusinessTargetType.class)}),
+		@JoinTable(type= JoinTable.Type.LEFT_JOIN, entity= BusinessCheckPlan.class, alias="businessCheckPlan",
+				on="businessCheckPlan.id = a.plan_id", attrName = "businessCheckPlan",
+				columns={@Column(includeEntity= BusinessCheckPlan.class)}),
 },
 		orderBy="a.update_date DESC"
 )
@@ -105,6 +109,10 @@ public class BusinessTarget2 extends DataEntity<BusinessTarget2> {
 	@Getter
 	@Setter
 	private BusinessTargetType businessTargetType;
+	//查询冗余字段
+	@Getter
+	@Setter
+	private BusinessCheckPlan businessCheckPlan;
 	@Getter
 	@Setter
 	private String targeTtypeId;

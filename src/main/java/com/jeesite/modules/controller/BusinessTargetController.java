@@ -87,8 +87,11 @@ public class BusinessTargetController extends BaseController {
 	@RequestMapping(value = {"list/{checkPlanId}"})
 	public String list(@PathVariable String checkPlanId,BusinessTarget2 businessTarget2, Model model) {
 		BusinessTargetType businessTargetType = new BusinessTargetType();
+		BusinessCheckPlan businessCheckPlan = new BusinessCheckPlan();
+		businessCheckPlan.setId(checkPlanId);
 		businessTargetType.setCheckPlanId(checkPlanId);
 		businessTarget2.setBusinessTargetType(businessTargetType);
+		businessTarget2.setBusinessCheckPlan(businessCheckPlan);
 		model.addAttribute("businessTarget2", businessTarget2);
 		model.addAttribute("checkPlanId", checkPlanId);
 		return "modules/businesstarget2/businessTarget2List";
@@ -100,16 +103,29 @@ public class BusinessTargetController extends BaseController {
 	@RequiresPermissions("businesstarget2:businessTarget2:view")
 	@RequestMapping(value = "listData")
 	@ResponseBody
-	public Page<BusinessTarget2> listData(BusinessTarget2 businessTarget2, HttpServletRequest request, HttpServletResponse response) {
+	public Page<BusinessTarget2> listData(BusinessTarget2 businessTarget2, String checkPlanId, HttpServletRequest request, HttpServletResponse response) {
 		String targetTypeCode = businessTarget2.getBusinessTargetType().getTargetTypeCode();
+		BusinessCheckPlan businessCheckPlan = new BusinessCheckPlan();
+		businessCheckPlan.setId(checkPlanId);
+		businessTarget2.setBusinessCheckPlan(businessCheckPlan);
 		String pageNo = request.getParameter("pageNo");
 		String pageSize = request.getParameter("pageSize");
-		if (org.springframework.util.StringUtils.isEmpty(pageNo) && org.springframework.util.StringUtils.isEmpty(businessTarget2.getBusinessTargetType().getId())) {
-			businessTarget2.setPage(new Page<>(request, response));
-			return businessTarget2Service.findPage(businessTarget2);
-		}
 		int pNo = org.springframework.util.StringUtils.isEmpty(pageNo)?0:Integer.valueOf(pageNo)-1;
 		int pSize = org.springframework.util.StringUtils.isEmpty(pageSize)?20:Integer.valueOf(pageSize);
+		if (org.springframework.util.StringUtils.isEmpty(businessTarget2.getBusinessTargetType().getId())) {
+			businessTarget2.setPage(new Page<>(request, response));
+			List<BusinessTarget2> resultList = businessTarget2Service.findPage(checkPlanId, pNo, pSize);
+			resultList.forEach(item->{
+				Office office = new Office();
+				office.setOfficeName(item.getExecuteDepartment());
+				item.setExecuteDepartments(office);
+			});
+			Page<BusinessTarget2> page = new Page<>(request,response);
+			page.setList(resultList);
+			page.setCount(resultList.size());
+			return page;
+		}
+
 		List<BusinessTarget2> pageList = businessTarget2Service.findByTypeCode(targetTypeCode, pNo,pSize);
 		pageList.forEach(item->{
 			Office office = new Office();
@@ -161,6 +177,7 @@ public class BusinessTargetController extends BaseController {
 
 		model.addAttribute("office", office);
 		model.addAttribute("checkCycle", checkCycle);
+		model.addAttribute("checkPlanId", checkPlanId);
 
 		return "modules/businesstarget2/businessTarget2Form";
 	}
@@ -194,7 +211,7 @@ public class BusinessTargetController extends BaseController {
 	@RequiresPermissions("businesstarget2:businessTarget2:edit")
 	@PostMapping(value = "save")
 	@ResponseBody
-	public String save(@Validated BusinessTarget2 businessTarget2, String checkCycle) {
+	public String save(@Validated BusinessTarget2 businessTarget2, String checkCycle, String checkPlanId) {
 		//数据采集周期
 		String targetCheckCycle = businessTarget2.getTargetCheckCycle();
 		int stages = Integer.valueOf(checkCycle)/Integer.valueOf(targetCheckCycle);
@@ -204,6 +221,9 @@ public class BusinessTargetController extends BaseController {
 		if(org.springframework.util.StringUtils.isEmpty(businessTarget2.getExecuteDepartments().getId())) {return renderResult(Global.FALSE, text("执行部门未设置！"));}
 		List<BusinessTargetDataItem2> businessTargetDataItem2List = businessTarget2.getBusinessTargetDataItem2List();
 		if (org.springframework.util.StringUtils.isEmpty(businessTargetDataItem2List) || businessTargetDataItem2List.size() == 0) {return renderResult(Global.FALSE, text("请设置数据采集项!"));}
+		BusinessCheckPlan businessCheckPlan = new BusinessCheckPlan();
+		businessCheckPlan.setId(checkPlanId);
+		businessTarget2.setBusinessCheckPlan(businessCheckPlan);
 		businessTarget2Service.save(businessTarget2);
 		return renderResult(Global.TRUE, text("保存指标成功！"));
 	}

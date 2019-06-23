@@ -9,7 +9,6 @@ import com.jeesite.common.entity.Page;
 import com.jeesite.common.mapper.JsonMapper;
 import com.jeesite.common.web.BaseController;
 import com.jeesite.modules.entity.BusinessCheckPlan;
-import com.jeesite.modules.entity.BusinessTarget2;
 import com.jeesite.modules.service.BusinessCheckPlanService;
 import com.jeesite.modules.service.BusinessTarget2Service;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
@@ -26,7 +25,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -92,10 +90,10 @@ public class BusinessCheckPlanController extends BaseController {
 		if(businessCheckPlan.getPlanEndTime().getTime()<=businessCheckPlan.getPlanStartTime().getTime()) {return renderResult(Global.FALSE, text("计划时间设置不合理!"));};
 		if(businessCheckPlan.getPlanScoringEndTime().getTime()<=businessCheckPlan.getPlanScoringStartTime().getTime()) {return renderResult(Global.FALSE, text("评分时间设置不合理!"));};
 		businessCheckPlan.setPlanStatus(1);//未启动
-		String targetTypeCode = businessCheckPlan.getBusinessTargetType().getTargetTypeCode();
-		List<BusinessTarget2> businessTarget2List = businessTarget2Service.findByTypeCode(targetTypeCode);
-		if (StringUtils.isEmpty(businessTarget2List) || businessTarget2List.size() == 0) {return renderResult(Global.FALSE, text("该考核模板下不存在考核细则或模板层级错误!")); }
-		if (StringUtils.isEmpty(targetTypeCode)) {return renderResult(Global.FALSE, text("考核模板必填!"));}
+//		String targetTypeCode = businessCheckPlan.getBusinessTargetType().getTargetTypeCode();
+//		List<BusinessTarget2> businessTarget2List = businessTarget2Service.findByTypeCode(targetTypeCode);
+//		if (StringUtils.isEmpty(businessTarget2List) || businessTarget2List.size() == 0) {return renderResult(Global.FALSE, text("该考核模板下不存在考核细则或模板层级错误!")); }
+//		if (StringUtils.isEmpty(targetTypeCode)) {return renderResult(Global.FALSE, text("考核模板必填!"));}
 		if (StringUtils.isEmpty(businessCheckPlan.getPlanCheckUser().getUserCode())) {return renderResult(Global.FALSE, text("负责人必填!"));}
 		if (StringUtils.isEmpty(businessCheckPlan.getPlanDutyUser().getUserCode())) {return renderResult(Global.FALSE, text("责任人必填!"));}
 

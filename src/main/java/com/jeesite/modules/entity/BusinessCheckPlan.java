@@ -63,6 +63,7 @@ public class BusinessCheckPlan extends DataEntity<BusinessCheckPlan> {
 //	@NotNull(message = "专业类型必填")
 	private BusinessTargetType businessTargetType;		// 模板
 
+	@NotNull(message = "专业类型必填")
 	private Integer planMajorType;		// 专业类型
 	@NotNull(message = "计划名称必填")
 	private String planName;		// 计划名称

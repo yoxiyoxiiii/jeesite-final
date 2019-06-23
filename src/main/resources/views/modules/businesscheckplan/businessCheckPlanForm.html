@@ -23,12 +23,23 @@
 							</div>
 						</div>
 					</div>
+				</div>
+				<div class="row">
 					<div class="col-xs-6">
 						<div class="form-group">
 							<label class="control-label col-sm-4" title="">
 								<span class="required hide">*</span> ${text('考核周期')}：<i class="fa icon-question hide"></i></label>
 							<div class="col-sm-8">
 								<#form:select path="checkCycle" dictType="target_check_cycle" blankOption="true" class="form-control" />
+							</div>
+						</div>
+					</div>
+					<div class="col-xs-6">
+						<div class="form-group">
+							<label class="control-label col-sm-4" title="">
+								<span class="required hide">*</span> ${text('专业类型')}：<i class="fa icon-question hide"></i></label>
+							<div class="col-sm-8">
+								<#form:select path="planMajorType" dictType="plan_major_type" blankOption="true" class="form-control" />
 							</div>
 						</div>
 					</div>
