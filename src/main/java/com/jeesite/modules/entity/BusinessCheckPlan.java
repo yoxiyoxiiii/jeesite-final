@@ -131,7 +131,27 @@ public class BusinessCheckPlan extends DataEntity<BusinessCheckPlan> {
 	public void setPlanStartTime(Date planStartTime) {
 		this.planStartTime = planStartTime;
 	}
-	
+
+
+	/*列表查询专用*/
+	public Date getPlanStartTime_gte() {
+		return sqlMap.getWhere().getValue("plan_start_time", QueryType.GTE);
+	}
+
+	public void setPlanStartTime_gte(Date planStartTime) {
+		sqlMap.getWhere().and("plan_start_time", QueryType.GTE, planStartTime);
+	}
+
+	public Date getPlanStartTime_lte() {
+		return sqlMap.getWhere().getValue("plan_start_time", QueryType.LTE);
+	}
+
+	public void setPlanStartTime_lte(Date planStartTime) {
+		sqlMap.getWhere().and("plan_start_time", QueryType.LTE, planStartTime);
+	}
+
+
+
 	@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
 	public Date getPlanEndTime() {
 		return planEndTime;

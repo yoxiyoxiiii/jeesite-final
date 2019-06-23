@@ -15,53 +15,67 @@
 		<div class="box-body">
 			<#form:form id="searchForm" model="${businessCheckPlan}" action="${ctx}/businesscheckplan/businessCheckPlan/listData" method="post" class="form-inline hide"
 					data-page-no="${parameter.pageNo}" data-page-size="${parameter.pageSize}" data-order-by="${parameter.orderBy}">
-				<div class="form-group">
+			<div class="col-xs-3">
+			    <div class="form-group">
 					<label class="control-label">${text('考核周期')}：</label>
 					<div class="control-inline width-120">
 						<#form:select path="checkCycle" dictType="plan_period" blankOption="true" class="form-control" />
 					</div>
 				</div>
+			</div>
+			<div class="col-xs-3">
 				<div class="form-group">
 					<label class="control-label">${text('专业类型')}：</label>
-					<div class="control-inline">
-						<#form:input path="planMajorType" maxlength="4" class="form-control width-120"/>
+					<div class="control-inline  width-120">						
+						<#form:select path="planMajorType" dictType="plan_major_type" blankOption="true" class="form-control" />
 					</div>
 				</div>
+			</div>
+			<div class="col-xs-3">
 				<div class="form-group">
 					<label class="control-label">${text('计划名称')}：</label>
-					<div class="control-inline">
+					<div class="control-inline  width-120">
 						<#form:input path="planName" maxlength="255" class="form-control width-120"/>
 					</div>
-				</div>
-				<div class="form-group">
-					<label class="control-label ">${text('开始时间')}：</label>
-					<div class="control-inline ">					
-						<#form:input path="planStartTime_gte" readonly="true" maxlength="20" class="form-control Wdate-date"
-							dataFormat="date" onclick="WdatePicker({dateFmt:'yyyy-MM-dd',isShowClear:false,onpicked:function(){prizeDate_lte.click()}});"/>
-							--
-						<#form:input path="planStartTime_lte" readonly="true" maxlength="20" class="form-control Wdate-date"
-						   dataFormat="date" onclick="WdatePicker({dateFmt:'yyyy-MM-dd',isShowClear:false});"/>
-					</div>
-				</div>
-				
+				</div>			
+			</div>
+			<div class="col-xs-3">	
 				<div class="form-group">
 					<label class="control-label">${text('负责人')}：</label>
 					<div class="control-inline">
 						<#form:input path="planCheckUserId" maxlength="50" class="form-control width-120"/>
 					</div>
 				</div>
-				<div class="form-group">
-					<label class="control-label">${text('责任人')}：</label>
+			</div>
+			<div class="col-xs-3">
+			<div class="form-group">
+					<label class="control-label">${text('责 任 人')}：</label>
 					<div class="control-inline">
 						<#form:input path="planDutyUserId" maxlength="50" class="form-control width-120"/>
 					</div>
 				</div>				
-				<div class="form-group">
-					<label class="control-label">${text('状态')}：</label>
+			</div>
+			<div class="col-xs-3">
+			<div class="form-group">
+					<label class="control-label">${text('状    态')}：</label>
 					<div class="control-inline width-120">
 						<#form:select path="status" dictType="sys_status" blankOption="true" class="form-control"/>
 					</div>
-				</div>				
+				</div>
+				
+			</div>
+			<div class="col-xs-4">
+				<div class="form-group">
+						<label class="control-label ">${text('开始时间')}：</label>
+						<div class="control-inline  ">					
+							<#form:input path="planStartTime_gte" readonly="true" maxlength="20" class="form-control Wdate-date  width-120"
+								dataFormat="date" onclick="WdatePicker({dateFmt:'yyyy-MM-dd H:mm:ss',isShowClear:false,onpicked:function(){planStartTime_lte.click()}});"/>
+								--
+							<#form:input path="planStartTime_lte" readonly="true" maxlength="20" class="form-control Wdate-date  width-120"
+							   dataFormat="date" onclick="WdatePicker({dateFmt:'yyyy-MM-dd H:mm:ss',isShowClear:false});"/>
+						</div>
+					</div>
+			</div>
 				<div class="form-group">
 					<button type="submit" class="btn btn-primary btn-sm">${text('查询')}</button>
 					<button type="reset" class="btn btn-default btn-sm">${text('重置')}</button>
