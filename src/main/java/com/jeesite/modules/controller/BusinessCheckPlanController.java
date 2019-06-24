@@ -9,8 +9,12 @@ import com.jeesite.common.entity.Page;
 import com.jeesite.common.mapper.JsonMapper;
 import com.jeesite.common.web.BaseController;
 import com.jeesite.modules.entity.BusinessCheckPlan;
+import com.jeesite.modules.entity.EvaluLib;
 import com.jeesite.modules.service.BusinessCheckPlanService;
 import com.jeesite.modules.service.BusinessTarget2Service;
+import com.jeesite.modules.sys.entity.Office;
+import com.jeesite.modules.sys.service.OfficeService;
+import com.jeesite.modules.sys.utils.UserUtils;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.quartz.SchedulerException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,10 +22,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.StringUtils;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -39,6 +40,9 @@ public class BusinessCheckPlanController extends BaseController {
 
 	@Autowired
 	private BusinessCheckPlanService businessCheckPlanService;
+
+	@Autowired
+	private OfficeService officeService;
 	/**
 	 * 获取数据
 	 */
@@ -166,7 +170,38 @@ public class BusinessCheckPlanController extends BaseController {
 		businessCheckPlanService.updateStatus(businessCheckPlan);
 		return renderResult(Global.TRUE, text("考核计划流程操作成功"));
 		//todo:流程状态需要内部控制
+		//todo: 当前120时,必须先判断是否关联了奖扣和测评
 	}
 
 
+
+	/**
+	 * 独立评价表
+	 */
+	@RequestMapping(value = {"report/{checkPlanId}/{depatId}", ""})
+	public String report(@PathVariable String checkPlanId, @PathVariable String depatId, BusinessCheckPlan businessCheckPlan, Model model) {
+		//todo:需要权限判断
+		BusinessCheckPlan temp = businessCheckPlanService.get(checkPlanId);
+		//参评单位, 前端在指定单位的情况下,关注各项测评指标
+		if( depatId != null  && depatId != "0"){
+			Office office = officeService.get(depatId);
+			model.addAttribute("office", office);
+		}
+
+//		List<Map<String, Object>>  users = businessCheckPlanService.findUsers(businessCheckPlan.getPlanDutyUser());
+//		model.addAttribute("listEvaluLib", listEvaluLib);
+		model.addAttribute("businessCheckPlan",temp);
+		model.addAttribute("user", UserUtils.getUser());
+//		model.addAttribute("users",users);
+		return "modules/businesscheckplan/businessCheckPlanDataReport";
+	}
+
+	/**
+	 * 获取绩效报告
+	 */
+	@RequestMapping(value = "evaluReport")
+	@ResponseBody
+	public List<Map<String, Object>> checkReport(String checkPlanId, String createBy, String deptId) {
+		return businessCheckPlanService.findReport(checkPlanId, createBy, deptId);
+	}
 }

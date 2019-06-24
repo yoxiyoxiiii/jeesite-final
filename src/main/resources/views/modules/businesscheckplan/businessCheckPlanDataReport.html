@@ -1,0 +1,331 @@
+<% layout('/layouts/default.html', {title: '绩效测评报告', libs: ['dataGrid']}){ %>
+<style>
+	body {
+		counter-reset: section;
+	}
+
+	.box-body label {
+		font-weight: normal;
+	}
+
+	.box-body .row {
+		padding-left: 40px;
+	}
+
+	.box-body .row>div {
+		padding: 10px 0;
+		border-bottom: 1px dotted #eee;
+	}
+
+	.title0 {
+		font-size: 16px;
+		counter-reset: subsection xxx;
+	}
+
+	.title0:before {
+		counter-increment: section;
+		content: "第"counter(section) "部分. ";
+	}
+
+	.title1 {
+		font-size: 14px;
+		padding-left: 2em;
+		counter-reset: subsubsection xxx;
+	}
+
+	.title1:before {
+		counter-increment: subsection;
+		content: counter(section) "."counter(subsection) " ";
+	}
+
+	.title2 {
+		padding-left: 4em;
+		counter-reset: xxx;
+	}
+
+	.title2:before {
+		counter-increment: subsubsection;
+		content: counter(section) "."counter(subsection) "."counter(subsubsection) " ";
+	}
+
+	.titleL:before {
+		counter-increment: xxx;
+		content: counter(xxx) " : ";
+		/*color: red;*/
+	}
+
+	.noborder{
+		border-width:0 !important;
+		background-color: rgba(0,0,0,0);
+	}
+	/* .evaluindex:before {
+		counter-increment: subsubsubsection;
+		content: counter(subsubsubsection);
+	} */
+
+	.forceHeight{
+		height: 100% !important;
+	}
+</style>
+<div class="main-content">
+	<div class="box box-main">
+		<div class="pad margin no-print">
+			<div class="callout callout-info" style="margin-bottom: 0!important;">
+				<h4><i class="fa fa-info"></i> 提示:</h4>
+				该绩效考核还未完成. 该测评当前没有关联考核方案, 不影响任何一个考核结果. the invoice to test.
+			</div>
+		</div>
+		<section class="invoice">
+			<!-- title row -->
+			<div class="row">
+				<div class="col-xs-12">
+					<h2 class="page-header">
+						<i class="fa fa-lastfm-square"></i> ${businessCheckPlan.planName}
+						<small class="pull-right">结束时间: ${businessCheckPlan.planEndTime, dateFormat="yyyy-MM-dd HH:mm"}</small>
+						<small class="span6">( ${text('绩效考核报告')} )</small>
+					</h2>
+				</div>
+				<!-- /.col -->
+			</div>
+			<!-- info row -->
+			<div class="row">
+				<div class="col-md-6 col-sm-6 col-xs-12">
+					<div class="info-box bg-gray-light">
+						<span class="info-box-icon bg-yellow"><i class="fa fa-forumbee"></i></span>
+						<div class="info-box-content">
+							<span class="info-box-text">计划</span>
+							<span class="info-box-number">90 / 20</span>
+							<small>(参评部门/测评份数)</small>
+						</div>
+					</div>
+				</div>
+				<div class="col-md-6 col-sm-6 col-xs-12">
+					<div class="info-box bg-aqua">
+						<span class="info-box-icon"><i class="fa fa-sliders"></i></span>
+						<div class="info-box-content">
+							<span class="info-box-text">进度(已提交/未提交)</span>
+							<span class="info-box-number">180 , 20</span>
+
+							<div class="progress">
+								<div class="progress-bar" style="width: 90%"></div>
+							</div>
+							<span class="progress-description">
+								90% 已完成测评任务
+							</span>
+						</div>
+						<!-- /.info-box-content -->
+					</div>
+				</div>
+				<!-- fix for small devices only -->
+				<div class="clearfix visible-sm-block"></div>
+			</div>
+
+
+			<!-- Table row -->
+			<div class="row">
+				<div class="col-xs-12" id="dataGridContent">
+					<table id="dataGrid"></table>
+					<div id="dataGridPage"></div>
+				</div>				
+			</div>
+			<!-- /.row -->
+
+			<div class="row">
+				<!-- accepted payments column -->
+				<div class="col-xs-6">
+					<p class="lead">测评有效性分析:</p>
+					<a class="btn btn-app">
+						<i class="fa fa-repeat"></i> 有效
+					</a>
+					<a class="btn btn-app">
+						<span class="badge bg-yellow">3</span>
+						<i class="fa fa-bullhorn"></i> 预发布
+					</a>
+				
+					<a class="btn btn-app">
+						<span class="badge bg-green">300</span>
+						<i class="fa fa-barcode"></i> 公示
+					</a>
+					<a class="btn btn-app" id="printReport">						
+						<i class="fa fa-print"></i> 打印报告
+					</a>
+					<p class="text-muted well well-sm no-shadow" style="margin-top: 10px;">
+						本次活动与2019-4-20 08:00:00启动,发出票数200张.<br>
+						截止2019-6-1 20:00:00结束,共收回票数198张. 其中1张作废.<br>
+						测评过程: 有效.
+					</p>
+				</div>
+				<!-- /.col -->
+				<div class="col-xs-6">
+					<p class="lead">测评结果报告 2/22/2014</p>
+
+					<div class="table-responsive">
+						<table class="table">
+							<tbody>
+								<tr>
+									<th style="width:50%">督考推任务完成情况(10.5%):</th>
+									<td>10</td>
+								</tr>
+								<tr>
+									<th>服务意识 (59.3%)</th>
+									<td>10.34</td>
+								</tr>
+								<tr>
+									<th>德育(40%):</th>
+									<td>$5.80</td>
+								</tr>
+								<tr>
+									<th>作废:</th>
+									<td>5</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+				</div>
+				<!-- /.col -->
+			</div>
+			<!-- /.row -->
+
+			<!-- this row will not appear when printing -->
+			<div class="row no-print">
+				<div class="col-xs-12">				
+					<button type="button" class="btn btn-success pull-right"><i class="fa fa-credit-card"></i> 关闭报告
+					</button>
+					<button type="button" class="btn btn-primary pull-right" id="btnExport" style="margin-right: 5px;">
+						<i class="fa fa-download"></i> 导出 EXCLE
+					</button>
+				</div>
+			</div>
+		</section>
+	</div>
+</div>
+<!-- 模态框（Modal） -->
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+	<form id="searchForm" action="" method="post" class="form-inline hide" data-page-no="" data-page-size="" data-order-by="">
+
+	</form>
+	<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+						&times;
+					</button>
+					<h4 class="modal-title" id="myModalLabel">
+						选择测评人
+					</h4>
+				</div>
+				<div class="modal-body span6">								
+					todo:	${user}			
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-primary" data-dismiss="modal">确定
+							</button>
+					<button type="button" class="btn btn-default" data-dismiss="modal">取消
+					</button>
+				</div>
+			</div>
+		</div>
+	</div>
+<% } %>
+
+<script>
+
+//加载测评数据记录
+var evaluData = null;
+		$.ajax({
+			type:"POST",
+			async: false,
+			url:"${ctx}/businesscheckplan/businessCheckPlan/checkReport?checkPlanId=${businessCheckPlan.id}&deptId=",
+			dataType:"json",
+			success: function(json){
+				evaluData = json;				
+			}});
+
+// 初始化DataGrid对象
+$('#dataGrid').dataGrid({
+	data: evaluData,
+    datatype: "local",
+	height: "100%",
+	loadonce: true,
+	loadui: "disable", 
+	rowNum : evaluData==null?20:evaluData.length,//一页显示多少条
+    rowList : [ 20, 50, 100 ],//可供用户选择一页显示多少条 
+	columnModel: [
+		{header:'${text("参评部门")}', name:'full_name', index:'a.dept_id', width:300, align:"left", formatter: function(val, obj, row, act){
+			return '<a href="${ctx}/evalu/evalu/form?id='+row.dept_id+'" class="btnList" data-title="${text("查看部门详细得分")}">'+(val)+'</a>';
+		}},		
+		{header:'${text("有效回收评测表")}', name:'youxiao', index:'a.youxiao', width:100, align:"center"},
+		{header:'${text("总分")}', name:'zongfen', index:'a.zongfen', width:100, align:"center"},
+		{header:'${text("最终得分")}', name:'pingjun', index:'a.pingjun', width:100, align:"center"},
+		{header:'${text("总排名")}', name:'rownum', index:'a.rownum', width:100, align:"center"},
+		{header:'${text("等级")}', name:'level', index:'a.level', width:100, align:"center"},
+		{header:'${text("操作")}', name:'actions', width:120, sortable:false, title:false, align:"center", formatter: function(val, obj, row, act){
+			var actions = [];
+			<% if(hasPermi('evalu:evalu:edit')){ %>
+				actions.push('<button onclick="viewEvaluTable(this)" type="button" class="btn btn-default noborder" data-depat="'+ row.dept_id +'" data-depatname="'+ row.full_name +'" title="${text("查看评测明细")}"><i class="fa fa-list-ol"></i></button>&nbsp;');
+			<% } %>
+			return actions.join('');
+		}}
+	],
+	// loadComplete: function() {
+	// 	resetHeight();
+	// 	//BUG:手动关闭loading窗口
+	// 	js.closeLoading(0, true)
+	// },
+	ajaxSuccess: function(data){
+		
+	}
+});
+
+$(window).bind('resize', function() { 	
+		resetHeight();	
+});
+
+$(".btnList").bind('onClick', function(){
+	alert($(this));
+});
+
+//异步下载
+$('#btnExport').click(function(){
+	js.ajaxSubmitForm($('#searchForm'), {
+		url:'${ctx}/demo/print',
+		downloadFile:true
+	});
+});
+
+$(function(){
+	$("#printReport").click(function(){
+		var printHtml = document.getElementsByTagName('html')[0].innerHTML;
+		var wind = window.open("", "newwin", "toolbar=no,scrollbars=yes,menubar=no");	
+		wind.document.body.innerHTML = printHtml;
+		wind.print();
+		wind.close();
+	}); 
+});
+function resetHeight(){
+	if( evaluData.length != null){
+		var newHeight = (evaluData.length + 3)*36;
+		$("#dataGridContent").height(newHeight);
+		$(".ui-jqgrid .ui-jqgrid-bdiv").addClass("forceHeight");
+	}	
+}
+
+
+var temDepatID = "";
+var temDepatFullName = "";
+function viewEvaluTable(obj){
+	temDepatID = $(obj).attr("data-depat");
+	temDepatFullName = $(obj).attr("data-depatname");
+	$("#myModal #myModalLabel").html( temDepatFullName +  "<small>请选择测评人</small>");
+	$('#myModal').modal('show');
+	return false;
+}
+
+function viewDitail(name, depat_name){
+	// 查看明细	
+		js.addTabPage($(this), '评测明细', '${ctx}/evalu/evaluLib/reportTableView/${businessCheckPlan.id}/' + temDepatID + '/' + name, true, false);		
+	
+}
+
+
+</script>
