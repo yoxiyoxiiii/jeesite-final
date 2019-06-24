@@ -3,6 +3,7 @@
  */
 package com.jeesite.modules.service;
 
+import com.jeesite.common.collect.MapUtils;
 import com.jeesite.common.entity.Page;
 import com.jeesite.common.service.CrudService;
 import com.jeesite.modules.entity.BusinessJob;
@@ -11,6 +12,8 @@ import com.jeesite.modules.entity.BusinessCheckPlan;
 import com.jeesite.modules.entity.BusinessTarget2;
 import com.jeesite.modules.entity.BusinessTargetType;
 import com.jeesite.modules.sys.service.UserService;
+import com.jeesite.modules.sys.utils.DictUtils;
+import com.jeesite.modules.sys.utils.UserUtils;
 import org.quartz.JobDataMap;
 import org.quartz.SchedulerException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,8 +21,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
-import java.util.UUID;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 /**
  * 考核计划Service
@@ -78,6 +82,23 @@ public class BusinessCheckPlanService extends CrudService<BusinessCheckPlanDao, 
 	@Override
 	@Transactional(readOnly=false)
 	public void updateStatus(BusinessCheckPlan businessCheckPlan) {
+
+		//日志: 谁,什么时间,什么操作?
+		BusinessCheckPlan temp = get(businessCheckPlan.getId());
+		String logs = temp.getRemarks();
+		//操作状态
+		String option = DictUtils.getDictLabel("sys_status", businessCheckPlan.getStatus(), "处理");
+		Date date = new Date();
+		DateFormat df = new SimpleDateFormat("yyyy年MM月dd日 hh时mm分ss秒  EE", Locale.CHINA);
+		String log = "用户 %s 在 %s 时间,对该计划进行 %s 操作\r\n";
+		logs += String.format(log,
+				UserUtils.getUser().getUserName(),
+				df.format(date),
+				option
+		);
+		businessCheckPlan.setRemarks(logs);
+		businessCheckPlan.setIsNewRecord(false);
+		super.save(businessCheckPlan);
 		super.updateStatus(businessCheckPlan);
 	}
 
@@ -160,5 +181,21 @@ public class BusinessCheckPlanService extends CrudService<BusinessCheckPlanDao, 
 		super.delete(businessCheckPlan);
 
 	}
-	
+
+	/**
+	 * 绩效报告
+	 * @param checkPlanId 绩效计划ID
+	 * @param deptId  参评部门ID
+	 * @return
+	 */
+	@Transactional(readOnly = false)
+	public List<Map<String, Object>> findReport(String checkPlanId, String createBy, String deptId) {
+		Map<String, Object> ps = MapUtils.newHashMap();
+		ps.put("checkPlanId", checkPlanId);
+		ps.put("createBy", createBy);
+		ps.put("deptId", deptId);
+		List<Map<String, Object>> result = dao.findReport(ps);
+		return result;
+	}
+
 }

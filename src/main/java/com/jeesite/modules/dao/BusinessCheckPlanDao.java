@@ -7,6 +7,9 @@ import com.jeesite.common.dao.CrudDao;
 import com.jeesite.common.mybatis.annotation.MyBatisDao;
 import com.jeesite.modules.entity.BusinessCheckPlan;
 
+import java.util.List;
+import java.util.Map;
+
 /**
  * 考核计划DAO接口
  * @author BusinessCheckPlan
@@ -14,5 +17,5 @@ import com.jeesite.modules.entity.BusinessCheckPlan;
  */
 @MyBatisDao
 public interface BusinessCheckPlanDao extends CrudDao<BusinessCheckPlan> {
-	
+    public List<Map<String, Object>> findReport(Map<String, Object> params);
 }

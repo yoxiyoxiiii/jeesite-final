@@ -11,5 +11,8 @@
 		</where>
 		ORDER BY ${sqlMap.order.toSql()}
 	</select> -->
-	
+	<!-- 演示Map参数和返回值，支持分页 -->
+	<select id="findReport" resultType="map">
+		call check_report(#{checkPlanId})
+	</select>
 </mapper>
