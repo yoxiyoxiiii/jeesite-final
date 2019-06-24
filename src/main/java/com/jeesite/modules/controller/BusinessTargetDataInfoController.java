@@ -14,6 +14,7 @@ import com.jeesite.modules.entity.BusinessTargetDataItem;
 import com.jeesite.modules.service.BusinessTargetDataItemService;
 import com.jeesite.modules.sys.entity.User;
 import com.jeesite.modules.sys.service.UserService;
+import com.jeesite.modules.sys.utils.UserUtils;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -48,6 +49,8 @@ public class BusinessTargetDataInfoController extends BaseController {
 
 	@Autowired
 	private UserService userService;
+	@Autowired
+	private BusinessTargetDataItemService itemService;
 	
 	/**
 	 * 获取数据
@@ -167,15 +170,16 @@ public class BusinessTargetDataInfoController extends BaseController {
 	}
 	
 	/**
-	 * 启用上报的数据
+	 * 数据项状态变化
 	 */
+
 	@RequiresPermissions("businesstargetdatainfo:businessTargetDataInfo:edit")
 	@RequestMapping(value = "enable")
 	@ResponseBody
-	public String enable(BusinessTargetDataInfo businessTargetDataInfo) {
-		businessTargetDataInfo.setStatus(BusinessTargetDataInfo.STATUS_NORMAL);
-		businessTargetDataInfoService.updateStatus(businessTargetDataInfo);
-		return renderResult(Global.TRUE, text("启用上报的数据成功"));
+	public String enable(BusinessTargetDataInfo businessTargetDataInfo, String status) {
+		BusinessTargetDataItem businessTargetDataItem = businessTargetDataInfo.getBusinessTargetDataItem();
+		itemService.updateItemStatus(businessTargetDataItem.getId(), UserUtils.getUser().getUserCode(), status);
+		return renderResult(Global.TRUE, text("操作成功!"));
 	}
 	
 	/**

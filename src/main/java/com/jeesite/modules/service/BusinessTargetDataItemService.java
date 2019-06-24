@@ -87,4 +87,9 @@ public class BusinessTargetDataItemService extends CrudService<BusinessTargetDat
 	public List<BusinessTargetDataItem> findByBusinessTargetId(String businessTargetId) {
 		return dao.findByBusinessTargetId(businessTargetId);
 	}
+
+	@Transactional(readOnly=false)
+	public void updateItemStatus(String id, String userCode, String status) {
+		dao.updateItemStatus(id, userCode,status);
+	}
 }

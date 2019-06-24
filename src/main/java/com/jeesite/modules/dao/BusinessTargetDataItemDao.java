@@ -18,4 +18,6 @@ import java.util.List;
 public interface BusinessTargetDataItemDao extends CrudDao<BusinessTargetDataItem> {
 
     List<BusinessTargetDataItem> findByBusinessTargetId(String businessTargetId);
+
+    void updateItemStatus(String id, String userCode, String status);
 }
