@@ -28,4 +28,16 @@
         select target_id,data_item_count,up_item_count from business_target_task_monitor
         where target_id = #{targetId} and department_id = #{officeCode} and plan_id = #{businessCheckPlanId}
     </select>
+    <select id="countDept" resultType="java.lang.Long">
+        select COUNT(department_id) from business_target_task_monitor
+    </select>
+    <select id="countCompleteDept" resultType="java.lang.Long">
+        select COUNT(department_id) from  business_target_task_monitor where status = #{status}
+    </select>
+    <select id="countUpDataItem" resultType="java.lang.Long">
+        SELECT SUM(data_item_count) FROM business_target_task_monitor
+    </select>
+    <select id="countCompleteDataItem" resultType="java.lang.Long">
+        SELECT SUM(up_item_count) FROM business_target_task_monitor
+    </select>
 </mapper>

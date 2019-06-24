@@ -15,6 +15,49 @@
 <!--				<% } %>-->
 			</div>
 		</div>
+		<div class="row">
+			<div class="col-md-3 col-sm-6 col-xs-12">
+				<div class="info-box">
+					<span class="info-box-icon bg-aqua"><i class="fa fa-anchor"></i></span>
+					<div class="info-box-content">
+						<span class="info-box-text">考核部门</span>
+						<span class="info-box-number">${countDept}<small></small></span>
+					</div>
+				</div>
+			</div>
+			<div class="col-md-3 col-sm-6 col-xs-12">
+				<div class="info-box">
+					<span class="info-box-icon bg-red"><i class="fa fa-empire"></i></span>
+					<div class="info-box-content">
+						<span class="info-box-text">完成上报部门</span>
+						<span class="info-box-number">${countCompleteDept}</span>
+					</div>
+				</div>
+			</div>
+
+			<!-- fix for small devices only -->
+			<div class="clearfix visible-sm-block"></div>
+
+			<div class="col-md-3 col-sm-6 col-xs-12">
+				<div class="info-box">
+					<span class="info-box-icon bg-green"><i class="fa fa-connectdevelop"></i></span>
+					<div class="info-box-content">
+						<span class="info-box-text">应上报总数</span>
+						<span class="info-box-number">${countUpDataItem}</span>
+					</div>
+				</div>
+			</div>
+			<div class="col-md-3 col-sm-6 col-xs-12">
+				<div class="info-box">
+					<span class="info-box-icon bg-yellow"><i class="fa fa-puzzle-piece"></i></span>
+
+					<div class="info-box-content">
+						<span class="info-box-text">实际上报数</span>
+						<span class="info-box-number">${countCompleteDataItem}</span>
+					</div>
+				</div>
+			</div>
+		</div>
 		<div class="box-body">
 			<#form:form id="searchForm" model="${businessTargetTaskMonitor}" action="${ctx}/businesstargettaskmonitor/businessTargetTaskMonitor/listData" method="post" class="form-inline hide"
 					data-page-no="${parameter.pageNo}" data-page-size="${parameter.pageSize}" data-order-by="${parameter.orderBy}">
@@ -62,6 +105,7 @@
 				</div>
 			</#form:form>
 			<table id="dataGrid"></table>
+		    <div id="dataGridPage"></div>
 		</div>
 	</div>
 </div>
@@ -95,7 +139,7 @@ $('#dataGrid').dataGrid({
 	defaultExpandLevel: 0,	// 默认展开的层次
 	expandNodeClearPostData: 'targetId,departmentId,planId,targetTypeName,', // 展开节点清理请求参数数据（一般设置查询条件的字段属性，否则在查询后，不能展开子节点数据）	// 加载成功后执行事件
 	ajaxSuccess: function(data){
-		
+
 	}
 });
 </script>

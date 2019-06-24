@@ -27,4 +27,13 @@ public interface BusinessTargetTaskMonitorDao extends TreeDao<BusinessTargetTask
                      String status
 
     );
+
+    long countDept();
+
+    long countCompleteDept(String status);
+
+    long countUpDataItem();
+
+    long countCompleteDataItem();
+
 }

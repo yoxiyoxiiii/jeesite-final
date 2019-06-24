@@ -88,4 +88,20 @@ public class BusinessTargetTaskMonitorService extends TreeService<BusinessTarget
 	) {
 		super.dao.updateByIds(targetId, officeCode,  businessCheckPlanId,upItemCount, status);
 	}
+
+	public long countDept() {
+		return super.dao.countDept();
+	}
+
+	public long countCompleteDept(String status) {
+		return super.dao.countCompleteDept(status);
+	}
+
+	public long countUpDataItem() {
+		return super.dao.countUpDataItem();
+	}
+
+	public long countCompleteDataItem() {
+		return super.dao.countCompleteDataItem();
+	}
 }
