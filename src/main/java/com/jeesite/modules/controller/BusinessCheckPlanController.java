@@ -9,7 +9,6 @@ import com.jeesite.common.entity.Page;
 import com.jeesite.common.mapper.JsonMapper;
 import com.jeesite.common.web.BaseController;
 import com.jeesite.modules.entity.BusinessCheckPlan;
-import com.jeesite.modules.entity.EvaluLib;
 import com.jeesite.modules.service.BusinessCheckPlanService;
 import com.jeesite.modules.service.BusinessTarget2Service;
 import com.jeesite.modules.sys.entity.Office;
@@ -20,7 +19,6 @@ import org.quartz.SchedulerException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.util.StringUtils;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -92,9 +90,12 @@ public class BusinessCheckPlanController extends BaseController {
 	@PostMapping(value = "save")
 	@ResponseBody
 	public String save(@Validated BusinessCheckPlan businessCheckPlan) {
-		//只要修改过,就重走流程
-		businessCheckPlan.setStatus( BusinessCheckPlan.STATUS_DRAFT);
-		businessCheckPlanService.updateStatus(businessCheckPlan);
+		boolean isNewRecord = businessCheckPlan.getIsNewRecord();
+		if (!isNewRecord) {
+			//只要修改过,就重走流程
+			businessCheckPlan.setStatus( BusinessCheckPlan.STATUS_DRAFT);
+			businessCheckPlanService.updateStatus(businessCheckPlan);
+		}
 
 		if(businessCheckPlan.getPlanEndTime().getTime()<=businessCheckPlan.getPlanStartTime().getTime()) {return renderResult(Global.FALSE, text("计划时间设置不合理!"));};
 		if(businessCheckPlan.getPlanScoringEndTime().getTime()<=businessCheckPlan.getPlanScoringStartTime().getTime()) {return renderResult(Global.FALSE, text("评分时间设置不合理!"));};

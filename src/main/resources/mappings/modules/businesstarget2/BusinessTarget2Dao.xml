@@ -43,4 +43,7 @@
         left join js_sys_office o on bt.target_execute_dep_id = o.office_code
         where  plan_id = #{checkPlanId} limit #{pageNo},#{pageSize}
     </select>
+    <select id="findListByPlanId" resultType="com.jeesite.modules.entity.BusinessTarget2">
+       SELECT * from business_target WHERE plan_id = #{planId}
+    </select>
 </mapper>

@@ -12,6 +12,7 @@ import com.jeesite.modules.entity.BusinessStageTarget2;
 import com.jeesite.modules.entity.BusinessTarget2;
 import com.jeesite.modules.entity.BusinessTargetDataItem2;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -146,5 +147,9 @@ public class BusinessTarget2Service extends CrudService<BusinessTarget2Dao, Busi
 
 	public List<BusinessTarget2> findPage(String checkPlanId,Integer pageNo, Integer pageSize) {
 		return dao.findPageByCheckPlanId(checkPlanId,pageNo, pageSize);
+	}
+
+	public List<BusinessTarget2> findListByPlanId(@Param(value = "planId") String planId) {
+		return dao.findListByPlanId(planId);
 	}
 }

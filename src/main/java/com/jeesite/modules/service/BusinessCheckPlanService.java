@@ -6,11 +6,10 @@ package com.jeesite.modules.service;
 import com.jeesite.common.collect.MapUtils;
 import com.jeesite.common.entity.Page;
 import com.jeesite.common.service.CrudService;
-import com.jeesite.modules.entity.BusinessJob;
 import com.jeesite.modules.dao.BusinessCheckPlanDao;
 import com.jeesite.modules.entity.BusinessCheckPlan;
+import com.jeesite.modules.entity.BusinessJob;
 import com.jeesite.modules.entity.BusinessTarget2;
-import com.jeesite.modules.entity.BusinessTargetType;
 import com.jeesite.modules.sys.service.UserService;
 import com.jeesite.modules.sys.utils.DictUtils;
 import com.jeesite.modules.sys.utils.UserUtils;
@@ -116,12 +115,11 @@ public class BusinessCheckPlanService extends CrudService<BusinessCheckPlanDao, 
 	@Autowired
 	private BusinessTarget2Service businessTarget2Service;
 	private void addJob(BusinessCheckPlan businessCheckPlan) {
-		//考核模板
-
-		BusinessTargetType businessTargetTypeTree = businessCheckPlan.getBusinessTargetType();
-		String targetTypeCode = businessTargetTypeTree.getTargetTypeCode();
+		//考核计划ID
+		String id = businessCheckPlan.getId();
+		//得到该考核计划下的所有考核细则
+		List<BusinessTarget2> businessTarget2List = businessTarget2Service.findListByPlanId(id);
 		//根据考核模板获取 考核细则
-		List<BusinessTarget2> businessTarget2List = businessTarget2Service.findByTypeCode(targetTypeCode);
 		businessTarget2List.forEach(item->{
 			try {
 				setJob(businessCheckPlan, item);
