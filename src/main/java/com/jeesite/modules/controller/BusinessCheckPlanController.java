@@ -99,7 +99,8 @@ public class BusinessCheckPlanController extends BaseController {
 
 		if(businessCheckPlan.getPlanEndTime().getTime()<=businessCheckPlan.getPlanStartTime().getTime()) {return renderResult(Global.FALSE, text("计划时间设置不合理!"));};
 		if(businessCheckPlan.getPlanScoringEndTime().getTime()<=businessCheckPlan.getPlanScoringStartTime().getTime()) {return renderResult(Global.FALSE, text("评分时间设置不合理!"));};
-		businessCheckPlan.setPlanStatus(1);//未启动
+//		businessCheckPlan.setPlanStatus(1);//未启动
+		businessCheckPlan.setStatus("9");//未启动
 		/*  sanye: 必填项应该在实体里面约束
 		String targetTypeCode = businessCheckPlan.getBusinessTargetType().getTargetTypeCode();
 		List<BusinessTarget2> businessTarget2List = businessTarget2Service.findByTypeCode(targetTypeCode);
@@ -129,14 +130,14 @@ public class BusinessCheckPlanController extends BaseController {
 	 * 启用考核计划
 	 * 生成一个定时任务，并启动
 	 */
+
 	@RequiresPermissions("businesscheckplan:businessCheckPlan:edit")
 	@RequestMapping(value = "enable")
 	@ResponseBody
 	public String enable(BusinessCheckPlan businessCheckPlan) throws ClassNotFoundException, SchedulerException {
 		businessCheckPlan.setStatus(BusinessCheckPlan.STATUS_NORMAL);
-		businessCheckPlanService.updateStatus(businessCheckPlan);
-		businessCheckPlanService.start(businessCheckPlan);
-		return renderResult(Global.TRUE, text("启用考核计划成功"));
+		Map<String, Object> objectMap = businessCheckPlanService.start(businessCheckPlan);
+		return renderResult((String) objectMap.get("result"), text((String) objectMap.get("msg")));
 	}
 	
 	/**
