@@ -7,10 +7,10 @@ import com.jeesite.common.config.Global;
 import com.jeesite.common.entity.Page;
 import com.jeesite.common.web.BaseController;
 import com.jeesite.modules.entity.BusinessTarget2;
-import com.jeesite.modules.service.BusinessTarget2Service;
 import com.jeesite.modules.entity.BusinessTargetDataInfo;
-import com.jeesite.modules.service.BusinessTargetDataInfoService;
 import com.jeesite.modules.entity.BusinessTargetDataItem;
+import com.jeesite.modules.service.BusinessTarget2Service;
+import com.jeesite.modules.service.BusinessTargetDataInfoService;
 import com.jeesite.modules.service.BusinessTargetDataItemService;
 import com.jeesite.modules.sys.entity.User;
 import com.jeesite.modules.sys.service.UserService;
@@ -49,8 +49,8 @@ public class BusinessTargetDataInfoController extends BaseController {
 
 	@Autowired
 	private UserService userService;
-	@Autowired
-	private BusinessTargetDataItemService itemService;
+
+
 	
 	/**
 	 * 获取数据
@@ -178,10 +178,36 @@ public class BusinessTargetDataInfoController extends BaseController {
 	@ResponseBody
 	public String enable(BusinessTargetDataInfo businessTargetDataInfo, String status) {
 		BusinessTargetDataItem businessTargetDataItem = businessTargetDataInfo.getBusinessTargetDataItem();
-		itemService.updateItemStatus(businessTargetDataItem.getId(), UserUtils.getUser().getUserCode(), status);
+		dataItemService.updateItemStatus(businessTargetDataItem.getId(), UserUtils.getUser().getUserCode(), status);
 		return renderResult(Global.TRUE, text("操作成功!"));
 	}
-	
+
+	/**
+	 *
+	 * 数据填报驳回
+	 * @param id
+	 * @return
+	 */
+	@RequiresPermissions("businesstargetdatainfo:businessTargetDataInfo:edit")
+	@RequestMapping(value = "back")
+	public String back(String id, Model model) {
+		model.addAttribute("id",id);
+		return "modules/businesstargetdatainfo/back";
+	}
+
+
+	@RequiresPermissions("businesstargetdatainfo:businessTargetDataInfo:edit")
+	@RequestMapping(value = "saveBack")
+	public String saveBack(String id, String msg) {
+		BusinessTargetDataInfo businessTargetDataInfo = businessTargetDataInfoService.get(id);
+		String dataItemId = businessTargetDataInfo.getBusinessTargetDataItem().getId();
+		BusinessTargetDataItem businessTargetDataItem = dataItemService.get(dataItemId);
+		businessTargetDataItem.setMsg(msg);
+		businessTargetDataItem.setItemStatus("3");//驳回
+		dataItemService.update(businessTargetDataItem);
+		return "redirect:list";
+	}
+
 	/**
 	 * 删除上报的数据
 	 */

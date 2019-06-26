@@ -112,6 +112,9 @@ public class SendMsgJobService {
                     businessPlanUserTask.setOffice(o);
                     businessPlanUserTaskService.save(businessPlanUserTask);
                     employeeDtos.add(employeeDto);
+                    dateItem.setItemStatus("0");//待填报
+                    dateItem.setIsNewRecord(false);
+                    businessTargetDataItemService.save(dateItem);
                 }
                 msgPush(employeeDtos);
             }

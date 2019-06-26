@@ -63,7 +63,18 @@ public class BusinessTargetDataItemService extends CrudService<BusinessTargetDat
 		// 保存上传附件
 		FileUploadUtils.saveFileUpload(businessTargetDataItem.getId(), "businessTargetDataItem_file");
 	}
-	
+
+
+	/**
+	 * 保存数据（插入或更新）
+	 * @param businessTargetDataItem
+	 */
+	@Override
+	@Transactional(readOnly=false)
+	public void update(BusinessTargetDataItem businessTargetDataItem) {
+	   super.dao.update(businessTargetDataItem);
+	}
+
 	/**
 	 * 更新状态
 	 * @param businessTargetDataItem

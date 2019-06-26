@@ -5,12 +5,8 @@ package com.jeesite.modules.service;
 
 import com.jeesite.common.entity.Page;
 import com.jeesite.common.service.CrudService;
-import com.jeesite.modules.entity.BusinessCheckPlan;
-import com.jeesite.modules.entity.BusinessCheckPlanUser;
-import com.jeesite.modules.entity.BusinessPlanUserTask;
 import com.jeesite.modules.dao.BusinessTargetDataInfoDao;
-import com.jeesite.modules.entity.BusinessTargetDataInfo;
-import com.jeesite.modules.entity.BusinessTargetTaskMonitor;
+import com.jeesite.modules.entity.*;
 import com.jeesite.modules.file.utils.FileUploadUtils;
 import com.jeesite.modules.sys.entity.Office;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,6 +24,14 @@ public class BusinessTargetDataInfoService extends CrudService<BusinessTargetDat
 
 	@Autowired
 	private BusinessPlanUserTaskService planUserTaskService;
+	@Autowired
+	private BusinessCheckPlanUserService checkPlanUserService;
+	@Autowired
+	private BusinessCheckPlanService businessCheckPlanService;
+	@Autowired
+	private BusinessTargetTaskMonitorService businessTargetTaskMonitorService;
+	@Autowired
+	private BusinessTargetDataItemService businessTargetDataItemService;
 	/**
 	 * 获取单条数据
 	 * @param businessTargetDataInfo
@@ -67,15 +71,13 @@ public class BusinessTargetDataInfoService extends CrudService<BusinessTargetDat
 	 * 保存数据（插入或更新）
 	 * @param businessTargetDataInfo
 	 */
-	@Autowired
-	private BusinessCheckPlanUserService checkPlanUserService;
-	@Autowired
-	private BusinessCheckPlanService businessCheckPlanService;
-	@Autowired
-	private BusinessTargetTaskMonitorService businessTargetTaskMonitorService;
 	@Transactional(readOnly=false)
 	public void save(BusinessTargetDataInfo businessTargetDataInfo,String userTaskId) {
 		this.save(businessTargetDataInfo);
+		BusinessTargetDataItem businessTargetDataItem = businessTargetDataItemService.get(businessTargetDataInfo.getBusinessTargetDataItem().getId());
+		businessTargetDataItem.setItemStatus("1");//待审
+		businessTargetDataItem.setIsNewRecord(false);
+		businessTargetDataItemService.save(businessTargetDataItem);
 		//更新个人任务状态
 		BusinessPlanUserTask businessPlanUserTask =planUserTaskService.get(userTaskId);
 		businessPlanUserTask.setTaskStatus(2);

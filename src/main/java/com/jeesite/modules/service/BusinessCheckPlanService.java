@@ -123,7 +123,6 @@ public class BusinessCheckPlanService extends CrudService<BusinessCheckPlanDao, 
      *
      * @param businessCheckPlan
      */
-
     @Transactional(readOnly = false, rollbackFor = Exception.class, propagation = Propagation.REQUIRED)
     public Map<String, Object> start(BusinessCheckPlan businessCheckPlan) throws SchedulerException, ClassNotFoundException {
         Map<String, Object> addJob = addJob(businessCheckPlan);//一个考核计划一个job
@@ -144,6 +143,9 @@ public class BusinessCheckPlanService extends CrudService<BusinessCheckPlanDao, 
             return result;
         }
         BusinessCheckPlanUser businessCheckPlanUser = planUsers.stream().findFirst().get();
+        businessCheckPlanUser.setPlanUserStatus("2");//考核中
+        businessCheckPlanUser.setIsNewRecord(false);
+        businessCheckPlanUserService.save(businessCheckPlanUser);
         //得到考核的部门
         String departmentId = businessCheckPlanUser.getDepartmentId();
         String[] split = departmentId.split(",");
