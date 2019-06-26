@@ -12,10 +12,8 @@ import org.springframework.stereotype.Repository;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.stream.Collectors;
 
 
 @Slf4j
@@ -35,7 +33,9 @@ public class BusinessJobJdbc {
         NamedParameterJdbcTemplate namedParameterJdbcTemplate = new NamedParameterJdbcTemplate(jdbcTemplate);
         List<EmployeeDto> list = namedParameterJdbcTemplate.query(sql, params, new BeanPropertyRowMapper(EmployeeDto.class));
         log.info("数据上报员集合 -> {}",list);
-        return list;
+        //数据管理员去重
+        return list.stream().collect(Collectors.collectingAndThen(
+                Collectors.toCollection(() -> new TreeSet<>(Comparator.comparing(EmployeeDto::getOfficeCode))),ArrayList::new));
     }
 
     public EmployeeDto findOfficeCode(String departmentId, String dataReporter) {
