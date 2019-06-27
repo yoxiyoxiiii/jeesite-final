@@ -84,11 +84,10 @@ public class BusinessTarget2 extends DataEntity<BusinessTarget2> {
 	@Setter
 	@NotNull(message = "考核内容必填!")
 	private String targetContent;		// 考核内容，考核细则
-	@Getter
-	@Setter
+	@Getter @Setter
 	@NotNull(message = "请设置单位分值!")
 	@Max(value = 100,message = "请合理设置单位分值!")
-	private BigDecimal targetScore;		// 单位分值
+	private Double targetScore;		// 单位分值
 //	@Getter
 //	@Setter
 //	private BigDecimal targetMaxScore;		// 最高分值
@@ -96,7 +95,7 @@ public class BusinessTarget2 extends DataEntity<BusinessTarget2> {
 	@Setter
 	@Max(value = 100,message = "请合理设置最高分!")
 	@Min(value = 1,message = "请合理设置最高分!")
-	private BigDecimal targetMax;		// 考核计划最高目标
+	private Double targetMax;		// 考核计划最高目标
 	@Getter
 	@Setter
 	private Integer targetWeigth;		// 权重

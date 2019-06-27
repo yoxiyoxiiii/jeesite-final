@@ -5,6 +5,7 @@ package com.jeesite.modules.dao;
 
 import com.jeesite.common.dao.CrudDao;
 import com.jeesite.common.mybatis.annotation.MyBatisDao;
+import com.jeesite.modules.entity.BusinessStageTarget2;
 import com.jeesite.modules.entity.BusinessTarget2;
 import org.apache.ibatis.annotations.Param;
 
@@ -33,4 +34,14 @@ public interface BusinessTarget2Dao extends CrudDao<BusinessTarget2> {
                                                 @Param(value = "pageSize") Integer pageSize);
 
     List<BusinessTarget2> findListByPlanId(String planId);
+
+    BusinessStageTarget2 findTargetStageBy(@Param(value = "id") String id,
+                                           @Param(value = "currentStageNumber")Integer currentStageNumber);
+
+    /**
+     * 根据target ID 统计 有阶段目标数
+     * @param id
+     * @return
+     */
+    int countStages(@Param("id") String id);
 }

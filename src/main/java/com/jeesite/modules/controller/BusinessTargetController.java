@@ -219,13 +219,13 @@ public class BusinessTargetController extends BaseController {
 		String targetCheckCycle = businessTarget2.getTargetCheckCycle();
 		int stages = Integer.valueOf(checkCycle)/Integer.valueOf(targetCheckCycle);
 		if(businessTarget2.getBusinessStageTarget2List().size() != stages){return renderResult(Global.FALSE, text("阶段目标期数错误："+stages)); }
-		businessTarget2.setExpressionStatus(0);//设置公式状态：未设置公式
-		if(businessTarget2.getTargetScore().doubleValue()<=0) {return renderResult(Global.FALSE, text("单位分值不合理！"));}
+		if(businessTarget2.getTargetScore()<=0) {return renderResult(Global.FALSE, text("单位分值不合理！"));}
 		if(org.springframework.util.StringUtils.isEmpty(businessTarget2.getExecuteDepartments().getId())) {return renderResult(Global.FALSE, text("执行部门未设置！"));}
 		List<BusinessTargetDataItem2> businessTargetDataItem2List = businessTarget2.getBusinessTargetDataItem2List();
 		if (org.springframework.util.StringUtils.isEmpty(businessTargetDataItem2List) || businessTargetDataItem2List.size() == 0) {return renderResult(Global.FALSE, text("请设置数据采集项!"));}
 		BusinessCheckPlan businessCheckPlan = new BusinessCheckPlan();
 		businessCheckPlan.setId(checkPlanId);
+		businessTarget2.setExpressionStatus(0);//设置公式状态：未设置公式
 		businessTarget2.setBusinessCheckPlan(businessCheckPlan);
 		businessTarget2Service.save(businessTarget2);
 		return renderResult(Global.TRUE, text("保存指标成功！"));

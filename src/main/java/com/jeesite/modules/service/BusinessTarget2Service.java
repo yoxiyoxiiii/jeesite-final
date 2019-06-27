@@ -85,12 +85,15 @@ public class BusinessTarget2Service extends CrudService<BusinessTarget2Dao, Busi
 				businessTargetDataItem2Dao.delete(businessTargetDataItem2);
 			}
 		}
+		List<BusinessStageTarget2> businessStageTarget2List = businessTarget2.getBusinessStageTarget2List();
 		// 保存 BusinessTarget2子表
-		for (BusinessStageTarget2 businessStageTarget2 : businessTarget2.getBusinessStageTarget2List()){
+		for (int i=0; i<businessStageTarget2List.size() ; i++){
+			BusinessStageTarget2 businessStageTarget2 = businessStageTarget2List.get(i);
 			if (!BusinessStageTarget2.STATUS_DELETE.equals(businessStageTarget2.getStatus())){
 				businessStageTarget2.setTargetId(businessTarget2);
 				if (businessStageTarget2.getIsNewRecord()){
 					businessStageTarget2.preInsert();
+					businessStageTarget2.setStageOrder(i+1);//设置排序
 					businessStageTarget2Dao.insert(businessStageTarget2);
 				}else{
 					businessStageTarget2.preUpdate();
@@ -151,5 +154,13 @@ public class BusinessTarget2Service extends CrudService<BusinessTarget2Dao, Busi
 
 	public List<BusinessTarget2> findListByPlanId(@Param(value = "planId") String planId) {
 		return dao.findListByPlanId(planId);
+	}
+
+	public BusinessStageTarget2 findTargetStageBy(String id, Integer currentStageNumber) {
+		return dao.findTargetStageBy(id, currentStageNumber);
+	}
+
+	public int countStages(String id) {
+		return dao.countStages(id);
 	}
 }

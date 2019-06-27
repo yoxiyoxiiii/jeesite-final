@@ -46,4 +46,11 @@
     <select id="findListByPlanId" resultType="com.jeesite.modules.entity.BusinessTarget2">
        SELECT * from business_target WHERE plan_id = #{planId}
     </select>
+    <select id="findTargetStageBy" resultType="com.jeesite.modules.entity.BusinessStageTarget2">
+        SELECT * from business_stage_target
+         WHERE target_id = #{id} and stage_order = #{currentStageNumber}
+    </select>
+    <select id="countStages" resultType="java.lang.Integer">
+        select count(*) from business_stage_target where target_id = #{id}
+    </select>
 </mapper>

@@ -9,6 +9,8 @@ import com.jeesite.common.mybatis.annotation.Column;
 import com.jeesite.common.mybatis.annotation.JoinTable;
 import com.jeesite.common.mybatis.annotation.Table;
 import com.jeesite.common.mybatis.mapper.query.QueryType;
+import lombok.Getter;
+import lombok.Setter;
 import org.hibernate.validator.constraints.Length;
 
 import java.util.Date;
@@ -23,6 +25,8 @@ import java.util.Date;
 		@Column(name="target_id", attrName="businessTarget.id", label="考核目标"),
 		@Column(name="plan_id", attrName="businessCheckPlan.id", label="考核计划"),
 		@Column(name="corn", attrName="corn", label="执行周期"),
+		@Column(name="stage_number", attrName="stageNumber", label="job执行次数"),
+		@Column(name="current_stage_number", attrName="currentStageNumber", label="当前期数"),
 		@Column(name="job_name", attrName="jobName", label="任务名称", queryType=QueryType.LIKE),
 		@Column(name="job_group", attrName="jobGroup", label="任务分组"),
 		@Column(name="bean_name", attrName="beanName", label="bean名称", queryType=QueryType.LIKE),
@@ -47,6 +51,12 @@ public class BusinessJob extends DataEntity<BusinessJob> {
 	private BusinessCheckPlan businessCheckPlan;		// 考核计划
 	private String corn;		// 执行周期
 	private String jobName;		// 任务名称
+	@Getter
+	@Setter
+	private Integer stageNumber;		// 任务执行多少期
+	@Getter
+	@Setter
+	private Integer currentStageNumber;		// 当前期数
 
 	public BusinessTarget2 getBusinessTarget() {
 		return businessTarget;

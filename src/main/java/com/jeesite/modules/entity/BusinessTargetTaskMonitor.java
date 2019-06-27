@@ -7,6 +7,7 @@ import com.jeesite.common.entity.TreeEntity;
 import com.jeesite.common.mybatis.annotation.Column;
 import com.jeesite.common.mybatis.annotation.JoinTable;
 import com.jeesite.common.mybatis.annotation.Table;
+import com.jeesite.modules.dao.BusinessStageTarget2Dao;
 import com.jeesite.modules.sys.entity.Office;
 import lombok.Getter;
 import lombok.Setter;
@@ -71,10 +72,15 @@ public class BusinessTargetTaskMonitor extends TreeEntity<BusinessTargetTaskMoni
 	@Getter
 	@Setter
 	private Office office;
-
 	@Getter
 	@Setter
 	private BusinessCheckPlan businessCheckPlan;
+	/**
+	 * 该条任务监控对应的期数
+	 */
+	@Getter
+	@Setter
+	private BusinessStageTarget2 businessStageTarget2;
 
 	public synchronized void addUpItemCount() {
 		this.upItemCount = upItemCount+1;

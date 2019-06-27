@@ -1,6 +1,7 @@
 package com.jeesite.modules.job;
 
 import com.jeesite.modules.entity.BusinessCheckPlan;
+import com.jeesite.modules.entity.BusinessJob;
 import com.jeesite.modules.service.SendMsgJobService;
 import com.jeesite.modules.entity.BusinessTarget2;
 import lombok.extern.slf4j.Slf4j;
@@ -21,10 +22,8 @@ public class SendMsgJob implements Job {
     @Autowired
     private SendMsgJobService sendMsgJobService;
 
-
-
     @Override
-    public void execute(JobExecutionContext context) throws JobExecutionException {
+    public void execute(JobExecutionContext context) {
         JobDataMap jobDataMap = context.getJobDetail().getJobDataMap();
         BusinessTarget2 businessTarget = (BusinessTarget2) jobDataMap.get("businessTarget");
         BusinessCheckPlan businessCheckPlan = (BusinessCheckPlan) jobDataMap.get("businessCheckPlan");

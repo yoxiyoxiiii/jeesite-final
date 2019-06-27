@@ -59,7 +59,17 @@ public class BusinessJobService extends CrudService<BusinessJobDao, BusinessJob>
 		//添加任务到quartz
 		quartzService.addJob(businessJob.getJobName(),businessJob.getJobGroup(),businessJob.getCorn(),jobDataMap);
 	}
-	
+
+	/**
+	 * 保存数据（插入或更新）
+	 * @param businessJob
+	 */
+	@Transactional(rollbackFor = Exception.class, propagation = Propagation.REQUIRED)
+	public void restart(BusinessJob businessJob, JobDataMap jobDataMap){
+		//重启quartz
+		quartzService.resume(businessJob.getJobName(),businessJob.getJobGroup());
+	}
+
 	/**
 	 * 更新状态
 	 * @param businessJob
@@ -84,5 +94,17 @@ public class BusinessJobService extends CrudService<BusinessJobDao, BusinessJob>
 	public List<BusinessJob> findByBusinessCheckPlanId(String businessCheckPlanId) {
 		List<BusinessJob> businessJobs = dao.findByBusinessCheckPlanId(businessCheckPlanId);
 		return businessJobs;
+	}
+
+	public void updateJobStatus(String checkPlanId, String jobStatus) {
+		super.dao.updateJobStatus(checkPlanId,jobStatus);
+	}
+
+	public BusinessJob findByTargetId(String businessTargetId) {
+		return super.dao.findByTargetId(businessTargetId);
+	}
+
+	public void pause(BusinessJob businessJob) {
+		quartzService.pause(businessJob.getJobName(), businessJob.getJobGroup());
 	}
 }

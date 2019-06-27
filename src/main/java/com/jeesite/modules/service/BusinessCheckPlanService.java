@@ -120,17 +120,28 @@ public class BusinessCheckPlanService extends CrudService<BusinessCheckPlanDao, 
 
     /**
      * 更新状态,关联定时任务
+     * 一个计划 一个 job
      *
      * @param businessCheckPlan
      */
     @Transactional(readOnly = false, rollbackFor = Exception.class, propagation = Propagation.REQUIRED)
     public Map<String, Object> start(BusinessCheckPlan businessCheckPlan) throws SchedulerException, ClassNotFoundException {
-        Map<String, Object> addJob = addJob(businessCheckPlan);//一个考核计划一个job
-        this.updateStatus(businessCheckPlan);
-        return addJob;
+        String checkPlanId = businessCheckPlan.getId();
+        List<BusinessJob> jobs = businessJobService.findByBusinessCheckPlanId(checkPlanId);
+        if (jobs.size() == 0) {//该计划没有添加任务
+            Map<String, Object> addJob = addJob(businessCheckPlan, true);//一个考核计划一个job
+            this.updateStatus(businessCheckPlan);
+            return addJob;
+        }
+        //存在任务，更新任务状态
+        Map<String, Object> stringObjectMap = addJob(businessCheckPlan, false);
+        businessJobService.updateJobStatus(checkPlanId, "5");//设置为运行状态
+        return stringObjectMap;
+
     }
 
-    private Map<String, Object> addJob(BusinessCheckPlan businessCheckPlan) {
+
+    private Map<String, Object> addJob(BusinessCheckPlan businessCheckPlan, boolean add) {
         Map<String, Object> result = new HashMap<>();
         //考核计划ID
         String id = businessCheckPlan.getId();
@@ -150,7 +161,7 @@ public class BusinessCheckPlanService extends CrudService<BusinessCheckPlanDao, 
         String departmentId = businessCheckPlanUser.getDepartmentId();
         String[] split = departmentId.split(",");
         for (String deptId : split) {
-            if(officeService.get(deptId).getTreeLevel()!=0) {
+            if (officeService.get(deptId).getTreeLevel() != 0) {
                 EmployeeDto employeeDto = businessJobJdbc.findOfficeCode(deptId, "dataReporter");
                 if (StringUtils.isEmpty(employeeDto)) {
                     result.put("result", Global.FALSE);
@@ -166,20 +177,23 @@ public class BusinessCheckPlanService extends CrudService<BusinessCheckPlanDao, 
             result.put("msg", "该计划未设置考核细则!");
             return result;
         }
-        //根据考核模板获取 考核细则
-        businessTarget2List.forEach(item -> {
-            try {
-                setJob(businessCheckPlan, item);
-            } catch (ClassNotFoundException e) {
-                e.printStackTrace();
-            } catch (SchedulerException e) {
-                e.printStackTrace();
-            }
-        });
+
+            //根据考核模板获取 考核细则,一个考核细则对应一个job
+            businessTarget2List.forEach(item -> {
+                try {
+                    setJob(businessCheckPlan, item,add);
+                } catch (ClassNotFoundException e) {
+                    e.printStackTrace();
+                } catch (SchedulerException e) {
+                    e.printStackTrace();
+                }
+            });
+
         result.put("result", Global.FALSE);
         result.put("msg", "操作成功!");
         return result;
     }
+
 
     /**
      * 停止任务
@@ -204,7 +218,14 @@ public class BusinessCheckPlanService extends CrudService<BusinessCheckPlanDao, 
     @Autowired
     private DictDataJdbc dictDataJdbc;
 
-    private void setJob(BusinessCheckPlan businessCheckPlan, BusinessTarget2 businessTarget) throws ClassNotFoundException, SchedulerException {
+    private void setJob(BusinessCheckPlan businessCheckPlan, BusinessTarget2 businessTarget, boolean add) throws ClassNotFoundException, SchedulerException {
+        if (!add) {//job 重启
+            List<BusinessJob> businessJobs = businessJobService.findByBusinessCheckPlanId(businessCheckPlan.getId());
+            businessJobs.forEach(job->{
+                businessJobService.restart(job, null);
+            });
+            return;
+        }
         //目标考核周期 周、半月、月、季度、半年、年 ，定时任务关联长度不能超过 255 个字符")
         String targetCheckCycle = businessTarget.getTargetCheckCycle();
         DictDataJdbc.DictDataDto dictDataDto = dictDataJdbc.getDictDataDto("target_check_cycle", targetCheckCycle);
@@ -216,6 +237,9 @@ public class BusinessCheckPlanService extends CrudService<BusinessCheckPlanDao, 
         businessJob.setJobName("com.jeesite.modules.job.SendMsgJob" + "-" + UUID.randomUUID());
         businessJob.setJobGroup(businessCheckPlan.getId());
         businessJob.setBusinessTarget(businessTarget);
+        int count = businessTarget2Service.countStages(businessTarget.getId());
+        businessJob.setStageNumber(count);//设置job 执行次数
+        businessJob.setCurrentStageNumber(0);
         businessJob.setBusinessCheckPlan(businessCheckPlan);
         JobDataMap jobDataMap = new JobDataMap();
 
@@ -223,7 +247,9 @@ public class BusinessCheckPlanService extends CrudService<BusinessCheckPlanDao, 
         jobDataMap.put("businessTarget", businessTarget);
         jobDataMap.put("businessCheckPlan", businessCheckPlan);
         businessJob.setJobStatus("5");//运行
+
         businessJobService.save(businessJob, jobDataMap);
+
     }
 
 

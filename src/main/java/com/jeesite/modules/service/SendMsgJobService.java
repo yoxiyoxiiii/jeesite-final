@@ -37,6 +37,7 @@ public class SendMsgJobService {
     @Autowired
     private BusinessTarget2Service businessTarget2Service;
 
+
     @Autowired
     private BusinessJobJdbc businessJobJdbc;
 
@@ -48,11 +49,33 @@ public class SendMsgJobService {
      */
     @Autowired
     private BusinessTargetTaskMonitorService businessTargetTaskMonitorService;
+    @Autowired
+    private BusinessJobService businessJobService;
 
     @Transactional(readOnly = false, rollbackFor = Exception.class)
     public void createTaskJob(BusinessTarget2 businessTarget, BusinessCheckPlan businessCheckPlan) {
         String businessCheckPlanId = businessCheckPlan.getId();
         String businessTargetId = businessTarget.getId();
+        //根据 businessTargetId 获取当前的job信息
+        BusinessJob businessJob = businessJobService.findByTargetId(businessTargetId);
+        businessJob.setIsNewRecord(false);
+        //获取总的执行次数
+        Integer stageNumber = businessJob.getStageNumber();
+        //当前执行的次数
+        Integer currentStageNumber = businessJob.getCurrentStageNumber();
+        if (stageNumber.equals(currentStageNumber)) {
+            //停止任务，考核计划 发送任务次数完成
+            businessJobService.pause(businessJob);
+            businessJob.setJobStatus("1");//完成
+            businessJobService.save(businessJob);
+            log.info("<<<<<<<<<<<<<考核计划完成!>>>>>>>");
+            return;
+        } else {
+            //更新次数
+            businessJob.setCurrentStageNumber(businessJob.getCurrentStageNumber()+1);//次数加一
+            businessJobService.save(businessJob);
+        }
+
         BusinessTarget2 businessTarget21 = businessTarget2Service.get(businessTargetId);
         //数据采集项
         List<BusinessTargetDataItem> businessTargetDataItemList = businessTargetDataItemService.findByBusinessTargetId(businessTargetId);
@@ -80,14 +103,18 @@ public class SendMsgJobService {
                 o.setOfficeCode(employeeDto.getOfficeCode());
                 businessTargetTaskMonitor.setOffice(o);
                 businessTargetTaskMonitor.setBusinessCheckPlan(businessCheckPlan);
-                BusinessTargetTaskMonitor taskMonitor = businessTargetTaskMonitorService.findByIds(businessTarget.getId(), employeeDto.getOfficeCode(), businessCheckPlanId);
-                if (taskMonitor != null) {
-                    log.info("考核部门任务数据存在: {}", employeeDto);
-                    continue;
-                }
+//                BusinessTargetTaskMonitor taskMonitor = businessTargetTaskMonitorService.findByIds(businessTarget.getId(), employeeDto.getOfficeCode(), businessCheckPlanId);
+//                if (taskMonitor != null) {
+//                    log.info("考核部门任务数据存在: {}", employeeDto);
+//                    continue;
+//                }
                 log.info("考核部门集合: {}", employeeDto);
                 businessTargetTaskMonitor.setBusinessCheckPlan(businessCheckPlan);
                 businessTargetTaskMonitor.setStatus("2");
+
+                //根据 阶段目标的序号和ID 获取
+                BusinessStageTarget2 businessStageTarget2 = businessTarget2Service.findTargetStageBy(businessTarget.getId(),businessJob.getCurrentStageNumber());
+                businessTargetTaskMonitor.setBusinessStageTarget2(businessStageTarget2);
                 //保存监控主表
                 businessTargetTaskMonitorService.save(businessTargetTaskMonitor);
                 BusinessTargetTaskMonitor monitor = businessTargetTaskMonitorService.get(businessTargetTaskMonitor);

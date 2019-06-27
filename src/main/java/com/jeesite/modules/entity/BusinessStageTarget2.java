@@ -3,6 +3,8 @@
  */
 package com.jeesite.modules.entity;
 
+import lombok.Getter;
+import lombok.Setter;
 import org.hibernate.validator.constraints.Length;
 
 import com.jeesite.common.entity.DataEntity;
@@ -21,6 +23,8 @@ import com.jeesite.common.mybatis.mapper.query.QueryType;
 		@Column(name="stage_number", attrName="stageNumber", label="期数 默认为一期", comment="期数 默认为一期："),
 		@Column(name="stage_target_value", attrName="stageTargetValue", label="目标值"),
 		@Column(name="stage_weight", attrName="stageWeight", label="权重%"),
+		@Column(name="stage_status", attrName="stageStatus", label="j"),
+		@Column(name="stage_order", attrName="stageOrder", label="序号"),
 		@Column(name="stage_try_hard_value", attrName="stageTryHardValue", label="争创值"),
 		@Column(name="create_date", attrName="createDate", label="create_date", isUpdate=false, isQuery=false),
 		@Column(name="update_date", attrName="updateDate", label="update_date", isQuery=false),
@@ -36,7 +40,10 @@ public class BusinessStageTarget2 extends DataEntity<BusinessStageTarget2> {
 	private Integer stageWeight;		// 权重%
 	private String stageTryHardValue;		// 争创值
 	private String stageName;		// 阶段目标名称
-	
+	@Setter
+	@Getter
+	private Integer stageOrder;		// 阶段目标 序号
+
 	public BusinessStageTarget2() {
 		this(null);
 	}

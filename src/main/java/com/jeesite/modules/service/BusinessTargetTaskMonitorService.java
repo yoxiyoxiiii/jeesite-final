@@ -6,8 +6,11 @@ package com.jeesite.modules.service;
 import com.jeesite.common.service.TreeService;
 import com.jeesite.modules.dao.BusinessTargetTaskMonitorDao;
 import com.jeesite.modules.entity.BusinessTargetTaskMonitor;
+import com.jeesite.modules.utils.StringUtil;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
+import sun.reflect.generics.reflectiveObjects.LazyReflectiveObjectGenerator;
 
 import java.util.List;
 
@@ -89,19 +92,31 @@ public class BusinessTargetTaskMonitorService extends TreeService<BusinessTarget
 		super.dao.updateByIds(targetId, officeCode,  businessCheckPlanId,upItemCount, status);
 	}
 
-	public long countDept() {
+	public Long countDept() {
 		return super.dao.countDept();
 	}
 
-	public long countCompleteDept(String status) {
-		return super.dao.countCompleteDept(status);
+	public Long countCompleteDept(String status) {
+		Long countCompleteDept = super.dao.countCompleteDept(status);
+		if (StringUtils.isEmpty(countCompleteDept)) {
+			return 0L;
+		}
+		return countCompleteDept;
 	}
 
-	public long countUpDataItem() {
-		return super.dao.countUpDataItem();
+	public Long countUpDataItem() {
+		Long countUpDataItem = super.dao.countUpDataItem();
+		if (StringUtils.isEmpty(countUpDataItem)) {
+			return 0L;
+		}
+		return countUpDataItem;
 	}
 
-	public long countCompleteDataItem() {
-		return super.dao.countCompleteDataItem();
+	public Long countCompleteDataItem() {
+		Long countCompleteDataItem = super.dao.countCompleteDataItem();
+		if (StringUtils.isEmpty(countCompleteDataItem)) {
+			return 0L;
+		}
+		return countCompleteDataItem;
 	}
 }

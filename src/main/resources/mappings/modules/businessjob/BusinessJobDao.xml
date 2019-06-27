@@ -17,4 +17,14 @@
         FROM business_job
         where plan_id = #{businessCheckPlanId}
     </select>
+    <select id="findByTargetId" resultType="com.jeesite.modules.entity.BusinessJob">
+        SELECT *
+        FROM business_job
+        where target_id = #{businessTargetId}
+    </select>
+    <update id="updateJobStatus">
+        update business_job
+        set job_status = #{jobStatus}
+        where plan_id = #{checkPlanId}
+    </update>
 </mapper>
