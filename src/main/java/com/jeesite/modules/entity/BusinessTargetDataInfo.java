@@ -23,6 +23,9 @@ import org.hibernate.validator.constraints.Length;
 		@Column(name="user_id", attrName="user.userCode", label="数据上报的人/部门"),
 		@Column(name="target_id", attrName="businessTarget.id", label="考核细则"),
 		@Column(name="data_info", attrName="dataInfo", label="具体的数据"),
+		@Column(name="data_status", attrName="dataStatus", label="上报数据状态"),
+		@Column(name="msg", attrName="msg", label="驳回信息"),
+		@Column(name="update_by", attrName="updateBy", label="操作人"),
 		@Column(name="data_type", attrName="dataType", label="数据类型"),
 	},
 		joinTable = {
@@ -55,7 +58,17 @@ public class BusinessTargetDataInfo extends DataEntity<BusinessTargetDataInfo> {
 	private User user;		// 数据上报的人/部门
 	private String dataInfo;		// 具体的数据
 	private Integer dataType;		// 数据类型
-	
+
+	@Getter
+	@Setter
+	private String  dataStatus;		// 上报数据状态
+	@Getter
+	@Setter
+	private String  msg;		// 驳回信息
+	@Getter
+	@Setter
+	private String  updateBy;		// 操作人
+
 	public BusinessTargetDataInfo() {
 		this(null);
 	}

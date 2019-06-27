@@ -9,6 +9,7 @@ import com.jeesite.common.web.BaseController;
 import com.jeesite.modules.entity.BusinessTarget2;
 import com.jeesite.modules.entity.BusinessTargetDataInfo;
 import com.jeesite.modules.entity.BusinessTargetDataItem;
+import com.jeesite.modules.service.BusinessPlanUserTaskService;
 import com.jeesite.modules.service.BusinessTarget2Service;
 import com.jeesite.modules.service.BusinessTargetDataInfoService;
 import com.jeesite.modules.service.BusinessTargetDataItemService;
@@ -49,6 +50,8 @@ public class BusinessTargetDataInfoController extends BaseController {
 
 	@Autowired
 	private UserService userService;
+	@Autowired
+	private BusinessPlanUserTaskService businessPlanUserTaskService;
 
 
 	
@@ -177,8 +180,9 @@ public class BusinessTargetDataInfoController extends BaseController {
 	@RequestMapping(value = "enable")
 	@ResponseBody
 	public String enable(BusinessTargetDataInfo businessTargetDataInfo, String status) {
-		BusinessTargetDataItem businessTargetDataItem = businessTargetDataInfo.getBusinessTargetDataItem();
-		dataItemService.updateItemStatus(businessTargetDataItem.getId(), UserUtils.getUser().getUserCode(), status);
+		businessTargetDataInfo.setUpdateBy(UserUtils.getUser().getUserCode());
+		businessTargetDataInfo.setDataStatus(status);
+		businessTargetDataInfoService.update(businessTargetDataInfo);
 		return renderResult(Global.TRUE, text("操作成功!"));
 	}
 
@@ -200,11 +204,16 @@ public class BusinessTargetDataInfoController extends BaseController {
 	@RequestMapping(value = "saveBack")
 	public String saveBack(String id, String msg) {
 		BusinessTargetDataInfo businessTargetDataInfo = businessTargetDataInfoService.get(id);
+		businessTargetDataInfo.setMsg(msg);
+		businessTargetDataInfo.setDataStatus("3");//驳回
+		businessTargetDataInfo.setUpdateBy(UserUtils.getUser().getUserCode());
 		String dataItemId = businessTargetDataInfo.getBusinessTargetDataItem().getId();
-		BusinessTargetDataItem businessTargetDataItem = dataItemService.get(dataItemId);
-		businessTargetDataItem.setMsg(msg);
-		businessTargetDataItem.setItemStatus("3");//驳回
-		dataItemService.update(businessTargetDataItem);
+		String targetId = businessTargetDataInfo.getBusinessTarget().getId();
+
+		String userCode = businessTargetDataInfo.getUser().getUserCode();
+		businessPlanUserTaskService.updateStatus(targetId, dataItemId, userCode,"3");//标记被驳回。
+		businessTargetDataInfoService.update(businessTargetDataInfo);
+		//MsgPushUtils.push()
 		return "redirect:list";
 	}
 

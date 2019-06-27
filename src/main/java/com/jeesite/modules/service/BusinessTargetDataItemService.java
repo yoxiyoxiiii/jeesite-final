@@ -5,7 +5,6 @@ package com.jeesite.modules.service;
 
 import com.jeesite.common.entity.Page;
 import com.jeesite.common.service.CrudService;
-import com.jeesite.modules.entity.BusinessTarget2;
 import com.jeesite.modules.dao.BusinessTargetDataItemDao;
 import com.jeesite.modules.entity.BusinessTargetDataItem;
 import com.jeesite.modules.file.utils.FileUploadUtils;
@@ -54,9 +53,9 @@ public class BusinessTargetDataItemService extends CrudService<BusinessTargetDat
 	@Override
 	@Transactional(readOnly=false)
 	public void save(BusinessTargetDataItem businessTargetDataItem) {
-		String stageId = businessTargetDataItem.getStagetargetId();
-		BusinessTarget2 businessTargets = stageTargetService.get(stageId).getBusinessTargets();
-		businessTargetDataItem.setTargetId(businessTargets);
+//		String stageId = businessTargetDataItem.getStagetargetId();
+//		BusinessTarget2 businessTargets = stageTargetService.get(stageId).getBusinessTargets();
+//		businessTargetDataItem.setTargetId(businessTargets);
 		super.save(businessTargetDataItem);
 		// 保存上传图片
 		FileUploadUtils.saveFileUpload(businessTargetDataItem.getId(), "businessTargetDataItem_image");

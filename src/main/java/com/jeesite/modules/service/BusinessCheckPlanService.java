@@ -125,7 +125,7 @@ public class BusinessCheckPlanService extends CrudService<BusinessCheckPlanDao, 
      * @param businessCheckPlan
      */
     @Transactional(readOnly = false, rollbackFor = Exception.class, propagation = Propagation.REQUIRED)
-    public Map<String, Object> start(BusinessCheckPlan businessCheckPlan) throws SchedulerException, ClassNotFoundException {
+    public Map<String, Object> start(BusinessCheckPlan businessCheckPlan) {
         String checkPlanId = businessCheckPlan.getId();
         List<BusinessJob> jobs = businessJobService.findByBusinessCheckPlanId(checkPlanId);
         if (jobs.size() == 0) {//该计划没有添加任务
@@ -202,7 +202,6 @@ public class BusinessCheckPlanService extends CrudService<BusinessCheckPlanDao, 
      */
     @Transactional(readOnly = false, rollbackFor = Exception.class, propagation = Propagation.REQUIRED)
     public void stop(BusinessCheckPlan businessCheckPlan) {
-        //this.updateStatus(businessCheckPlan);
         List<BusinessJob> businessJobs = businessJobService.findByBusinessCheckPlanId(businessCheckPlan.getId());
         businessJobs.forEach(businessJob -> {
             businessJobService.delete(businessJob);
@@ -218,7 +217,8 @@ public class BusinessCheckPlanService extends CrudService<BusinessCheckPlanDao, 
     @Autowired
     private DictDataJdbc dictDataJdbc;
 
-    private void setJob(BusinessCheckPlan businessCheckPlan, BusinessTarget2 businessTarget, boolean add) throws ClassNotFoundException, SchedulerException {
+    @Transactional(rollbackFor = Exception.class, propagation = Propagation.SUPPORTS)
+    public void setJob(BusinessCheckPlan businessCheckPlan, BusinessTarget2 businessTarget, boolean add) throws ClassNotFoundException, SchedulerException {
         if (!add) {//job 重启
             List<BusinessJob> businessJobs = businessJobService.findByBusinessCheckPlanId(businessCheckPlan.getId());
             businessJobs.forEach(job->{

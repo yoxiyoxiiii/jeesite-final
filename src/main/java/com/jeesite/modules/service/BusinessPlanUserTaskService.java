@@ -32,7 +32,6 @@ public class BusinessPlanUserTaskService extends CrudService<BusinessPlanUserTas
 	/**
 	 * 查询分页数据
 	 * @param businessPlanUserTask 查询条件
-	 * @param businessPlanUserTask.page 分页对象
 	 * @return
 	 */
 	@Override
@@ -69,5 +68,9 @@ public class BusinessPlanUserTaskService extends CrudService<BusinessPlanUserTas
 	public void delete(BusinessPlanUserTask businessPlanUserTask) {
 		super.delete(businessPlanUserTask);
 	}
-	
+
+	@Transactional(readOnly=false)
+	public void updateStatus(String targetId, String dataItemId,String userCode, String status) {
+		super.dao.updateStatusBy(targetId, dataItemId, userCode, status);
+	}
 }

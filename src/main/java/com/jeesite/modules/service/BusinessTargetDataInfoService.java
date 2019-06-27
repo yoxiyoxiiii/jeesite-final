@@ -74,10 +74,7 @@ public class BusinessTargetDataInfoService extends CrudService<BusinessTargetDat
 	@Transactional(readOnly=false)
 	public void save(BusinessTargetDataInfo businessTargetDataInfo,String userTaskId) {
 		this.save(businessTargetDataInfo);
-		BusinessTargetDataItem businessTargetDataItem = businessTargetDataItemService.get(businessTargetDataInfo.getBusinessTargetDataItem().getId());
-		businessTargetDataItem.setItemStatus("1");//待审
-		businessTargetDataItem.setIsNewRecord(false);
-		businessTargetDataItemService.save(businessTargetDataItem);
+		businessTargetDataInfo.setDataStatus("1");//待审
 		//更新个人任务状态
 		BusinessPlanUserTask businessPlanUserTask =planUserTaskService.get(userTaskId);
 		businessPlanUserTask.setTaskStatus(2);

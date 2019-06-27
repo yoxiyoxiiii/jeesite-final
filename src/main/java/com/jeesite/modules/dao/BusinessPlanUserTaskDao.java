@@ -6,6 +6,7 @@ package com.jeesite.modules.dao;
 import com.jeesite.common.dao.CrudDao;
 import com.jeesite.common.mybatis.annotation.MyBatisDao;
 import com.jeesite.modules.entity.BusinessPlanUserTask;
+import org.springframework.data.repository.query.Param;
 
 /**
  * 目标生成的任务DAO接口
@@ -14,5 +15,9 @@ import com.jeesite.modules.entity.BusinessPlanUserTask;
  */
 @MyBatisDao
 public interface BusinessPlanUserTaskDao extends CrudDao<BusinessPlanUserTask> {
-	
+
+    void updateStatusBy(@Param("targetId") String targetId,
+                        @Param("dataItemId") String dataItemId,
+                        @Param("userCode") String userCode,
+                        @Param("status") String status);
 }

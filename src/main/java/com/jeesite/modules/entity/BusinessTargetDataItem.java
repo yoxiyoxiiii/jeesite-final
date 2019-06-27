@@ -26,9 +26,9 @@ import com.jeesite.common.mybatis.mapper.query.QueryType;
 		@Column(name="item_weight", attrName="itemWeight", label="数据项权重"),
 		@Column(name="item_score", attrName="itemScore", label="数据项分数"),
 		@Column(name="item_final_score", attrName="itemFinalScore", label="数据项得分"),
-		@Column(name="item_status", attrName="itemStatus", label="数据项状态"),
-		@Column(name="update_by", attrName="updateBy", label="审核者"),
-		@Column(name="msg", attrName="msg", label="驳回信息"),
+//		@Column(name="item_status", attrName="itemStatus", label="数据项状态"),
+//		@Column(name="update_by", attrName="updateBy", label="审核者"),
+//		@Column(name="msg", attrName="msg", label="驳回信息"),
 		@Column(name="item_description", attrName="itemDescription", label="说明"),
 		@Column(name="create_date", attrName="createDate", label="创建时间", isUpdate=false, isQuery=false),
 		@Column(name="update_date", attrName="updateDate", label="更新时间", isQuery=false),
@@ -53,15 +53,15 @@ public class BusinessTargetDataItem extends DataEntity<BusinessTargetDataItem> {
 	@Getter
 	@Setter
 	private String itemFinalScore;		// 数据项得分
-	@Getter
-	@Setter
-	private String itemStatus;		// 数据项状态
-	@Getter
-	@Setter
-	private String updateBy;		// 审核人
-	@Getter
-	@Setter
-	private String msg;		// 驳回信息
+//	@Getter
+//	@Setter
+//	private String itemStatus;		// 数据项状态
+//	@Getter
+//	@Setter
+//	private String updateBy;		// 审核人
+//	@Getter
+//	@Setter
+//	private String msg;		// 驳回信息
 	private String itemDescription;		// 说明
 	@Getter
 	@Setter

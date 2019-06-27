@@ -11,6 +11,7 @@ import com.jeesite.modules.sys.service.EmployeeService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
@@ -52,7 +53,7 @@ public class SendMsgJobService {
     @Autowired
     private BusinessJobService businessJobService;
 
-    @Transactional(readOnly = false, rollbackFor = Exception.class)
+    @Transactional(readOnly = false, propagation = Propagation.SUPPORTS,rollbackFor = Exception.class)
     public void createTaskJob(BusinessTarget2 businessTarget, BusinessCheckPlan businessCheckPlan) {
         String businessCheckPlanId = businessCheckPlan.getId();
         String businessTargetId = businessTarget.getId();
@@ -87,6 +88,7 @@ public class SendMsgJobService {
             //得到被考核的部门
             //获取每个部门下的一个数据上报人员
             List<EmployeeDto> employeeDtoList = businessJobJdbc.findByOfficeCode(businessCheckPlanUser.getDepartmentId(), "dataReporter");
+            log.info("数据上报人员 集合 {}", employeeDtoList);
             for (EmployeeDto employeeDto : employeeDtoList) {
                 if (employeeDto.getOfficeCode() == null) {
                     log.error("该部门没有数据上报员! {}", businessCheckPlanUser.getDepartmentId());
@@ -103,11 +105,7 @@ public class SendMsgJobService {
                 o.setOfficeCode(employeeDto.getOfficeCode());
                 businessTargetTaskMonitor.setOffice(o);
                 businessTargetTaskMonitor.setBusinessCheckPlan(businessCheckPlan);
-//                BusinessTargetTaskMonitor taskMonitor = businessTargetTaskMonitorService.findByIds(businessTarget.getId(), employeeDto.getOfficeCode(), businessCheckPlanId);
-//                if (taskMonitor != null) {
-//                    log.info("考核部门任务数据存在: {}", employeeDto);
-//                    continue;
-//                }
+
                 log.info("考核部门集合: {}", employeeDto);
                 businessTargetTaskMonitor.setBusinessCheckPlan(businessCheckPlan);
                 businessTargetTaskMonitor.setStatus("2");
@@ -139,11 +137,11 @@ public class SendMsgJobService {
                     businessPlanUserTask.setOffice(o);
                     businessPlanUserTaskService.save(businessPlanUserTask);
                     employeeDtos.add(employeeDto);
-                    dateItem.setItemStatus("0");//待填报
-                    dateItem.setIsNewRecord(false);
-                    businessTargetDataItemService.save(dateItem);
+//                    dateItem.setItemStatus("0");//待填报
+//                    dateItem.setIsNewRecord(false);
+//                    businessTargetDataItemService.update(dateItem);
                 }
-                msgPush(employeeDtos);
+                msgPush(employeeDto);
             }
         });
     }
@@ -162,5 +160,17 @@ public class SendMsgJobService {
             MsgPushUtils.push(msgContent, "BizKey", "BizType", "system");
         });
 
+    }
+    /**
+     * 推送消息
+     */
+    private synchronized void msgPush(EmployeeDto employeeDto) {
+            PcMsgContent msgContent = new PcMsgContent();
+            msgContent.setTitle("任务提醒");
+            msgContent.setContent("数据采集任务");
+            msgContent.addButton("办理", "/a/demo/demoCustomer/form?id=1120518619533426688");
+            //  即时推送消息
+//            MsgPushUtils.push(msgContent,  "BizKey",  "BizType",  employeeDto.getEmp_code());
+            MsgPushUtils.push(msgContent, "BizKey", "BizType", "system");
     }
 }
