@@ -25,6 +25,7 @@ import java.util.Date;
 @Table(name="business_check_plan", alias="a", columns={
 		@Column(name="id", attrName="id", label="id", isPK=true),
 		@Column(name="temp_id", attrName="businessTargetType.id", label="模板"),
+		//@Column(name="plan_user_id", attrName="businessCheckPlanUser.id", label="模板"),
 		@Column(name="plan_major_type", attrName="planMajorType", label="专业类型"),
 		@Column(name="plan_name", attrName="planName", label="计划名称", queryType=QueryType.LIKE),
 		@Column(includeEntity=DataEntity.class),
@@ -47,6 +48,9 @@ import java.util.Date;
 				@JoinTable(type = JoinTable.Type.LEFT_JOIN, entity = BusinessTargetType.class, alias = "businessTargetType",
 						on = "businessTargetType.target_type_code = a.temp_id", attrName = "businessTargetType",
 						columns = {@Column(includeEntity = BusinessTargetType.class)}),
+				@JoinTable(type = JoinTable.Type.LEFT_JOIN, entity = BusinessCheckPlanUser.class, alias = "businessCheckPlanUser",
+						on = "businessCheckPlanUser.plan_id = a.id", attrName = "businessCheckPlanUser",
+						columns = {@Column(name="id", label="名单编码", isPK=true),}),
 				@JoinTable(type = JoinTable.Type.LEFT_JOIN, entity = User.class, alias = "planCheckUser",
 						on = "planCheckUser.user_code = a.plan_check_user_id", attrName = "planCheckUser",
 						columns = {@Column(includeEntity = User.class)}),
@@ -64,6 +68,9 @@ public class BusinessCheckPlan extends DataEntity<BusinessCheckPlan> {
 //	@NotNull(message = "专业类型必填")
 	private BusinessTargetType businessTargetType;		// 模板
 
+	@Getter
+	@Setter
+	private BusinessCheckPlanUser businessCheckPlanUser;
 	@NotNull(message = "专业类型必填")
 	private Integer planMajorType;		// 专业类型
 	@NotNull(message = "计划名称必填")

@@ -23,6 +23,7 @@ import javax.validation.constraints.NotNull;
 		@Column(name="id", attrName="id", label="id", isPK=true),
 		@Column(name="plan_user_name", attrName="planUserName", label="考核名单名称"),
 		@Column(name="department_id", attrName="office.officeCode", label="被考核的人"),
+		@Column(name="department_name", attrName="office.officeName", label="被考核的人"),
 		@Column(name="plan_id", attrName="businessCheckPlan.id", label="考核计划"),
 		@Column(name="plan_status", attrName="planStatus", label="部门上报数据状态"),
 		@Column(name="plan_user_status", attrName="planUserStatus", label="考核名单状态"),

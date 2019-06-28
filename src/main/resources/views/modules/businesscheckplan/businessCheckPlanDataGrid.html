@@ -1,0 +1,393 @@
+<% layout('/layouts/default.html', {title: '绩效考核汇总', libs: ['dataGrid']}){ %>
+<div class="main-content">
+	<div class="box box-main">
+		<div class="box-header">
+			<div class="box-title">
+				<i class="fa fa-list-alt"></i>${evalu.title}- ${text('绩效考核汇总')}
+			</div>
+		</div>
+		<div class="box-body">
+			<#form:form id="searchForm" model="${evaluLib}" action="${ctx}/evalu/evaluLib/listDataReport" method="post" class="form-inline hide"
+			data-page-no="${parameter.pageNo}" data-page-size="${parameter.pageSize}" data-order-by="${parameter.orderBy}">
+			<div class="form-group">
+				<label class="control-label">测评部门：</label>
+				<div class="control-inline">
+					<#form:input path="testInput" maxlength="200" class="form-control width-120"/>
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="control-label">多行文本：</label>
+				<div class="control-inline">
+					<#form:input path="testTextarea" maxlength="200" class="form-control width-120"/>
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="control-label">下拉框：</label>
+				<div class="control-inline width-120">
+					<#form:select path="testSelect" dictType="sys_menu_type" blankOption="true" class="form-control"/>
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="control-label">下拉多选：</label>
+				<div class="control-inline width-120">
+					<#form:select path="testSelectMultiple" dictType="sys_menu_type" multiple="true" blankOption="true" class="form-control"/>
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="control-label">单选框：</label>
+				<div class="control-inline">
+					<#form:radio path="testRadio" dictType="sys_menu_type" blankOption="true" class="form-control"/>
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="control-label">复选框：</label>
+				<div class="control-inline">
+					<#form:checkbox path="testCheckbox" dictType="sys_menu_type" blankOption="true" class="form-control"/>
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="control-label">日期选择：</label>
+				<div class="control-inline">
+					<#form:input path="testDate_gte" readonly="true" maxlength="20" class="form-control Wdate-date"
+					dataFormat="date" onclick="WdatePicker({dateFmt:'yyyy-MM-dd',isShowClear:false,onpicked:function(){testDate_lte.click()}});"/>
+					&nbsp;--&nbsp;
+					<#form:input path="testDate_lte" readonly="true" maxlength="20" class="form-control Wdate-date"
+					dataFormat="date" onclick="WdatePicker({dateFmt:'yyyy-MM-dd',isShowClear:false});"/>
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="control-label">日期时间：</label>
+				<div class="control-inline">
+					<#form:input path="testDatetime_gte" readonly="true" maxlength="20" class="form-control Wdate-datetime"
+					dataFormat="datetime" onclick="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm',isShowClear:false,onpicked:function(){testDatetime_lte.click()}});"/>
+					&nbsp;--&nbsp;
+					<#form:input path="testDatetime_lte" readonly="true" maxlength="20" class="form-control Wdate-datetime"
+					dataFormat="datetime" onclick="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm',isShowClear:false});"/>
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="control-label">用户选择：</label>
+				<div class="control-inline width-120" >
+					<#form:treeselect id="testUser" title="用户选择"
+					path="testUser.userCode" labelPath="testUser.userName"
+					url="${ctx}/sys/office/treeData?isLoadUser=true" allowClear="true"/>
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="control-label">机构选择：</label>
+				<div class="control-inline width-120" >
+					<#form:treeselect id="testOffice" title="机构选择"
+					path="testOffice.officeCode" labelPath="testOffice.officeName"
+					url="${ctx}/sys/office/treeData" allowClear="true"/>
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="control-label">区域选择：</label>
+				<div class="control-inline width-120" >
+					<#form:treeselect id="testAreaCode" title="区域选择"
+					path="testAreaCode" labelPath="testAreaName"
+					url="${ctx}/sys/area/treeData" allowClear="true"/>
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="control-label">状态：</label>
+				<div class="control-inline width-120">
+					<#form:select path="status" dictType="sys_search_status" blankOption="true" class="form-control"/>
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="control-label">备注信息：</label>
+				<div class="control-inline">
+					<#form:input path="remarks" maxlength="500" class="form-control width-120"/>
+				</div>
+			</div>
+			<div class="form-group">
+				<button type="submit" class="btn btn-primary btn-sm">查询</button>
+				<button type="reset" class="btn btn-default btn-sm">重置</button>
+			</div>
+		</#form:form>
+		<table id="dataGrid"></table>
+		<div id="dataGridPage"></div>
+	</div>
+</div>
+</div>
+
+<!-- 模态框（Modal） -->
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+					&times;
+				</button>
+				<h4 class="modal-title" id="myModalLabel">
+					单位
+				</h4>
+			</div>
+			<div class="modal-body span6">								
+				<%for(evaluLib in listEvaluLib ){%>
+					<%if(evaluLib.treeLeaf=="1"){%>	
+						<li>${evaluLib.treeCode} -- ${evaluLib.evalSelectType}</li>				
+					<#form:radio path="${evaluLib.treeCode}" dictType="${evaluLib.evalSelectType}" class="form-control" />					
+					<%}%>
+				<%}%>				
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-default" data-dismiss="modal">确定
+				</button>
+			</div>
+		</div>
+	</div>
+</div>
+<% } %>
+<script>
+
+//仅提供四级树 todo:有待扩展到无限级
+
+var groupHeaders = {}; 
+//动态列格式化
+function columnFormat(cols){
+	var formatCols = [];
+	formatCols.push({header:'测评部门', name:'officeName', frozen:true});
+	//return [{header:'测评部门'},{header:'测评部门2'}];
+	
+	var maxLevel = 0;
+	for(var i = 0 ; i < cols.length; i++){
+		var item = cols[i];			
+		if(item.isTreeLeaf){
+			formatCols.push({header:item.treeName, name:item.treeCode});
+	
+			//上级节点的子节点数,递归加一
+			var nodeId = searchParent(cols, item.parentCodes);
+				$(nodeId).each(function(index, id){
+					if( cols[id].numberOfColumns == undefined){
+						cols[id].numberOfColumns = 0;
+					}
+					cols[id].numberOfColumns += 1;
+					//第一个叶子(累计子节点为1)节点时,
+					if(cols[id].numberOfColumns == 1){
+						cols[id].startColumnName = item.treeCode;
+					}
+				});
+
+			//最高层次计算
+			maxLevel = (item.treeLevel > maxLevel)?item.treeLevel:maxLevel;			
+		}
+	}
+
+	var numToEn = ["twoLevel","threeLevel","fourLevel","fiveLevel","sixLevel","sevenLevel","eightLevel","nineLevel","tenLevel"];
+	for(var i = 0 ; i < cols.length; i++){
+		var item = cols[i];			
+		if(!item.isTreeLeaf){
+			var lv = {startColumnName: item.startColumnName, numberOfColumns: item.numberOfColumns, titleText: item.treeName};
+			if( eval( "groupHeaders."+ numToEn[maxLevel - item.treeLevel-1]) == undefined ){
+				eval( "groupHeaders."+ numToEn[maxLevel - item.treeLevel-1] + "= new Array()") ;
+			}
+			eval( "groupHeaders."+ numToEn[maxLevel - item.treeLevel-1] +".push(lv)");
+		}
+	}
+	return formatCols;
+}
+//sanye 动态加载列
+function searchParent(cols, parentCode){
+	var nodeId = [];
+	var code = parentCode.split(",");
+	//0,sss30,sss31,  处理0,和最后空
+	if(code.length > 0){
+		code.splice(0,1);
+	}
+	if(code.length > 2){
+		code.splice(code.length-1,1);	
+	}
+	$(cols).each(function(index, item){
+		if( item.isTreeLeaf == false){
+			if(item.treeLevel <= code.length 
+				&& item.treeCode == code[item.treeLevel]){
+					nodeId.push(index);
+			}
+		}
+	});
+	return nodeId;
+}
+
+//加载列数据
+var libColumns = null;
+$.ajax({
+	type:"POST",
+	async: false,
+	url:"${ctx}/evalu/evaluLib/listData?evaluId=${evalu.id}",
+	dataType:"json",
+	success: function(json){
+		libColumns = json;
+	}});
+
+var columnModelJson = columnFormat(libColumns);
+
+//加载测评数据记录
+var evaluData = null;
+$.ajax({
+	type:"POST",
+	async: false,
+	url:"${ctx}/evalu/evalu/evaluData?evaluId=${evalu.id}&deptId=&createBy=",
+	dataType:"json",
+	success: function(json){
+		evaluData = json;
+	}});
+
+//加载部门及数据
+function rowFormat(depats){
+	for(var n=0 ; n< depats.length; n++){
+		$(libColumns).each(function(index, col){
+			//todo:获取evaludata值
+			var score = valTranslate(depats[n].id, col.treeCode);			
+			eval("depats[n]." + col.treeCode + "= score;");			
+		});
+	}	
+	return depats;
+}
+
+var depats = null;
+$.ajax({
+	type:"POST",
+	async: false,
+	url:"${ctx}/evalu/evalu/offices?inParam=SJ15,SJ14,SJ13",
+	dataType:"json",
+	success: function(json){
+		depats = json;
+}});
+var rowJson = rowFormat(depats);
+//渲染操作框
+
+
+// 初始化DataGrid对象
+$('#dataGrid').dataGrid({
+	// searchForm: $("#searchForm"),
+	data: rowJson,
+    datatype: "local",
+	columnModel: columnModelJson,
+
+	frozenCols: true, 	// 启用冻结列，并在colModel中设置frozen:true
+	showRownum: true,	// 是否显示行号，默认true
+	showFooter: false,	// 是否显示底部合计行，数据载入详见 ajaxSuccess
+	sortable: false,
+	viewsortcols:[false,'horizontal',false],
+	// 设置多级表头
+	groupHeaders: groupHeaders,
+	
+	// 加载成功后执行事件
+	ajaxSuccess: function(data){
+
+		// ================ 启用合计行 BEGIN ==============
+		// showFooter: true, // 是否显示底部合计行
+		// 第 1 种方法：请求完成之后通过js设置，举例如下：
+		// 设置底部合计行数据（设置合计行）
+		// $('#dataGrid').dataGrid("footerData", "set", {
+		// 	"testInput" : "<center><em>合计：</em></center>",
+		// 	"testTextarea" : "<em>" + data.count + "</em>个",
+		// 	"id": "<em>￥900,000,000.00 &nbsp;</em>"
+		// }, false);
+		// 第 2 种方法：在返回结果集中设置 otherData属性，举例格式如下：
+		/* {"pageNo":1, "pageSize":30, "list":[返回结果集数据],
+			"otherData":{
+				"testInput" : "<center><em>合计：</em></center>",
+				"testTextarea" : "<em>" + data.count + "</em>个",
+				"id": "<em>￥900,000,000.00 &nbsp;</em>"
+			}
+		   } */
+		// ================ 启用合计行 END ================
+		
+	},
+	ajaxLoad: function(data){
+		columnModelJson.push({header:'测评部门'});
+    },
+});
+
+//动态绑定col事件
+$(libColumns).each(function(index, col){
+	$('#dataGrid').setColProp(col.treeCode,{formatter:colFormat});
+});
+$('#dataGrid').trigger('reloadGrid');
+
+function colFormat(val, obj, row, act){
+	var format =  '<div id="ev_'+ obj.irow +'_' + obj.pos
+	+ '" class="col-md-12 " style="height:100%;" onClick="evalu(\''
+	+ val +'\',\''+ obj.colModel.header +'\',\''
+	+ row.officeName +'\','+  obj.irow +','+ obj.pos +')">'
+	+ (val==" "?"&nbsp;":val)
+			+'</div>';
+	return format;
+}
+
+var currentColum = null;
+function evalu(val, header, officeName, irow, pos){
+	$("#myModal #myModalLabel").text(officeName +  "_" + header);
+	$('#myModal').modal('show');
+	currentColum ={ irow: irow, pos: posTranslate(pos-1), posCol: pos };
+	$(".modal-body").children().hide();
+
+	//清空值, 显示当前列	
+	var evaluLib = libColumns[currentColum.pos-1].treeCode;
+	$(".modal-body").find("#" + evaluLib).find("input[type=radio]").removeAttr("checked");
+	$(".modal-body").find("#" + evaluLib + ">label>div").removeClass("checked");
+
+	$(".modal-body").find("#" + evaluLib).show();
+}
+
+$(function () { $('#myModal').on('hide.bs.modal', function () {	
+	saveEvaluData();
+	})
+});
+
+
+function saveEvaluData(){	
+	var evaluLib = libColumns[currentColum.pos-1].treeCode;	
+	var checkRadio = $(".modal-body").find("#" + evaluLib).find("input:checked");
+
+	var checkValue =  $(checkRadio).val();
+	var title = $(checkRadio).parent().parent().text();
+	//读取选择的值
+	var  deptId = depats[currentColum.irow-1].id;
+	var evaluLibId = libColumns[currentColum.pos-1].id;
+	//保存值
+	$.ajax({
+		type:"POST",
+		url:"${ctx}/evalu/evaluData/save",
+		data: {evaluLibId:evaluLibId , deptId:deptId, score:checkValue},
+		dataType:"json",
+		success: function(json){
+			if(json.result == false){
+				js.showErrorMessage(json.message);
+			}
+		}});
+	//回显Grid
+	if(title == null || title == ""){title = "&nbs;"}
+	$("#ev_"+ currentColum.irow +"_" + currentColum.posCol).text(title);
+
+}
+
+function posTranslate(pos){
+	var curentPos = 0;
+	for(var i=0; i< libColumns.length; i++){
+		if(pos == curentPos){
+			break;
+		}
+		if( libColumns[i].isTreeLeaf == "0"){
+			continue;
+		}else{
+			curentPos++;
+		}		
+	}
+	return i;
+}
+
+function valTranslate(deptId, evaluLibId){
+	var score = " ";
+	$(evaluData).each(function(index, item){
+		if( item.deptId == deptId && item.evaluLibId == evaluLibId){
+			score = item.score;
+			return score;
+		}
+	});	
+	return score;
+}
+</script>

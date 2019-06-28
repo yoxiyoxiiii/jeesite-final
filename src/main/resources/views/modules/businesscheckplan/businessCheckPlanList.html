@@ -139,19 +139,28 @@ $('#dataGrid').dataGrid({
 					actions.push('<a href="${ctx}/businesscheckplan/businessCheckPlan/form?id='+row.id+'" class="btnList" title="${text("编辑考核计划")}"><i class="fa fa-pencil"></i></a>&nbsp;');
 					actions.push('<a href="${ctx}/businesstargettype/businessTargetType/list/'+row.id+'" class="btnList" title="${text("指标分类管理")}"><i class="fa fa-list-ol"></i></a>&nbsp;');
 					actions.push('<a href="${ctx}/businesstarget2/businessTarget2/treeList/'+row.id+'" class="btnList" title="${text("考核明细管理")}"><i class="fa fa-tasks"></i></a>&nbsp;');
-
-					actions.push('<a href="${ctx}/businesscheckplanuser/businessCheckPlanUser/list/'+row.id+'&" class="btnList" title="${text("考核名单分配")}"><i class="fa fa-users"></i></a>&nbsp;');
+					if( row.businessCheckPlanUser != null ){
+						//actions.push('<a href="${ctx}/businesscheckplanuser/businessCheckPlanUser/form?id='+row.businessCheckPlanUser.id+'&businessCheckPlan.id="'+ row.id +' class="btnList" title="${text("考核名单分配")}"><i class="fa fa-users"></i></a>&nbsp;');
+						actions.push('<a href="${ctx}/businesscheckplanuser/businessCheckPlanUser/form?id='+ row.businessCheckPlanUser.id +'" class="btnList" title="${text("考核名单分配")}"><i class="fa fa-users"></i></a>&nbsp;');
+					}else{
+						actions.push('<a href="${ctx}/businesscheckplanuser/businessCheckPlanUser/form?businessCheckPlan.id=' + row.id + '&businessCheckPlan.planName='+ row.planName +'" id="selectPlanUser" class="btnList" title="${text("考核名单分配")}"><i class="fa fa-users"></i></a>&nbsp;');
+					}
+					
 					actions.push('<a href="${ctx}/businesscheckplan/businessCheckPlan/delete?id='+row.id+'" class="btnList" title="${text("删除考核计划")}" data-confirm="${text("确认要删除该考核计划吗？")}"><i class="fa fa-trash-o"></i></a>&nbsp;');
 
 					actions.push('<a href="${ctx}/businesscheckplan/businessCheckPlan/audit?id='+row.id+'&status=4" class="btnList"  title="${text("提交审批")}" data-confirm="${text("确认要提交到审批吗？")}"><i class="fa fa-magic"></i></a>&nbsp;');
 				}
 
 				//只有审批完成后才能启动考核
-				if (row.status == "5" || row.status == "0"){
+				if (row.status == "2" || row.status == "0"){
 						actions.push('<a href="${ctx}/businesscheckplan/businessCheckPlan/enable?id='+row.id+'" class="btnList" title="${text("启用考核计划")}" data-confirm="${text("确认要启用该考核计划吗？")}"><i class="glyphicon glyphicon-ok-circle"></i></a>&nbsp;');
 					}else {
 						actions.push('<a href="${ctx}/businesscheckplan/businessCheckPlan/disable?id='+row.id+'" class="btnList" title="${text("废弃考核计划")}" data-confirm="${text("确认要废弃该考核计划吗？")}"><i class="glyphicon glyphicon-ban-circle"></i></a>&nbsp;');
 				}
+
+				//考核数据总表
+				actions.push('<a href="${ctx}/businesscheckplan/businessCheckPlan/reportGrid/'+row.id+'" class="btnList" title="${text("考核成绩汇总表")}"><i class="fa text-success"></i></a>&nbsp;');
+				actions.push('<a href="${ctx}/businesscheckplan/businessCheckPlan/reportTargetData/'+row.id+'" class="btnList" title="${text("业务工作完成数据统计表")}"><i class="fa text-success"></i></a>&nbsp;');
 			<% } %>	
 			return actions.join('');
 		}}
@@ -162,3 +171,4 @@ $('#dataGrid').dataGrid({
 	}
 });
 </script>
+

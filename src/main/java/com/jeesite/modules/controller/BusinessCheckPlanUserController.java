@@ -3,10 +3,12 @@
  */
 package com.jeesite.modules.controller;
 
+import com.jeesite.common.codec.EncodeUtils;
 import com.jeesite.common.config.Global;
 import com.jeesite.common.entity.Page;
 import com.jeesite.common.idgen.IdGen;
 import com.jeesite.common.lang.StringUtils;
+import com.jeesite.common.mapper.JsonMapper;
 import com.jeesite.common.web.BaseController;
 import com.jeesite.modules.entity.BusinessCheckPlan;
 import com.jeesite.modules.entity.BusinessCheckPlanUser;
@@ -24,6 +26,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 /**
  * 考核名单Controller
@@ -87,6 +90,10 @@ public class BusinessCheckPlanUserController extends BaseController {
 	@RequiresPermissions("businesscheckplanuser:businessCheckPlanUser:view")
 	@RequestMapping(value = "form")
 	public String form(BusinessCheckPlanUser businessCheckPlanUser,Office office,Model model) {
+	    //新建名单时名单默认名为计划名加+"考核名单"
+        if(businessCheckPlanUser.getIsNewRecord() && businessCheckPlanUser.getBusinessCheckPlan() != null){
+            businessCheckPlanUser.setPlanUserName( businessCheckPlanUser.getBusinessCheckPlan().getPlanName() + "名单");
+        }
 		model.addAttribute("businessCheckPlanUser", businessCheckPlanUser);
 		// 创建并初始化下一个节点信息
 		office = createNextNode(office);
@@ -221,4 +228,13 @@ public class BusinessCheckPlanUserController extends BaseController {
 		return "modules/businesscheckplanuser/view";
 	}
 
+	@RequestMapping({"listSelect"})
+	public String listSelect(BusinessCheckPlanUser businessCheckPlanUser, String selectData, Model model) {
+		String selectDataJson = EncodeUtils.decodeUrl(selectData);
+		if (JsonMapper.fromJson(selectDataJson, Map.class) != null) {
+			model.addAttribute("selectData", selectDataJson);
+		}
+		model.addAttribute("businessCheckPlanUser", businessCheckPlanUser);
+		return "modules/businesscheckplanuser/listSelect";
+	}
 }

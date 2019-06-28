@@ -206,4 +206,112 @@ public class BusinessCheckPlanController extends BaseController {
 	public List<Map<String, Object>> checkReport(String checkPlanId, String createBy, String deptId) {
 		return businessCheckPlanService.findReport(checkPlanId, createBy, deptId);
 	}
+
+
+	/**
+	 * 独立评价表
+	 */
+	@RequestMapping(value = {"reportTable/{checkPlanId}/{depatId}", ""})
+	public String reportTable(@PathVariable String checkPlanId, @PathVariable String depatId, BusinessCheckPlan businessCheckPlan, Model model) {
+		//todo:需要权限判断
+		BusinessCheckPlan temp = businessCheckPlanService.get(checkPlanId);
+//		List<EvaluLib> listEvaluLib = this.listData(evaluLib);
+//		for(int i=0; i<listEvaluLib.size(); i++){
+//			EvaluLib lib = listEvaluLib.get(i);
+//			if( listEvaluLib.get(i).getIsTreeLeaf()){
+//				String temType[] = lib.getEvalSelectType().split(",");
+//				listEvaluLib.get(i).setEvalSelectType(temType[temType.length-1]);
+//			}
+//		}
+		//评测数据
+		//测评单位
+		Office office = officeService.get(depatId);
+//		model.addAttribute("listEvaluLib", listEvaluLib);
+		model.addAttribute("businessCheckPlan",temp);
+		model.addAttribute("user",UserUtils.getUser());
+		model.addAttribute("office", office);
+		model.addAttribute("createBy","");
+		return "modules/businesscheckplan/businessCheckPlanDataTable";
+	}
+
+	/**
+	 * 独立考核表,带创建人
+	 */
+	@RequestMapping(value = {"reportTableView/{checkPlanId}/{depatId}/{createBy}", ""})
+	public String reportTableView(@PathVariable String checkPlanId, @PathVariable String depatId, @PathVariable String createBy, BusinessCheckPlan businessCheckPlan, Model model) {
+		//todo:需要权限判断
+		BusinessCheckPlan temp = businessCheckPlanService.get(checkPlanId);
+		//防止createBy字段错误传递给lib
+//		evaluLib.setCreateBy(null);
+//		List<EvaluLib> listEvaluLib = this.listData(evaluLib);
+//		for(int i=0; i<listEvaluLib.size(); i++){
+//			EvaluLib lib = listEvaluLib.get(i);
+//			if( listEvaluLib.get(i).getIsTreeLeaf()){
+//				String temType[] = lib.getEvalSelectType().split(",");
+//				listEvaluLib.get(i).setEvalSelectType(temType[temType.length-1]);
+//			}
+//		}
+		//评测数据
+		//测评单位
+		Office office = officeService.get(depatId);
+//		model.addAttribute("listEvaluLib", listEvaluLib);
+		model.addAttribute("businessCheckPlan",temp);
+		model.addAttribute("user",UserUtils.getUser());
+		model.addAttribute("office", office);
+		model.addAttribute("createBy",createBy);
+		return "modules/businesscheckplan/businessCheckPlanDataTable";
+	}
+
+
+	/**
+	 * 考核成绩汇总表
+	 */
+	@RequestMapping(value = "reportGrid/{checkPlanId}")
+	public String reportGrid(@PathVariable String checkPlanId, Model model) {
+		BusinessCheckPlan businessCheckPlan = businessCheckPlanService.get(checkPlanId);
+//		List<EvaluLib> listEvaluLib = this.listData(evaluLib);
+//		for(int i=0; i<listEvaluLib.size(); i++){
+//			EvaluLib lib = listEvaluLib.get(i);
+//			if( listEvaluLib.get(i).getIsTreeLeaf()){
+//				String temType[] = lib.getEvalSelectType().split(",");
+//				listEvaluLib.get(i).setEvalSelectType(temType[temType.length-1]);
+//			}
+//		}
+
+//		List<User> users =
+		//参评领导
+//		List<Map<String, Object>>  users = evaluService.findUsers(evalu.getExeUser());
+		model.addAttribute("businessCheckPlan", businessCheckPlan);
+//		model.addAttribute("listEvaluLib",listEvaluLib);
+//		model.addAttribute("evalu",evalu);
+//		model.addAttribute("users",users);
+		return "modules/businesscheckplan/businessCheckPlanDataGrid";
+	}
+
+
+	/**
+	 * 业务工作完成数据统计表
+	 */
+	@RequestMapping(value = "reportTargetData/{checkPlanId}")
+	public String reportTarget(@PathVariable String checkPlanId, Model model) {
+		BusinessCheckPlan businessCheckPlan = businessCheckPlanService.get(checkPlanId);
+//		List<EvaluLib> listEvaluLib = this.listData(businessCheckPlan);
+//		for(int i=0; i<listEvaluLib.size(); i++){
+//			EvaluLib lib = listEvaluLib.get(i);
+//			if( listEvaluLib.get(i).getIsTreeLeaf()){
+//				String temType[] = lib.getEvalSelectType().split(",");
+//				listEvaluLib.get(i).setEvalSelectType(temType[temType.length-1]);
+//			}
+//		}
+
+//		List<User> users =
+		//参评领导
+//		List<Map<String, Object>>  users = evaluService.findUsers(evalu.getExeUser());
+		model.addAttribute("businessCheckPlan", businessCheckPlan);
+//		model.addAttribute("listEvaluLib",listEvaluLib);
+//		model.addAttribute("evalu",evalu);
+//		model.addAttribute("users",users);
+		return "modules/businesscheckplan/businessCheckPlanDataTarget";
+	}
+
 }

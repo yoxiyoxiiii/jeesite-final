@@ -1,0 +1,201 @@
+<% layout('/layouts/default.html', {title: '民主测评明细树表管理', libs: ['validate']}){ %>
+<style>
+	body {
+		counter-reset: section;
+	}
+
+	.box-body label {
+		font-weight: normal;
+	}
+
+	.box-body .row {
+		padding-left: 40px;
+	}
+
+	.box-body .row>div {
+		padding: 10px 0;
+		border-bottom: 1px dotted #eee;
+	}
+
+	.title0 {
+		font-size: 16px;
+		counter-reset: subsection xxx;
+	}
+
+	.title0:before {
+		counter-increment: section;
+		content: "第"counter(section) "部分. ";
+	}
+
+	.title1 {
+		font-size: 14px;
+		padding-left: 2em;
+		counter-reset: subsubsection xxx;
+	}
+
+	.title1:before {
+		counter-increment: subsection;
+		content: counter(section) "."counter(subsection) " ";
+	}
+
+	.title2 {
+		padding-left: 4em;
+		counter-reset: xxx;
+	}
+
+	.title2:before {
+		counter-increment: subsubsection;
+		content: counter(section) "."counter(subsection) "."counter(subsubsection) " ";
+	}
+
+	.titleL:before {
+		counter-increment: xxx;
+		content: counter(xxx) " : ";
+		/*color: red;*/
+	}
+
+	/* .evaluindex:before {
+		counter-increment: subsubsubsection;
+		content: counter(subsubsubsection);
+	} */
+</style>
+<div class="main-content">
+	<div class="box box-main">
+		<div class="box-header with-border">
+			<div class="box-title">
+				<i class="fa fa-list-alt"></i> ${evalu.title}- ${text('民主测评单')}(${office.officeName})
+			</div>
+			<div class="box-tools pull-right">
+				<button type="button" class="btn btn-box-tool" data-widget="collapse"><i
+						class="fa fa-minus"></i></button>
+			</div>
+		</div>
+		<div>需要添加信息:  被评测单位, 测评人(只读): </div>
+		<#form:form id="inputForm" model="${evaluLib}" action="${ctx}/evalu/evaluLib/saveData" method="post"
+			class="form-horizontal">
+			<div class="box-body">
+				<%for(evaluLib in listEvaluLib ){%>
+				<%if(evaluLib.treeLeaf=="0"){%>
+				<div class="form-unit title${evaluLib.treeLevel}">${evaluLib.treeNames}</div>
+				<%}%>
+				<%if(evaluLib.treeLeaf=="1"){%>
+				<div class="row">
+					<div class="col-xs-12">
+						<div class="form-group">
+							<label class="col-sm-7 <%if(evaluLib.treeLevel==0){%>title0<%}else{%>sss titleL<%}%>">
+							${evaluLib.treeName}.(${evaluLib.score}分)</label>
+							</label>
+							<div class="col-sm-5">
+								<#form:radio path="${evaluLib.treeCode}" dictType="${evaluLib.evalSelectType}"
+									class="form-control" />
+							</div>
+						</div>
+					</div>
+				</div>
+				<%}%>
+			<%}%>
+				<%if(evalu.hasOpinion=="1"){%>
+				<div class="form-unit title0">${text('测评意见')}</div>
+				<div class="row">
+					<div class="col-xs-12">
+						<div class="form-group">
+							<label class="control-label col-sm-2">
+								<span class="required hide">*</span> ${text('请填写评测意见')}：<i
+									class="fa icon-question hide"></i></label>
+							<div class="col-sm-10">
+								<#form:textarea path="remarks" rows="4" maxlength="500" class="form-control" />
+							</div>
+						</div>
+					</div>
+				</div>
+				<%}%>
+		</div>
+		<div class="box-footer">
+			<div class="row">
+				<div class="col-sm-offset-2 col-sm-10">
+					<input type="hidden" name="evaluId" value="${evalu.id}">
+					<input type="hidden" name="deptId" value="${office.officeCode}">
+					<% if (hasPermi('evalu:evaluData:edit')){ %>
+				<button type="submit" class="btn btn-sm btn-primary" id="btnSubmit"><i class="fa fa-check"></i>
+					${text('保 存')}</button>&nbsp;
+				<% } %>
+				<button type="button" class="btn btn-sm btn-default" id="btnCancel"
+					onclick="js.closeCurrentTabPage()"><i class="fa fa-reply-all"></i> ${text('关 闭')}</button>
+			</div>
+	</div>
+</div>
+</#form:form>
+</div>
+</div>
+<% } %>
+
+<script>
+
+	//回显数据
+	var purchaseTypeJson;
+	$.ajax({
+		type: "POST",
+		url: "${ctx}/evalu/evaluLib/listDataReport?evaluId=${evalu.id}&deptId=${office.officeCode}",
+		dataType: "json",
+		success: function (json) {
+		}
+	});
+
+	//加载测评数据记录
+var evaluData = null;
+$.ajax({
+	type:"POST",
+	async: false,
+	url:"${ctx}/evalu/evalu/evaluData?evaluId=${evalu.id}&deptId=${office.officeCode}&createBy=${createBy}",
+	dataType:"json",
+	success: function(json){
+		evaluData = json;
+
+		//清空值, 显示当前列	
+		$(json).each(function(index, libData){
+			var evaluLib=libData.evaluLibId;
+			$("#" + evaluLib).find("input[value="+ libData.score +"]").attr("checked","checked");
+			// $("#" + evaluLib + ">label>div").addClass("checked");
+		});
+	}});
+
+	//加载测评意见
+	$.ajax({
+		type:"POST",
+		async: false,
+		url:"${ctx}/evalu/evaluOpinion/listData?evaluId=${evalu.id}&deptId=${office.officeCode}&createBy=${createBy}",
+		dataType:"json",
+		success: function(json){
+			//清空值, 显示当前列
+			if( json.count == 1){
+				$("#remarks").val(json.list[0].opinion);
+			}
+		}});
+
+</script>
+
+<script>
+	$("#inputForm").validate({
+		submitHandler: function (form) {
+			js.ajaxSubmitForm($(form), function (data) {
+				js.showMessage(data.message);
+				if (data.result == Global.TRUE) {
+					js.closeCurrentTabPage(function (contentWindow) {
+						contentWindow.page();
+					});
+				}
+			}, "json");
+		}
+	});
+
+	//只读控制:
+	var createBy = '${createBy}';
+	$(function(){
+		//查看指定人员ID
+		if(createBy != '' && createBy.length > 0){
+			$("#btnSubmit").hide();
+		}
+	});
+	
+
+</script>
