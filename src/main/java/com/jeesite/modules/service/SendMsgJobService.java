@@ -113,6 +113,7 @@ public class SendMsgJobService {
                 //根据 阶段目标的序号和ID 获取
                 BusinessStageTarget2 businessStageTarget2 = businessTarget2Service.findTargetStageBy(businessTarget.getId(),businessJob.getCurrentStageNumber());
                 businessTargetTaskMonitor.setBusinessStageTarget2(businessStageTarget2);
+                businessTargetTaskMonitor.setUserCode(employeeDto.getEmp_code());
                 //保存监控主表
                 businessTargetTaskMonitorService.save(businessTargetTaskMonitor);
                 BusinessTargetTaskMonitor monitor = businessTargetTaskMonitorService.get(businessTargetTaskMonitor);

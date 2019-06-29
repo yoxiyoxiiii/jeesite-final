@@ -9,10 +9,7 @@ import com.jeesite.common.web.BaseController;
 import com.jeesite.modules.entity.BusinessTarget2;
 import com.jeesite.modules.entity.BusinessTargetDataInfo;
 import com.jeesite.modules.entity.BusinessTargetDataItem;
-import com.jeesite.modules.service.BusinessPlanUserTaskService;
-import com.jeesite.modules.service.BusinessTarget2Service;
-import com.jeesite.modules.service.BusinessTargetDataInfoService;
-import com.jeesite.modules.service.BusinessTargetDataItemService;
+import com.jeesite.modules.service.*;
 import com.jeesite.modules.sys.entity.User;
 import com.jeesite.modules.sys.service.UserService;
 import com.jeesite.modules.sys.utils.UserUtils;
@@ -53,6 +50,9 @@ public class BusinessTargetDataInfoController extends BaseController {
 	@Autowired
 	private BusinessPlanUserTaskService businessPlanUserTaskService;
 
+	@Autowired
+	private BusinessTargetTaskMonitorService businessTargetTaskMonitorService;
+
 
 	
 	/**
@@ -68,7 +68,7 @@ public class BusinessTargetDataInfoController extends BaseController {
 	 */
 	@RequiresPermissions("businesstargetdatainfo:businessTargetDataInfo:view")
 	@RequestMapping(value = {"list", ""})
-	public String list(BusinessTargetDataInfo businessTargetDataInfo, String userCode,Model model) {
+	public String list(BusinessTargetDataInfo businessTargetDataInfo,String userCode,Model model) {
 		model.addAttribute("userCode", userCode);
 		model.addAttribute("businessTargetDataInfo", businessTargetDataInfo);
 		return "modules/businesstargetdatainfo/businessTargetDataInfoList";
@@ -102,6 +102,29 @@ public class BusinessTargetDataInfoController extends BaseController {
 	public String form(BusinessTargetDataInfo businessTargetDataInfo, Model model) {
 		model.addAttribute("businessTargetDataInfo", businessTargetDataInfo);
 		return "modules/businesstargetdatainfo/businessTargetDataInfoForm";
+	}
+	/**
+	 * 重新填报
+	 */
+	@RequiresPermissions("businesstargetdatainfo:businessTargetDataInfo:view")
+	@RequestMapping(value = "report")
+	public String report(BusinessTargetDataInfo businessTargetDataInfo, Model model) {
+		model.addAttribute("businessTargetDataInfo", businessTargetDataInfo);
+		return "modules/businesstargetdatainfo/report";
+	}
+
+	/**
+	 * 重新填报
+	 */
+	@RequiresPermissions("businesstargetdatainfo:businessTargetDataInfo:view")
+	@RequestMapping(value = "saveReport")
+	@ResponseBody
+	public String saveReport(BusinessTargetDataInfo businessTargetDataInfo, Model model) {
+		businessTargetDataInfo.setDataStatus("1");//待审核
+		businessTargetDataInfo.setIsNewRecord(false);
+		businessTargetDataInfoService.saveReport(businessTargetDataInfo);
+		model.addAttribute("businessTargetDataInfo", businessTargetDataInfo);
+		return renderResult(Global.TRUE, text("保存上报的数据成功！"));
 	}
 
 	/**
@@ -212,9 +235,12 @@ public class BusinessTargetDataInfoController extends BaseController {
 
 		String userCode = businessTargetDataInfo.getUser().getUserCode();
 		businessPlanUserTaskService.updateStatus(targetId, dataItemId, userCode,"3");//标记被驳回。
+		businessTargetTaskMonitorService.updateBy(userCode, targetId, "");
+
 		businessTargetDataInfoService.update(businessTargetDataInfo);
 		//MsgPushUtils.push()
 		return "redirect:list";
+//		return renderResult(Global.TRUE, text("操作成功!"));
 	}
 
 	/**

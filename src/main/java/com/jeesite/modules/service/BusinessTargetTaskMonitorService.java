@@ -6,11 +6,9 @@ package com.jeesite.modules.service;
 import com.jeesite.common.service.TreeService;
 import com.jeesite.modules.dao.BusinessTargetTaskMonitorDao;
 import com.jeesite.modules.entity.BusinessTargetTaskMonitor;
-import com.jeesite.modules.utils.StringUtil;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
-import sun.reflect.generics.reflectiveObjects.LazyReflectiveObjectGenerator;
 
 import java.util.List;
 
@@ -118,5 +116,9 @@ public class BusinessTargetTaskMonitorService extends TreeService<BusinessTarget
 			return 0L;
 		}
 		return countCompleteDataItem;
+	}
+
+	public void updateBy(String userCode, String targetId, String status) {
+		super.dao.updateBy(userCode,targetId, status);
 	}
 }

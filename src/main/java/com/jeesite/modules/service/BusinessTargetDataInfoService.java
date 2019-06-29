@@ -31,7 +31,7 @@ public class BusinessTargetDataInfoService extends CrudService<BusinessTargetDat
 	@Autowired
 	private BusinessTargetTaskMonitorService businessTargetTaskMonitorService;
 	@Autowired
-	private BusinessTargetDataItemService businessTargetDataItemService;
+	private BusinessPlanUserTaskService businessPlanUserTaskService;
 	/**
 	 * 获取单条数据
 	 * @param businessTargetDataInfo
@@ -132,5 +132,16 @@ public class BusinessTargetDataInfoService extends CrudService<BusinessTargetDat
 	public void delete(BusinessTargetDataInfo businessTargetDataInfo) {
 		super.delete(businessTargetDataInfo);
 	}
-	
+
+	@Transactional(readOnly=false)
+	public void saveReport(BusinessTargetDataInfo businessTargetDataInfo) {
+		businessTargetDataInfo.setDataStatus("1");//待审核
+		businessTargetDataInfo.setIsNewRecord(false);
+		String userCode = businessTargetDataInfo.getUser().getUserCode();
+		String targetId = businessTargetDataInfo.getBusinessTarget().getId();
+		String dataItemId = businessTargetDataInfo.getBusinessTargetDataItem().getId();
+		businessPlanUserTaskService.updateStatus(targetId,dataItemId, userCode, "4");//重报
+		businessTargetTaskMonitorService.updateBy(userCode, targetId,"4");//将监控状态修改未 已重报
+		this.save(businessTargetDataInfo);
+	}
 }

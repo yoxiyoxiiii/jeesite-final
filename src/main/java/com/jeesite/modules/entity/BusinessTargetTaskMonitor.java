@@ -7,7 +7,6 @@ import com.jeesite.common.entity.TreeEntity;
 import com.jeesite.common.mybatis.annotation.Column;
 import com.jeesite.common.mybatis.annotation.JoinTable;
 import com.jeesite.common.mybatis.annotation.Table;
-import com.jeesite.modules.dao.BusinessStageTarget2Dao;
 import com.jeesite.modules.sys.entity.Office;
 import lombok.Getter;
 import lombok.Setter;
@@ -21,6 +20,7 @@ import lombok.Setter;
 		@Column(name="id", attrName="id", label="id", isPK=true),
 		@Column(name="target_id", attrName="businessTarget2.id", label="考核细则", isTreeName=true),
 		@Column(name="department_id", attrName="office.officeCode", label="考核部门ID"),
+		@Column(name="user_id", attrName="userCode", label="数据上报员"),
 		@Column(name="plan_id", attrName="businessCheckPlan.id", label="考核计划"),
 		@Column(name="data_item_count", attrName="dataItemCount", label="数据项数量"),
 		@Column(name="up_item_count", attrName="upItemCount", label="已上报数据项数量"),
@@ -48,6 +48,10 @@ public class BusinessTargetTaskMonitor extends TreeEntity<BusinessTargetTaskMoni
 	private String targetId;		// 考核细则
 	private String departmentId;		// 考核部门ID
 	private String planId;		// 考核计划
+
+	@Getter
+	@Setter
+	private String userCode;		// 考核计划
 
 	@Getter
 	@Setter

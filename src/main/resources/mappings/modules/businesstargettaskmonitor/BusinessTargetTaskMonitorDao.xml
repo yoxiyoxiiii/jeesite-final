@@ -5,6 +5,9 @@
         update business_target_task_monitor set up_item_count = #{upItemCount},status = #{status}
         where target_id = #{targetId} and department_id = #{officeCode} and plan_id = #{businessCheckPlanId}
     </update>
+    <update id="updateBy">
+        update business_target_task_monitor set status = #{status} where target_id = #{targetId} and user_id = #{userCode}
+    </update>
 
     <!-- 查询数据
     <select id="findList" resultType="BusinessTargetTaskMonitor">

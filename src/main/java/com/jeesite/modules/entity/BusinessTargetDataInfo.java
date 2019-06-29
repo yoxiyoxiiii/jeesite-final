@@ -46,6 +46,8 @@ public class BusinessTargetDataInfo extends DataEntity<BusinessTargetDataInfo> {
 	
 	private static final long serialVersionUID = 1L;
 
+	@Getter
+	@Setter
 	private String targetDataItemId; // 数据项
 	@Getter
 	@Setter
@@ -76,25 +78,6 @@ public class BusinessTargetDataInfo extends DataEntity<BusinessTargetDataInfo> {
 	public BusinessTargetDataInfo(String id){
 		super(id);
 	}
-	
-//	@Length(min=0, max=50, message="数据项长度不能超过 50 个字符")
-//	public String getTargetDataItemId() {
-//		return targetDataItemId;
-//	}
-//
-//	public void setTargetDataItemId(String targetDataItemId) {
-//		this.targetDataItemId = targetDataItemId;
-//	}
-	
-//	@Length(min=0, max=50, message="数据上报的人/部门长度不能超过 50 个字符")
-//	public String getUserId() {
-//		return userId;
-//	}
-//
-//	public void setUserId(String userId) {
-//		this.userId = userId;
-//	}
-	
 	@Length(min=0, max=255, message="具体的数据长度不能超过 255 个字符")
 	public String getDataInfo() {
 		return dataInfo;

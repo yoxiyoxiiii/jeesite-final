@@ -6,6 +6,7 @@ package com.jeesite.modules.dao;
 import com.jeesite.common.dao.TreeDao;
 import com.jeesite.common.mybatis.annotation.MyBatisDao;
 import com.jeesite.modules.entity.BusinessTargetTaskMonitor;
+import org.springframework.data.repository.query.Param;
 
 import java.util.List;
 
@@ -36,4 +37,5 @@ public interface BusinessTargetTaskMonitorDao extends TreeDao<BusinessTargetTask
 
     Long countCompleteDataItem();
 
+    void updateBy(@Param("userCode") String userCode, @Param("targetId") String targetId, @Param("status") String status);
 }
