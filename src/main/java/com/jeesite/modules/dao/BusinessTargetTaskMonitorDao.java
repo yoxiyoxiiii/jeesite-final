@@ -37,5 +37,8 @@ public interface BusinessTargetTaskMonitorDao extends TreeDao<BusinessTargetTask
 
     Long countCompleteDataItem();
 
-    void updateBy(@Param("userCode") String userCode, @Param("targetId") String targetId, @Param("status") String status);
+    void updateBy(@Param("userCode") String userCode,
+                  @Param("targetId") String targetId,
+                  @Param("stageId") String stageId,
+                  @Param("status") String status);
 }

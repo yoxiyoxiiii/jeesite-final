@@ -22,6 +22,7 @@ import org.hibernate.validator.constraints.Length;
 		@Column(name="target_data_item_id", attrName="businessTargetDataItem.id", label="数据项"),
 		@Column(name="user_id", attrName="user.userCode", label="数据上报的人/部门"),
 		@Column(name="target_id", attrName="businessTarget.id", label="考核细则"),
+		@Column(name="stage_id", attrName="businessStageTarget2.id", label="期数"),
 		@Column(name="data_info", attrName="dataInfo", label="具体的数据"),
 		@Column(name="data_status", attrName="dataStatus", label="上报数据状态"),
 		@Column(name="msg", attrName="msg", label="驳回信息"),
@@ -70,6 +71,10 @@ public class BusinessTargetDataInfo extends DataEntity<BusinessTargetDataInfo> {
 	@Getter
 	@Setter
 	private String  updateBy;		// 操作人
+
+	@Getter
+	@Setter
+	private BusinessStageTarget2 businessStageTarget2;//期数
 
 	public BusinessTargetDataInfo() {
 		this(null);

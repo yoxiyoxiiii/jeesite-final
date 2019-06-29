@@ -73,24 +73,28 @@ public class BusinessTargetDataInfoService extends CrudService<BusinessTargetDat
 	 */
 	@Transactional(readOnly=false)
 	public void save(BusinessTargetDataInfo businessTargetDataInfo,String userTaskId) {
-		this.save(businessTargetDataInfo);
 		businessTargetDataInfo.setDataStatus("1");//待审
 		//更新个人任务状态
 		BusinessPlanUserTask businessPlanUserTask =planUserTaskService.get(userTaskId);
-		businessPlanUserTask.setTaskStatus(2);
+		businessPlanUserTask.setTaskStatus(3);
 		businessPlanUserTask.setId(userTaskId);
 		businessPlanUserTask.setIsNewRecord(false);
 		planUserTaskService.save(businessPlanUserTask);
 		Office office = businessPlanUserTask.getOffice();
 		BusinessCheckPlanUser businessCheckPlanUser = new BusinessCheckPlanUser();
+		businessCheckPlanUser.setIsNewRecord(false);
 		businessCheckPlanUser.setPlanStatus("2");//设置考核名单中，上报数据后部门的数据上报状态
 		businessCheckPlanUser.setOffice(office);
 		String businessCheckPlanId = businessPlanUserTask.getBusinessCheckPlanId();
-		BusinessCheckPlan businessCheckPlan = businessCheckPlanService.get(businessCheckPlanId);
+		BusinessCheckPlan businessCheckPlan = new BusinessCheckPlan();
+		businessCheckPlan.setId(businessCheckPlanId);
 		businessCheckPlanUser.setBusinessCheckPlan(businessCheckPlan);
+		businessCheckPlanUser.setId(businessCheckPlanId);
 		checkPlanUserService.save(businessCheckPlanUser);//更新部门任务上报状态
-
+		//关联期数
+		businessTargetDataInfo.setBusinessStageTarget2(businessPlanUserTask.getBusinessStageTarget2());
 		//BusinessTargetTaskMonitor taskMonitor = businessTargetTaskMonitorService.findByIds(businessPlanUserTask.getBusinessTarget().getId(), office.getOfficeCode(), businessCheckPlanId);
+		this.save(businessTargetDataInfo);
 		BusinessTargetTaskMonitor taskMonitor = businessTargetTaskMonitorService.get(businessPlanUserTask.getMonitorId());
 		Integer dataItemCount = taskMonitor.getDataItemCount();
 		taskMonitor.addUpItemCount();//+1
@@ -140,8 +144,8 @@ public class BusinessTargetDataInfoService extends CrudService<BusinessTargetDat
 		String userCode = businessTargetDataInfo.getUser().getUserCode();
 		String targetId = businessTargetDataInfo.getBusinessTarget().getId();
 		String dataItemId = businessTargetDataInfo.getBusinessTargetDataItem().getId();
-		businessPlanUserTaskService.updateStatus(targetId,dataItemId, userCode, "4");//重报
-		businessTargetTaskMonitorService.updateBy(userCode, targetId,"4");//将监控状态修改未 已重报
+		businessPlanUserTaskService.updateStatus(targetId,dataItemId, userCode, "5");//重报
+		businessTargetTaskMonitorService.updateBy(userCode, targetId,businessTargetDataInfo.getBusinessStageTarget2().getId(),"5");//将监控状态修改未 已重报
 		this.save(businessTargetDataInfo);
 	}
 }

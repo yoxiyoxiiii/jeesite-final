@@ -21,6 +21,7 @@ import lombok.Setter;
 		@Column(name="target_id", attrName="businessTarget2.id", label="考核细则", isTreeName=true),
 		@Column(name="department_id", attrName="office.officeCode", label="考核部门ID"),
 		@Column(name="user_id", attrName="userCode", label="数据上报员"),
+		@Column(name="stage_id", attrName="businessStageTarget2.id", label="期数"),
 		@Column(name="plan_id", attrName="businessCheckPlan.id", label="考核计划"),
 		@Column(name="data_item_count", attrName="dataItemCount", label="数据项数量"),
 		@Column(name="up_item_count", attrName="upItemCount", label="已上报数据项数量"),

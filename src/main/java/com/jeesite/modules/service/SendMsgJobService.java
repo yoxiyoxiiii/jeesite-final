@@ -108,7 +108,7 @@ public class SendMsgJobService {
 
                 log.info("考核部门集合: {}", employeeDto);
                 businessTargetTaskMonitor.setBusinessCheckPlan(businessCheckPlan);
-                businessTargetTaskMonitor.setStatus("2");
+                businessTargetTaskMonitor.setStatus("2");//未完成
 
                 //根据 阶段目标的序号和ID 获取
                 BusinessStageTarget2 businessStageTarget2 = businessTarget2Service.findTargetStageBy(businessTarget.getId(),businessJob.getCurrentStageNumber());
@@ -125,9 +125,10 @@ public class SendMsgJobService {
                     User user = new User();
                     user.setUserCode(employeeDto.getEmp_code());
                     user.setUserName(employeeDto.getEmp_name());
+                    businessPlanUserTask.setBusinessStageTarget2(businessStageTarget2);//关联期数
                     businessPlanUserTask.setBusinessTarget(businessTarget);
                     businessPlanUserTask.setBusinessTargetDataItem(dateItem);
-                    businessPlanUserTask.setTaskStatus(1);//未完成
+                    businessPlanUserTask.setTaskStatus(2);//未完成
                     businessPlanUserTask.setTaskDescription(dateItem.getItemDescription());
                     businessPlanUserTask.setUser(user);
 

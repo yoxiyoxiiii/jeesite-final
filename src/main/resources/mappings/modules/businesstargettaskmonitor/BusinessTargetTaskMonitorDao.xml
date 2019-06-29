@@ -6,7 +6,7 @@
         where target_id = #{targetId} and department_id = #{officeCode} and plan_id = #{businessCheckPlanId}
     </update>
     <update id="updateBy">
-        update business_target_task_monitor set status = #{status} where target_id = #{targetId} and user_id = #{userCode}
+        update business_target_task_monitor set status = #{status} where target_id = #{targetId} and user_id = #{userCode} and stage_id = #{stageId}
     </update>
 
     <!-- 查询数据

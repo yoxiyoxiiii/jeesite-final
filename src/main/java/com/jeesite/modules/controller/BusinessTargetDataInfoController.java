@@ -234,8 +234,8 @@ public class BusinessTargetDataInfoController extends BaseController {
 		String targetId = businessTargetDataInfo.getBusinessTarget().getId();
 
 		String userCode = businessTargetDataInfo.getUser().getUserCode();
-		businessPlanUserTaskService.updateStatus(targetId, dataItemId, userCode,"3");//标记被驳回。
-		businessTargetTaskMonitorService.updateBy(userCode, targetId, "");
+		businessPlanUserTaskService.updateStatus(targetId, dataItemId, userCode,"4");//标记被驳回。
+		businessTargetTaskMonitorService.updateBy(userCode, targetId, businessTargetDataInfo.getBusinessStageTarget2().getId(),"4");// 驳回
 
 		businessTargetDataInfoService.update(businessTargetDataInfo);
 		//MsgPushUtils.push()

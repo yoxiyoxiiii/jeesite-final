@@ -28,6 +28,7 @@ import java.util.Date;
 		@Column(name="business_check_plan_id", attrName="businessCheckPlanId", label="任务所属的user"),
 		@Column(name="department_id", attrName="office.officeCode", label="任务所属的部门"),
 		@Column(name="target_id", attrName="businessTarget.id", label="任务关联的目标"),
+		@Column(name="stage_id", attrName="businessStageTarget2.id", label="任务关联的目标"),
 		@Column(name="target_data_item_id", attrName="businessTargetDataItem.id", label="任务关联的数据项"),
 		@Column(name="task_status", attrName="taskStatus", label="任务状态"),
 		@Column(name="task_description", attrName="taskDescription", label="描述信息"),
@@ -62,6 +63,9 @@ public class BusinessPlanUserTask extends DataEntity<BusinessPlanUserTask> {
 	@Setter
 	@Getter
 	private BusinessTarget2 businessTarget;		// 任务关联的目标
+	@Setter
+	@Getter
+	private BusinessStageTarget2 businessStageTarget2;		// 期数
 	@Setter
 	@Getter
 	private BusinessTargetDataItem businessTargetDataItem;		// 任务关联的数据项

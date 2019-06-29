@@ -118,7 +118,8 @@ public class BusinessTargetTaskMonitorService extends TreeService<BusinessTarget
 		return countCompleteDataItem;
 	}
 
-	public void updateBy(String userCode, String targetId, String status) {
-		super.dao.updateBy(userCode,targetId, status);
+    @Transactional(readOnly=false)
+	public void updateBy(String userCode, String targetId, String stageId,String status) {
+		super.dao.updateBy(userCode,targetId, stageId,status);
 	}
 }

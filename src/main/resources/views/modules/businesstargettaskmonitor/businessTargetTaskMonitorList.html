@@ -140,7 +140,7 @@ $('#dataGrid').dataGrid({
 		{header:'${text("考核部门")}', name:'office.fullName', index:'a.department_id', width:150, align:"left"},
 		{header:'${text("考核计划")}', name:'businessCheckPlan.planName', index:'a.plan_id', width:150, align:"left"},
 		{header:'${text("上报状态")}', name:'status', index:'a.status', width:150, align:"center", formatter: function(val, obj, row, act){
-			return js.getDictLabel(${@DictUtils.getDictListJson('planStatus')}, val, '${text("未知")}', true);
+			return js.getDictLabel(${@DictUtils.getDictListJson('task_status')}, val, '${text("未知")}', true);
 		}},
 		{header:'${text("应上报数据项")}', name:'dataItemCount', index:'a.tree_sort', width:150, align:"center"},
 		{header:'${text("实上报数据项")}', name:'upItemCount', index:'a.tree_sort', width:150, align:"center"},
