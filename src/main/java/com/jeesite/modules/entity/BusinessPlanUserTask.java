@@ -49,6 +49,9 @@ import java.util.Date;
 				@JoinTable(type = JoinTable.Type.LEFT_JOIN, entity = BusinessTargetDataItem.class, alias = "businessTargetDataItem",
 						on = "businessTargetDataItem.id = a.target_data_item_id", attrName = "businessTargetDataItem",
 						columns = {@Column(includeEntity = BusinessTargetDataItem.class)}),
+				@JoinTable(type = JoinTable.Type.LEFT_JOIN, entity = BusinessStageTarget2.class, alias = "businessStageTarget2",
+						on = "businessStageTarget2.id = a.stage_id", attrName = "businessStageTarget2",
+						columns = {@Column(includeEntity = BusinessStageTarget2.class)}),
 
 		},
 		orderBy="a.update_date DESC"

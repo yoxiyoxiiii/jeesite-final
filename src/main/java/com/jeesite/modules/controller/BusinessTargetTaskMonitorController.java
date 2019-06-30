@@ -64,7 +64,6 @@ public class BusinessTargetTaskMonitorController extends BaseController {
 	@RequestMapping(value = {"chartList"})
 	public String chartList(BusinessTarget2 businessTarget2, Model model) {
 		List<BusinessTarget2> businessTarget2List = new ArrayList<>();
-		businessTarget2.setTargetName("ssssssssss");
 		businessTarget2List.add(businessTarget2);
 		model.addAttribute("businessTarget2", businessTarget2List);
 		return "modules/businesstargettaskmonitor/chartList";
@@ -90,8 +89,14 @@ public class BusinessTargetTaskMonitorController extends BaseController {
 	public String list(BusinessTargetTaskMonitor businessTargetTaskMonitor, Model model) {
 		//统计考核的部门总数
 		Long countDept = businessTargetTaskMonitorService.countDept();
+		//未上报
+		Long notReport = businessTargetTaskMonitorService.countCompleteDept("2");
 		//统计完成上报数据的部门数
 		Long countCompleteDept = businessTargetTaskMonitorService.countCompleteDept("3");
+		//驳回
+		Long back = businessTargetTaskMonitorService.countCompleteDept("4");
+		// 重报
+		Long report = businessTargetTaskMonitorService.countCompleteDept("5");
 		//统计上报的总的数据项
 		Long countUpDataItem = businessTargetTaskMonitorService.countUpDataItem();
 		//统计完成上报的数据项
@@ -99,8 +104,11 @@ public class BusinessTargetTaskMonitorController extends BaseController {
 
 		model.addAttribute("businessTargetTaskMonitor", businessTargetTaskMonitor);
 		model.addAttribute("countDept", countDept);
+		model.addAttribute("back", back);
+		model.addAttribute("report", report);
 		model.addAttribute("countCompleteDept", countCompleteDept);
 		model.addAttribute("countUpDataItem", countUpDataItem);
+		model.addAttribute("notReport", notReport);
 		model.addAttribute("countCompleteDataItem", countCompleteDataItem);
 		return "modules/businesstargettaskmonitor/businessTargetTaskMonitorList";
 	}

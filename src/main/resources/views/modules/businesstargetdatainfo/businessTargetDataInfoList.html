@@ -67,6 +67,7 @@ $('#dataGrid').dataGrid({
 		{header:'${text("用户")}', name:'user.userName', index:'a.user_id', width:150, align:"center"},
 		{header:'${text("数据")}', name:'dataInfo', index:'a.data_info', width:150, align:"left"},
 		{header:'${text("得分")}', name:'businessTargetDataItem.itemFinalScore', index:'a.data_info', width:150, align:"left"},
+		{header:'${text("期数")}', name:'businessStageTarget2.stageNumber', index:'a.data_info', width:150, align:"center"},
 		{header:'${text("状态")}', name:'dataStatus', index:'a.status', width:150, align:"left",formatter: function(val, obj, row, act){
 				return js.getDictLabel(${@DictUtils.getDictListJson('data_item_status')}, val, '${text("未知")}', true);
 		}},

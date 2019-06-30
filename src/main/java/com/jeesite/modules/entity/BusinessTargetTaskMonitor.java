@@ -39,6 +39,9 @@ import lombok.Setter;
 		@JoinTable(type= JoinTable.Type.LEFT_JOIN, entity= BusinessTarget2.class, alias="businessTarget2",
 				on="businessTarget2.id = a.target_id", attrName = "businessTarget2",
 				columns={@Column(includeEntity=BusinessTarget2.class)}),
+		@JoinTable(type= JoinTable.Type.LEFT_JOIN, entity= BusinessStageTarget2.class, alias="businessStageTarget2",
+				on="businessStageTarget2.id = a.stage_id", attrName = "businessStageTarget2",
+				columns={@Column(includeEntity=BusinessStageTarget2.class)}),
       },
 
 		orderBy="a.tree_sorts, a.id"

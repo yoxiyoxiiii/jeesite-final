@@ -39,6 +39,9 @@ import org.hibernate.validator.constraints.Length;
 				@JoinTable(type = JoinTable.Type.LEFT_JOIN, entity = User.class, alias = "user",
 						on = "user.user_code = a.user_id", attrName = "user",
 						columns = {@Column(includeEntity = User.class)}),
+				@JoinTable(type = JoinTable.Type.LEFT_JOIN, entity = BusinessStageTarget2.class, alias = "businessStageTarget2",
+						on = "businessStageTarget2.id = a.stage_id", attrName = "businessStageTarget2",
+						columns = {@Column(includeEntity = BusinessStageTarget2.class)}),
 
 		},
 		orderBy="a.id DESC"
