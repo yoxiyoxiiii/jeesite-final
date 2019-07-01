@@ -118,7 +118,7 @@ public class SendMsgJobService {
                 businessTargetTaskMonitorService.save(businessTargetTaskMonitor);
                 BusinessTargetTaskMonitor monitor = businessTargetTaskMonitorService.get(businessTargetTaskMonitor);
 
-                for (BusinessTargetDataItem dateItem : businessTargetDataItemList) {
+//                for (BusinessTargetDataItem dateItem : businessTargetDataItemList) {
 
                     BusinessPlanUserTask businessPlanUserTask = new BusinessPlanUserTask();
                     businessPlanUserTask.setMonitorId(monitor.getId());//设置监控ID
@@ -127,9 +127,9 @@ public class SendMsgJobService {
                     user.setUserName(employeeDto.getEmp_name());
                     businessPlanUserTask.setBusinessStageTarget2(businessStageTarget2);//关联期数
                     businessPlanUserTask.setBusinessTarget(businessTarget);
-                    businessPlanUserTask.setBusinessTargetDataItem(dateItem);
+//                    businessPlanUserTask.setBusinessTargetDataItem(dateItem);
                     businessPlanUserTask.setTaskStatus(2);//未完成
-                    businessPlanUserTask.setTaskDescription(dateItem.getItemDescription());
+//                    businessPlanUserTask.setTaskDescription(dateItem.getItemDescription());
                     businessPlanUserTask.setUser(user);
 
                     businessPlanUserTask.setBusinessCheckPlanId(businessCheckPlanId);//设置考核计划
@@ -142,7 +142,7 @@ public class SendMsgJobService {
 //                    dateItem.setItemStatus("0");//待填报
 //                    dateItem.setIsNewRecord(false);
 //                    businessTargetDataItemService.update(dateItem);
-                }
+//                }
                 msgPush(employeeDto);
             }
         });

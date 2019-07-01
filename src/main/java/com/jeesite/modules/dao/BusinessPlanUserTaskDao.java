@@ -8,6 +8,8 @@ import com.jeesite.common.mybatis.annotation.MyBatisDao;
 import com.jeesite.modules.entity.BusinessPlanUserTask;
 import org.springframework.data.repository.query.Param;
 
+import java.util.List;
+
 /**
  * 目标生成的任务DAO接口
  * @author yj
@@ -20,4 +22,6 @@ public interface BusinessPlanUserTaskDao extends CrudDao<BusinessPlanUserTask> {
                         @Param("dataItemId") String dataItemId,
                         @Param("userCode") String userCode,
                         @Param("status") String status);
+
+    List<BusinessPlanUserTask> findPageDisCount(@Param("pNo")int pNo, @Param("pSize")int pSize);
 }

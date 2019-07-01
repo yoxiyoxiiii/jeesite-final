@@ -15,7 +15,6 @@
 				<#form:hidden path="id"/>
 				<input hidden name="businessTargetId" id="businessTargetId" value="${businessTargetId}">
 				<input name="userTaskId" hidden value="${userTaskId}">
-				<input name="dataItemId" hidden value="${dataItemId}">
 				<div class="row">
 				<div class="row">
 					<div class="col-xs-12">
@@ -97,13 +96,13 @@ $("#inputForm").validate({
 
 //初始化数据采集项DataGrid对象
 $("#businessTargetDataItem2DataGrid").dataGrid({
-	data: ${toJson(businessTargetDataInfo.businessTarget.businessTargetDataItem2List)},
+	data: ${toJson(businessTargetDataInfo.dataInfoDtoList)},
 	datatype: "local", // 设置本地数据
 	autoGridHeight: function(){return 'auto'}, // 设置自动高度
 
 	// 设置数据表格列
 	columnModel: [
-		{header:'主键', name:'id', editable:true, hidden:true},
+		{header:'主键', name:'id' ,editable:true, hidden:false},
 		{header:'${text("采集数据项")}', name:'itemName', width:150, editable:false, edittype:'text', editoptions:{'maxlength':'255', 'class':'form-control'}},
 		{header:'${text("说明")}', name:'itemDescription', width:150, editable:false, edittype:'text', editoptions:{'maxlength':'255', 'class':'form-control'}},
 		{header:'${text("数据填报")}', name:'dataInfo', width:150, editable:true, edittype:'text', editoptions:{'maxlength':'255', 'class':'form-control'}},

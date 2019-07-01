@@ -6,9 +6,11 @@ package com.jeesite.modules.controller;
 import com.jeesite.common.config.Global;
 import com.jeesite.common.entity.Page;
 import com.jeesite.common.web.BaseController;
+import com.jeesite.modules.dto.BusinessTargetDataInfoDto;
 import com.jeesite.modules.entity.BusinessTarget2;
 import com.jeesite.modules.entity.BusinessTargetDataInfo;
 import com.jeesite.modules.entity.BusinessTargetDataItem;
+import com.jeesite.modules.entity.BusinessTargetDataItem2;
 import com.jeesite.modules.service.*;
 import com.jeesite.modules.sys.entity.User;
 import com.jeesite.modules.sys.service.UserService;
@@ -18,7 +20,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.StringUtils;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -26,6 +27,9 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * 上报的数据Controller
@@ -151,18 +155,21 @@ public class BusinessTargetDataInfoController extends BaseController {
 		BusinessTarget2 businessTarget2 = new BusinessTarget2();
 		businessTarget2.setId(businessTargetId);
 		BusinessTarget2 target2 = businessTargetService.get(businessTarget2);
-		BusinessTargetDataItem dataItem = new BusinessTargetDataItem();
-		dataItem.setId(dataItemId);
+//		BusinessTargetDataItem dataItem = new BusinessTargetDataItem();
+//		dataItem.setId(dataItemId);
 		businessTargetDataInfo.setBusinessTarget(target2);
-		BusinessTargetDataItem targetDataItem = dataItemService.get(dataItem);
-		businessTargetDataInfo.setBusinessTargetDataItem(targetDataItem);
+//		BusinessTargetDataItem targetDataItem = dataItemService.get(dataItem);
+//		businessTargetDataInfo.setBusinessTargetDataItem(targetDataItem);
 		User user = new User();
 		user.setUserCode(userCode);
 		User userModel = userService.get(user);
 		businessTargetDataInfo.setUser(userModel);
+		List<BusinessTargetDataItem2> businessTargetDataItem2List = target2.getBusinessTargetDataItem2List();
+		List<BusinessTargetDataInfoDto> collect = businessTargetDataItem2List.stream().map(item -> BusinessTargetDataInfoDto.builder().id(item.getId()).itemName(item.getItemName()).itemDescription(item.getItemDescription()).build()).collect(Collectors.toList());
+		businessTargetDataInfo.setDataInfoDtoList(collect);
 		model.addAttribute("businessTargetDataInfo", businessTargetDataInfo);
 		model.addAttribute("userTaskId", userTaskId);
-		model.addAttribute("dataItemId", dataItemId);
+//		model.addAttribute("dataItemId", dataItemId);
 		model.addAttribute("businessTargetId", businessTargetId);
 		return "modules/businesstargetdatainfo/businessTargetDataInfoFormNew";
 	}
@@ -174,15 +181,29 @@ public class BusinessTargetDataInfoController extends BaseController {
 	@RequiresPermissions("businesstargetdatainfo:businessTargetDataInfo:edit")
 	@PostMapping(value = "save")
 	@ResponseBody
-	public String save(@Validated BusinessTargetDataInfo businessTargetDataInfo, String userTaskId, String dataItemId) {
-		businessTargetDataInfo.setIsNewRecord(true);
-		BusinessTargetDataItem dataItem = new BusinessTargetDataItem();
-		dataItem.setId(dataItemId);
-		businessTargetDataInfo.setBusinessTargetDataItem(dataItem);
-		businessTargetDataInfoService.save(businessTargetDataInfo,userTaskId);
+	public String save(BusinessTargetDataInfo dataInfoDtos, String userTaskId) {
+		String dtosId = dataInfoDtos.getId();
+		//上报的数据
+		String dataInfo = dataInfoDtos.getDataInfo();
+		String[] dataList = dataInfo.split(",");
+		String[] split = dtosId.split(",");
+
+		//数据项ID
+		List<String> collect = Arrays.asList(split).stream().filter(item ->!StringUtils.isEmpty(item)).collect(Collectors.toList());
+		List<String> dataCollect = Arrays.asList(dataList).stream().filter(item ->!StringUtils.isEmpty(item)).collect(Collectors.toList());
+        for (int i = 0;i<collect.size(); i++) {
+			BusinessTargetDataInfo businessTargetDataInfo = new BusinessTargetDataInfo();
+			businessTargetDataInfo.setUser(dataInfoDtos.getUser());
+			businessTargetDataInfo.setBusinessTarget(dataInfoDtos.getBusinessTarget());
+			BusinessTargetDataItem dataItem = new BusinessTargetDataItem();
+			dataItem.setId(collect.get(i));
+			businessTargetDataInfo.setBusinessTargetDataItem(dataItem);
+			businessTargetDataInfo.setDataInfo(dataCollect.get(i));
+			businessTargetDataInfoService.save(businessTargetDataInfo,userTaskId);
+		}
 		return renderResult(Global.TRUE, text("保存上报的数据成功！"));
 	}
-	
+
 	/**
 	 * 停用上报的数据
 	 */

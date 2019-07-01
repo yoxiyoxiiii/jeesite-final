@@ -3,14 +3,18 @@
  */
 package com.jeesite.modules.entity;
 
+import com.jeesite.common.collect.ListUtils;
 import com.jeesite.common.entity.DataEntity;
 import com.jeesite.common.mybatis.annotation.Column;
 import com.jeesite.common.mybatis.annotation.JoinTable;
 import com.jeesite.common.mybatis.annotation.Table;
+import com.jeesite.modules.dto.BusinessTargetDataInfoDto;
 import com.jeesite.modules.sys.entity.User;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.validator.constraints.Length;
+
+import java.util.List;
 
 /**
  * 上报的数据Entity
@@ -78,6 +82,17 @@ public class BusinessTargetDataInfo extends DataEntity<BusinessTargetDataInfo> {
 	@Getter
 	@Setter
 	private BusinessStageTarget2 businessStageTarget2;//期数
+
+	private List<BusinessTargetDataInfoDto> dataInfoDtoList =  ListUtils.newArrayList();
+	public List<BusinessTargetDataInfoDto> getDataInfoDtoList() {
+		return dataInfoDtoList;
+	}
+
+	public void setDataInfoDtoList(List<BusinessTargetDataInfoDto> dataInfoDtoList) {
+		this.dataInfoDtoList = dataInfoDtoList;
+	}
+
+
 
 	public BusinessTargetDataInfo() {
 		this(null);

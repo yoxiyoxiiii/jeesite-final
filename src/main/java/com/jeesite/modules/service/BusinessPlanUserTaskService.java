@@ -10,6 +10,8 @@ import com.jeesite.modules.entity.BusinessPlanUserTask;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 /**
  * 目标生成的任务Service
  * @author yj
@@ -72,5 +74,9 @@ public class BusinessPlanUserTaskService extends CrudService<BusinessPlanUserTas
 	@Transactional(readOnly=false)
 	public void updateStatus(String targetId, String dataItemId,String userCode, String status) {
 		super.dao.updateStatusBy(targetId, dataItemId, userCode, status);
+	}
+
+	public List<BusinessPlanUserTask> findPageDisCount(int pNo, int pSize) {
+		return super.dao.findPageDisCount(pNo-1, pSize);
 	}
 }
