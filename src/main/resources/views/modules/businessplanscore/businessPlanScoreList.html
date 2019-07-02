@@ -1,0 +1,144 @@
+<% layout('/layouts/default.html', {title: '考核评分管理', libs: ['dataGrid']}){ %>
+<div class="main-content">
+	<div class="box box-main">
+		<div class="box-header">
+			<div class="box-title">
+				<i class="fa fa-list-alt"></i> ${text('考核评分管理')}
+			</div>
+			<div class="box-tools pull-right">
+				<a href="#" class="btn btn-default" id="btnSearch" title="${text('查询')}"><i class="fa fa-filter"></i> ${text('查询')}</a>
+				<% if(hasPermi('businessplanscore:businessPlanScore:edit')){ %>
+					<a href="${ctx}/businessplanscore/businessPlanScore/form" class="btn btn-default btnTool" title="${text('新增考核评分')}"><i class="fa fa-plus"></i> ${text('新增')}</a>
+				<% } %>
+			</div>
+		</div>
+		<div class="box-body">
+			<#form:form id="searchForm" model="${businessPlanScore}" action="${ctx}/businessplanscore/businessPlanScore/listData" method="post" class="form-inline hide"
+					data-page-no="${parameter.pageNo}" data-page-size="${parameter.pageSize}" data-order-by="${parameter.orderBy}">
+				<div class="form-group">
+					<label class="control-label">${text('考核计划ID')}：</label>
+					<div class="control-inline">
+						<#form:input path="checkPlanId" maxlength="50" class="form-control width-120"/>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="control-label">${text('考核名单ID')}：</label>
+					<div class="control-inline">
+						<#form:input path="checkPlanUserId" maxlength="50" class="form-control width-120"/>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="control-label">${text('最新总分数')}：</label>
+					<div class="control-inline">
+						<#form:input path="planTotalScore" maxlength="255" class="form-control width-120"/>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="control-label">${text('说明')}：</label>
+					<div class="control-inline">
+						<#form:input path="description" maxlength="255" class="form-control width-120"/>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="control-label">${text('审批状态 通过、退回、作废')}：</label>
+					<div class="control-inline">
+						<#form:input path="checkStatus" maxlength="4" class="form-control width-120"/>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="control-label">${text('原始得分')}：</label>
+					<div class="control-inline">
+						<#form:input path="planTotalScoreOld" maxlength="255" class="form-control width-120"/>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="control-label">${text('状态')}：</label>
+					<div class="control-inline width-120">
+						<#form:select path="status" dictType="sys_search_status" blankOption="true" class="form-control"/>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="control-label">${text('审批者')}：</label>
+					<div class="control-inline">
+						<#form:input path="auditBy" maxlength="64" class="form-control width-120"/>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="control-label">${text('审批时间')}：</label>
+					<div class="control-inline">
+						<#form:input path="auditDate" readonly="true" maxlength="20" class="form-control Wdate-datetime"
+							dataFormat="datetime" onclick="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm',isShowClear:false});"/>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="control-label">${text('备注信息')}：</label>
+					<div class="control-inline">
+						<#form:input path="remarks" maxlength="500" class="form-control width-120"/>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="control-label">${text('考核明显ID')}：</label>
+					<div class="control-inline">
+						<#form:input path="targetId" maxlength="50" class="form-control width-120"/>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="control-label">${text('考核部门ID')}：</label>
+					<div class="control-inline">
+						<#form:input path="deptId" maxlength="50" class="form-control width-120"/>
+					</div>
+				</div>
+				<div class="form-group">
+					<button type="submit" class="btn btn-primary btn-sm">${text('查询')}</button>
+					<button type="reset" class="btn btn-default btn-sm">${text('重置')}</button>
+				</div>
+			</#form:form>
+			<table id="dataGrid"></table>
+			<div id="dataGridPage"></div>
+		</div>
+	</div>
+</div>
+<% } %>
+<script>
+// 初始化DataGrid对象
+$('#dataGrid').dataGrid({
+	searchForm: $("#searchForm"),
+	columnModel: [
+		{header:'${text("考核计划ID")}', name:'checkPlanId', index:'a.check_plan_id', width:150, align:"left", frozen:true, formatter: function(val, obj, row, act){
+			return '<a href="${ctx}/businessplanscore/businessPlanScore/form?id='+row.id+'" class="btnList" data-title="${text("编辑考核评分")}">'+(val||row.id)+'</a>';
+		}},
+		{header:'${text("考核名单ID")}', name:'checkPlanUserId', index:'a.check_plan_user_id', width:150, align:"left"},
+		{header:'${text("最新总分数")}', name:'planTotalScore', index:'a.plan_total_score', width:150, align:"left"},
+		{header:'${text("说明")}', name:'description', index:'a.description', width:150, align:"left"},
+		{header:'${text("审批状态 通过、退回、作废")}', name:'checkStatus', index:'a.check_status', width:150, align:"center"},
+		{header:'${text("原始得分")}', name:'planTotalScoreOld', index:'a.plan_total_score_old', width:150, align:"left"},
+		{header:'${text("状态")}', name:'status', index:'a.status', width:150, align:"center", formatter: function(val, obj, row, act){
+			return js.getDictLabel(${@DictUtils.getDictListJson('sys_search_status')}, val, '${text("未知")}', true);
+		}},
+		{header:'${text("更新时间")}', name:'updateDate', index:'a.update_date', width:150, align:"center"},
+		{header:'${text("审批者")}', name:'auditBy', index:'a.audit_by', width:150, align:"left"},
+		{header:'${text("审批时间")}', name:'auditDate', index:'a.audit_date', width:150, align:"center"},
+		{header:'${text("备注信息")}', name:'remarks', index:'a.remarks', width:150, align:"left"},
+		{header:'${text("考核明显ID")}', name:'targetId', index:'a.target_id', width:150, align:"left"},
+		{header:'${text("考核部门ID")}', name:'deptId', index:'a.dept_id', width:150, align:"left"},
+		{header:'${text("操作")}', name:'actions', width:120, sortable:false, title:false, formatter: function(val, obj, row, act){
+			var actions = [];
+			<% if(hasPermi('businessplanscore:businessPlanScore:edit')){ %>
+				actions.push('<a href="${ctx}/businessplanscore/businessPlanScore/form?id='+row.id+'" class="btnList" title="${text("编辑考核评分")}"><i class="fa fa-pencil"></i></a>&nbsp;');
+				if (row.status == Global.STATUS_NORMAL){
+					actions.push('<a href="${ctx}/businessplanscore/businessPlanScore/disable?id='+row.id+'" class="btnList" title="${text("停用考核评分")}" data-confirm="${text("确认要停用该考核评分吗？")}"><i class="glyphicon glyphicon-ban-circle"></i></a>&nbsp;');
+				}
+				if (row.status == Global.STATUS_DISABLE){
+					actions.push('<a href="${ctx}/businessplanscore/businessPlanScore/enable?id='+row.id+'" class="btnList" title="${text("启用考核评分")}" data-confirm="${text("确认要启用该考核评分吗？")}"><i class="glyphicon glyphicon-ok-circle"></i></a>&nbsp;');
+				}
+				actions.push('<a href="${ctx}/businessplanscore/businessPlanScore/delete?id='+row.id+'" class="btnList" title="${text("删除考核评分")}" data-confirm="${text("确认要删除该考核评分吗？")}"><i class="fa fa-trash-o"></i></a>&nbsp;');
+			<% } %>
+			return actions.join('');
+		}}
+	],
+	// 加载成功后执行事件
+	ajaxSuccess: function(data){
+		
+	}
+});
+</script>

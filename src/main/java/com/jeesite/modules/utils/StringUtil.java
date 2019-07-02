@@ -25,8 +25,29 @@ public class StringUtil {
 
     public static List<String> getChiness(String str) {
         List<String> result = new ArrayList<>();
+        String regEx = "[/>=/,/<=/,`,~,!,@,#,$%^&*()+,-,=|{}':;',\\[\\]/>/,/</,/?~！@#￥%……&*（）——+|{}【】‘；：”“’。，、-]";
+        String[] split = str.split(regEx);
+        //是否是中文
+        String reg = "[\u4e00-\u9fa5]";
+        Pattern pat = Pattern.compile(reg);
+        for (String item : split) {
+            boolean match = pat.matcher(item).find();
+            if (match) {
+                String trim = item.trim();
+                result.add(trim);//添加中文到结果
+            }
+        }
+        return result;
+    }
+
+    /**
+     * 处理> <
+     * @param str
+     * @return
+     */
+    public static String doltOrgt(String str) {
         StringBuffer stringBuffer = new StringBuffer();
-        char[] chars = str.toCharArray();
+        char[] chars = str.trim().toCharArray();
         for (int i = 0;i<chars.length; i++) {
             int x = chars[i];
             if (x!=65310 && x!=65308) {//处理> <
@@ -36,18 +57,7 @@ public class StringUtil {
                 stringBuffer.append((char)x);
             }
         }
-        String regEx = "[/>=/,/<=/,`,~,!,@,#,$%^&*()+,-,=|{}':;',\\[\\]/>/,/</,/?~！@#￥%……&*（）——+|{}【】‘；：”“’。，、-]";
-        String[] split = stringBuffer.toString().split(regEx);
-        //是否是中文
-        String reg = "[\u4e00-\u9fa5]";
-        Pattern pat = Pattern.compile(reg);
-        for (String item : split) {
-            boolean match = pat.matcher(item).find();
-            if (match) {
-                result.add(item.trim());//添加中文到结果
-            }
-        }
-        return result;
+        return stringBuffer.toString();
     }
 
     public static void main(String[] args) {

@@ -328,6 +328,7 @@ public class BusinessTargetController extends BaseController {
 	@RequestMapping("/check")
     @ResponseBody
 	public String check(String targetResultExpression, String businessTargetId) {
+		String doltOrgt = StringUtil.doltOrgt(targetResultExpression);
 		if (org.springframework.util.StringUtils.isEmpty(targetResultExpression)) {return renderResult(Global.FALSE, text("公式必填！"));}
 		BusinessTarget2 businessTarget2 = businessTarget2Service.get(businessTargetId);
 		if ("2".equals(businessTarget2.getTargetAttribute())) {
@@ -337,13 +338,13 @@ public class BusinessTargetController extends BaseController {
 		List<BusinessTargetDataItem> businessTargetDataItems = dataItemService.findByBusinessTargetId(businessTargetId);
 		List<String> collect = businessTargetDataItems.stream().map(BusinessTargetDataItem::getItemName).collect(Collectors.toList());
 		//获取数据采集项，从公式中解析出来
-		List<String> chiness = StringUtil.getChiness(targetResultExpression);
+		List<String> chiness = StringUtil.getChiness(doltOrgt).stream().map(String::trim).collect(Collectors.toList());
 		boolean allMatch = collect.containsAll(chiness);
 
 		businessTarget2.setIsNewRecord(false);
 		if (allMatch) {//数据采集项都正确，再检测 公式是否能执行出结果
 			//替换中文后的公式,将所有的变量都 设置为1.
-			String expre = StringUtil.replaceChinese(targetResultExpression, "#");
+			String expre = StringUtil.replaceChinese(doltOrgt, "#");
 			//替换AND OR
 			if (expre.contains("AND")) {expre.replace("AND","&&");}
 			if (expre.contains("OR")) {expre.replace("OR","||");}
