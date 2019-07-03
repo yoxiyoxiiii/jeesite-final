@@ -262,7 +262,7 @@ public class BusinessTargetTaskMonitorController extends BaseController {
 
 		Interpreter bsh = new Interpreter();
 		String result =(String) bsh.eval(doltOrgt);//计算结果
-		return result;
+		return renderResult(Global.TRUE, "分数计算成功!");
 	}
 	
 }
