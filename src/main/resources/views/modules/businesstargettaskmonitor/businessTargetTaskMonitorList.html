@@ -160,6 +160,7 @@ $('#dataGrid').dataGrid({
 			<% if(hasPermi('businesstargettaskmonitor:businessTargetTaskMonitor:edit')){ %>
 				//actions.push('<a href="${ctx}/businesstargettaskmonitor/businessTargetTaskMonitor/treeList" class="btnList" title="${text("树形展示")}"><i class="fa fa-envira"></i></a>&nbsp;');
 					actions.push('<a href="${ctx}/businesstargettaskmonitor/businessTargetTaskMonitor/form?parentCode='+row.id+'" class="btnList" title="${text("提醒")}"><i class="fa  fa-bell-o"></i></a>&nbsp;');
+					actions.push('<a href="${ctx}/businesstargettaskmonitor/businessTargetTaskMonitor/score?targetId='+row.businessTarget2.id+'&deptId='+row.office.officeCode+'&stageId='+row.businessStageTarget2.id+'" class="btnList" title="${text("计算分值")}"><i class="fa fa-file-excel-o"></i></a>&nbsp;');
 			<% } %>
 			return actions.join('');
 		}}

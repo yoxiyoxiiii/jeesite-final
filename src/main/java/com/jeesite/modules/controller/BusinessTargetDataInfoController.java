@@ -147,7 +147,7 @@ public class BusinessTargetDataInfoController extends BaseController {
 	@RequiresPermissions("businesstargetdatainfo:businessTargetDataInfo:view")
 	@RequestMapping(value = "formNew")
 	public String formNew(BusinessTargetDataInfo businessTargetDataInfo,
-						  String businessTargetId, String dataItemId ,
+						  String businessTargetId,
 						  String userCode,
 						  String userTaskId,
 						  Model model) {
@@ -155,11 +155,7 @@ public class BusinessTargetDataInfoController extends BaseController {
 		BusinessTarget2 businessTarget2 = new BusinessTarget2();
 		businessTarget2.setId(businessTargetId);
 		BusinessTarget2 target2 = businessTargetService.get(businessTarget2);
-//		BusinessTargetDataItem dataItem = new BusinessTargetDataItem();
-//		dataItem.setId(dataItemId);
 		businessTargetDataInfo.setBusinessTarget(target2);
-//		BusinessTargetDataItem targetDataItem = dataItemService.get(dataItem);
-//		businessTargetDataInfo.setBusinessTargetDataItem(targetDataItem);
 		User user = new User();
 		user.setUserCode(userCode);
 		User userModel = userService.get(user);
@@ -169,7 +165,6 @@ public class BusinessTargetDataInfoController extends BaseController {
 		businessTargetDataInfo.setDataInfoDtoList(collect);
 		model.addAttribute("businessTargetDataInfo", businessTargetDataInfo);
 		model.addAttribute("userTaskId", userTaskId);
-//		model.addAttribute("dataItemId", dataItemId);
 		model.addAttribute("businessTargetId", businessTargetId);
 		return "modules/businesstargetdatainfo/businessTargetDataInfoFormNew";
 	}
@@ -274,5 +269,4 @@ public class BusinessTargetDataInfoController extends BaseController {
 		businessTargetDataInfoService.delete(businessTargetDataInfo);
 		return renderResult(Global.TRUE, text("删除上报的数据成功！"));
 	}
-	
 }

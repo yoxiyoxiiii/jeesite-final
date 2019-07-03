@@ -3,16 +3,21 @@
  */
 package com.jeesite.modules.controller;
 
+import bsh.EvalError;
+import bsh.Interpreter;
 import com.jeesite.common.collect.ListUtils;
 import com.jeesite.common.collect.MapUtils;
 import com.jeesite.common.config.Global;
 import com.jeesite.common.lang.StringUtils;
 import com.jeesite.common.web.BaseController;
 import com.jeesite.modules.entity.BusinessTarget2;
-import com.jeesite.modules.service.BusinessTarget2Service;
+import com.jeesite.modules.entity.BusinessTargetDataInfo;
 import com.jeesite.modules.entity.BusinessTargetTaskMonitor;
+import com.jeesite.modules.service.BusinessTarget2Service;
+import com.jeesite.modules.service.BusinessTargetDataInfoService;
 import com.jeesite.modules.service.BusinessTargetTaskMonitorService;
 import com.jeesite.modules.sys.utils.UserUtils;
+import com.jeesite.modules.utils.StringUtil;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -38,6 +43,9 @@ public class BusinessTargetTaskMonitorController extends BaseController {
 
 	@Autowired
 	private BusinessTargetTaskMonitorService businessTargetTaskMonitorService;
+
+	@Autowired
+	private BusinessTargetDataInfoService businessTargetDataInfoService;
 	
 	/**
 	 * 获取数据
@@ -212,19 +220,6 @@ public class BusinessTargetTaskMonitorController extends BaseController {
 		List<BusinessTargetTaskMonitor> list = businessTargetTaskMonitorService.findAll();
 		for (int i=0; i<list.size(); i++){
 				BusinessTargetTaskMonitor e = list.get(i);
-			// 过滤非正常的数据
-//			if (!BusinessTargetTaskMonitor.STATUS_NORMAL.equals(e.getStatus())){
-//				continue;
-//			}
-			// 过滤被排除的编码（包括所有子级）
-//			if (StringUtils.isNotBlank(excludeCode)){
-//				if (e.getId().equals(excludeCode)){
-//					continue;
-//				}
-//				if (e.getParentCodes().contains("," + excludeCode + ",")){
-//					continue;
-//				}
-//			}
 			Map<String, Object> map = MapUtils.newHashMap();
 			map.put("id", e.getTargetId());
 			map.put("pId", e.getParentCode());
@@ -246,6 +241,28 @@ public class BusinessTargetTaskMonitorController extends BaseController {
 		}
 		businessTargetTaskMonitorService.fixTreeData();
 		return renderResult(Global.TRUE, "数据修复成功");
+	}
+
+	@RequiresPermissions("businesstargettaskmonitor:businessTargetTaskMonitor:edit")
+	@RequestMapping(value = "score")
+	@ResponseBody
+	public String score(String targetId, String deptId, String stageId) throws EvalError {
+
+		BusinessTarget2 businessTarget2 = businessTarget2Service.get(targetId);
+		//得到计算公式
+		String targetResultExpression = businessTarget2.getTargetResultExpression();
+		String doltOrgt = StringUtil.doltOrgt(targetResultExpression);//处理中文的< >
+		//计算公式中的数据项
+		List<String> chiness = StringUtil.getChiness(doltOrgt);
+		for (int i=0;i<chiness.size(); i++) {
+			String item = chiness.get(i);
+			BusinessTargetDataInfo businessTargetDataInfo = businessTargetDataInfoService.findByItemName(item.trim(),targetId);
+			doltOrgt = doltOrgt.replaceAll(item,businessTargetDataInfo.getDataInfo());//将数据项替换成数据
+		}
+
+		Interpreter bsh = new Interpreter();
+		String result =(String) bsh.eval(doltOrgt);//计算结果
+		return result;
 	}
 	
 }

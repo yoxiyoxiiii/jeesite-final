@@ -6,6 +6,7 @@ package com.jeesite.modules.dao;
 import com.jeesite.common.dao.CrudDao;
 import com.jeesite.common.mybatis.annotation.MyBatisDao;
 import com.jeesite.modules.entity.BusinessTargetDataInfo;
+import org.springframework.data.repository.query.Param;
 
 /**
  * 上报的数据DAO接口
@@ -14,5 +15,7 @@ import com.jeesite.modules.entity.BusinessTargetDataInfo;
  */
 @MyBatisDao
 public interface BusinessTargetDataInfoDao extends CrudDao<BusinessTargetDataInfo> {
-	
+
+    BusinessTargetDataInfo findByItemName(@Param("targetId") String targetId,
+                                          @Param("dataItemName") String dataItemName);
 }

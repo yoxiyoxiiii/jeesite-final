@@ -148,4 +148,8 @@ public class BusinessTargetDataInfoService extends CrudService<BusinessTargetDat
 		businessTargetTaskMonitorService.updateBy(userCode, targetId,businessTargetDataInfo.getBusinessStageTarget2().getId(),"5");//将监控状态修改未 已重报
 		this.save(businessTargetDataInfo);
 	}
+
+	public BusinessTargetDataInfo findByItemName(String dataItemName, String targetId) {
+		return 	super.dao.findByItemName(targetId, dataItemName);
+	}
 }
