@@ -172,7 +172,7 @@ public class SendMsgJobService {
             msgContent.setContent("数据采集任务");
             msgContent.addButton("办理", "/a/demo/demoCustomer/form?id=1120518619533426688");
             //  即时推送消息
-//            MsgPushUtils.push(msgContent,  "BizKey",  "BizType",  employeeDto.getEmp_code());
-            MsgPushUtils.push(msgContent, "BizKey", "BizType", "system");
+            MsgPushUtils.push(msgContent,  "BizKey",  "BizType",  employeeDto.getEmp_code());
+//            MsgPushUtils.push(msgContent, "BizKey", "BizType", "system");
     }
 }

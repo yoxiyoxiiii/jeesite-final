@@ -8,6 +8,7 @@ import com.jeesite.common.entity.Page;
 import com.jeesite.common.web.BaseController;
 import com.jeesite.modules.entity.BusinessPlanUserTask;
 import com.jeesite.modules.service.BusinessPlanUserTaskService;
+import com.jeesite.modules.sys.utils.UserUtils;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -71,6 +72,7 @@ public class BusinessPlanUserTaskController extends BaseController {
 	@RequestMapping(value = "listData")
 	@ResponseBody
 	public Page<BusinessPlanUserTask> listData(BusinessPlanUserTask businessPlanUserTask, HttpServletRequest request, HttpServletResponse response) {
+		businessPlanUserTask.setUser(UserUtils.getUser());
 		businessPlanUserTask.setPage(new Page<>(request, response));
 		Page<BusinessPlanUserTask> page = businessPlanUserTaskService.findPage(businessPlanUserTask);
 		return page;

@@ -46,10 +46,12 @@ public class StringUtil {
      * @return
      */
     public static String doltOrgt(String str) {
+        String replaceAll = str.replaceAll(" ", "");
         StringBuffer stringBuffer = new StringBuffer();
-        char[] chars = str.trim().toCharArray();
+        char[] chars = replaceAll.trim().toCharArray();
         for (int i = 0;i<chars.length; i++) {
             int x = chars[i];
+            if (x==160 || x==194) {continue;}
             if (x!=65310 && x!=65308) {//处理> <
                 stringBuffer.append(chars[i]);
             }else {
@@ -59,6 +61,7 @@ public class StringUtil {
         }
         return stringBuffer.toString();
     }
+
 
     public static void main(String[] args) {
 //        String item = "(100-数据次啊及)*数据";
