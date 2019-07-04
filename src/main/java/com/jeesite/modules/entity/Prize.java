@@ -28,6 +28,7 @@ import com.jeesite.common.mybatis.mapper.query.QueryType;
 		@Column(name="id", attrName="id", label="编号", isPK=true),
 		@Column(name="dept_id", attrName="office.officeCode", label="主体单位"),
 		@Column(name="dept_join_id", attrName="officeJoin.officeCode", label="参与单位"),
+		@Column(name="dept_join_name", attrName="officeJoin.officeName", label="被考核的人"),
 		@Column(name="prize_lib_id", attrName="prizeLib.id", label="奖扣指标ID"),
 		@Column(name="prize_date", attrName="prizeDate", label="获奖时间"),
 		@Column(name="evidence", attrName="evidence", label="情况说明", queryType=QueryType.LIKE),

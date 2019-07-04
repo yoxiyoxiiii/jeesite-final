@@ -38,6 +38,12 @@
 					</div>
 				</div>
 				<div class="form-group">
+					<label class="control-label">${text('状态')}：</label>
+					<div class="control-inline width-120">
+						<#form:select path="status" dictType="sys_status" blankOption="true" class="form-control"/>
+					</div>
+				</div>
+				<div class="form-group">
 					<button type="submit" class="btn btn-primary btn-sm">${text('查询')}</button>
 					<button type="reset" class="btn btn-default btn-sm">${text('重置')}</button>
 				</div>
@@ -70,20 +76,27 @@ $('#dataGrid').dataGrid({
 		{header:'${text("操作")}', name:'actions', width:120, sortable:false, title:false, formatter: function(val, obj, row, act){
 			var actions = [];
 			<% if(hasPermi('evalu:evalu:edit')){ %>
-				actions.push('<a href="${ctx}/evalu/evalu/form?id='+row.id+'" class="btnList" title="${text("编辑民主测评")}"><i class="fa fa-pencil"></i></a>&nbsp;');
-				actions.push('<a href="${ctx}/evalu/evalu/delete?id='+row.id+'" class="btnList" title="${text("删除民主测评")}" data-confirm="${text("确认要删除该民主测评吗？")}"><i class="fa fa-trash-o"></i></a>&nbsp;');
-				actions.push('<a href="${ctx}/evalu/evaluLib/list/'+row.id+'" class="btnList" title="${text("测评项管理")}"><i class="fa fa-list-ol"></i></a>&nbsp;');
-				actions.push('<a href="javascript:" class="btnMore" title="更多操作"><i class="fa fa-chevron-circle-right"></i></a>&nbsp;');
-				actions.push('<div class="moreItems">');
-				actions.push('<a href="${ctx}/evalu/evaluLib/reportTable/'+row.id+'/AZ01" class="btn btn-default btn-xs btnList" title="预览测评单"><i class="fa fa-check-square-o"></i>预览测评单</a>&nbsp;');
-				actions.push('<a href="${ctx}/evalu/evaluLib/reportGrid/'+row.id+'" class="btn btn-default btn-xs btnList" title="预览测评表"><i class="fa fa-check-square-o"></i>预览测评表</a>&nbsp;');
-				actions.push('<a href="${ctx}/evalu/evaluLib/report/'+row.id+'/0" class="btn btn-default btn-xs btnList" title="查看测评报告"><i class="fa fa-check-circle-o"></i>查看测评报告</a>&nbsp;');
+				if ( row.status == Global.STATUS_DRAFT ||  row.status == Global.STATUS_AUDIT_BACK ){
+					actions.push('<a href="${ctx}/evalu/evalu/form?id='+row.id+'" class="btnList" title="${text("编辑民主测评")}"><i class="fa fa-pencil"></i></a>&nbsp;');				
+					actions.push('<a href="${ctx}/evalu/evaluLib/list/'+row.id+'" class="btnList" title="${text("测评项管理")}"><i class="fa fa-list-ol"></i></a>&nbsp;');				
+					actions.push('<a href="${ctx}/evalu/evalu/audit?id='+row.id+'&status=4" class="btnList"  title="${text("提交审批")}" data-confirm="${text("确认要提交到审批吗？")}"><i class="fa fa-magic"></i></a>&nbsp;');
+					actions.push('<a href="${ctx}/evalu/evalu/delete?id='+row.id+'" class="btnList" title="${text("删除民主测评")}" data-confirm="${text("确认要删除该民主测评吗？")}"><i class="fa fa-trash-o"></i></a>&nbsp;');
+				}else if ( row.status == Global.STATUS_AUDIT ){
+					actions.push('<a href="${ctx}/evalu/evalu/audit?id='+row.id+'&status=0" class="btnList" title="${text("审批通过")}" data-confirm="${text("确认要审批通过该奖扣指标吗？")}"><i class="fa fa-gavel"></i></a>&nbsp;');
+					actions.push('<a href="${ctx}/evalu/evalu/audit?id='+row.id+'&status=5" class="btnList" title="${text("审批不通过奖扣指标")}" data-confirm="${text("确认审批不通过该奖扣指标吗？")}"><i class="fa fa-lock text-danger"></i></a>&nbsp;');
+				}else if(row.status == Global.STATUS_NORMAL){
+					actions.push('<a href="javascript:" class="btnMore" title="更多操作"><i class="fa fa-chevron-circle-right"></i></a>&nbsp;');
+					actions.push('<div class="moreItems">');
+					actions.push('<a href="${ctx}/evalu/evaluLib/reportTable/'+row.id+'/AZ01" class="btn btn-default btn-xs btnList" title="预览测评单"><i class="fa fa-check-square-o"></i>预览测评单</a>&nbsp;');
+					actions.push('<a href="${ctx}/evalu/evaluLib/reportGrid/'+row.id+'" class="btn btn-default btn-xs btnList" title="预览测评表"><i class="fa fa-check-square-o"></i>预览测评表</a>&nbsp;');
+					actions.push('<a href="${ctx}/evalu/evaluLib/report/'+row.id+'/0" class="btn btn-default btn-xs btnList" title="查看测评报告"><i class="fa fa-check-circle-o"></i>查看测评报告</a>&nbsp;');
+				}
 				if (row.status == Global.STATUS_NORMAL){
 					actions.push('<a href="${ctx}/evalu/evalu/disable?id='+row.id+'" class="btnList" title="${text("停用民主测评")}" data-confirm="${text("确认要停用该民主测评吗？")}"><i class="glyphicon glyphicon-ban-circle"></i></a>&nbsp;');
 				}
 				if (row.status == Global.STATUS_DISABLE){
 					actions.push('<a href="${ctx}/evalu/evalu/enable?id='+row.id+'" class="btnList" title="${text("启用民主测评")}" data-confirm="${text("确认要启用该民主测评吗？")}"><i class="glyphicon glyphicon-ok-circle"></i></a>&nbsp;');
-				}
+				}				
 				actions.push('</div>');
 			<% } %>
 			return actions.join('');

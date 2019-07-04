@@ -142,9 +142,9 @@
 						<i class="fa fa-bullhorn"></i> 预发布
 					</a>
 				
-					<a class="btn btn-app">
+					<a class="btn btn-app" id="btnImport">
 						<span class="badge bg-green">300</span>
-						<i class="fa fa-barcode"></i> 公示
+						<i class="fa fa-barcode"></i> 测试导入
 					</a>
 					<a class="btn btn-app" id="printReport">						
 						<i class="fa fa-print"></i> 打印报告
@@ -201,8 +201,32 @@
 </div>
 <!-- 模态框（Modal） -->
 <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-	<form id="searchForm" action="" method="post" class="form-inline hide" data-page-no="" data-page-size="" data-order-by="">
-
+	<#form:form id="searchForm" model="${businessCheckPlan}" action="${ctx}/businesscheckplan/businessCheckPlan/exportData" method="post" class="form-inline hide"
+					data-page-no="${parameter.pageNo}" data-page-size="${parameter.pageSize}" data-order-by="${parameter.orderBy}">
+					<#form:hidden path="id"/>
+				<div class="form-group">
+					<label class="control-label">${text('计划名称')}：</label>
+					<div class="control-inline  width-120">
+						<#form:input path="planName" maxlength="255" class="form-control width-120"/>
+					</div>
+				</div>
+				
+					<div class="form-group">
+							<label class="control-label ">${text('开始时间')}：</label>
+							<div class="control-inline">					
+								<#form:input path="planStartTime_gte" readonly="true" maxlength="20" class="form-control Wdate-datetime"
+									dataFormat="date" onclick="WdatePicker({dateFmt:'yyyy-MM-dd H:mm',isShowClear:false,onpicked:function(){planStartTime_lte.click()}});"/>
+									--
+								<#form:input path="planStartTime_lte" readonly="true" maxlength="20" class="form-control Wdate-datetime"
+								   dataFormat="date" onclick="WdatePicker({dateFmt:'yyyy-MM-dd H:mm',isShowClear:false});"/>
+							</div>
+						</div>
+			
+				<div class="form-group">
+					<button type="submit" class="btn btn-primary btn-sm">${text('查询')}</button>
+					<button type="reset" class="btn btn-default btn-sm">${text('重置')}</button>
+				</div>
+			</#form:form>
 	</form>
 	<div class="modal-dialog">
 			<div class="modal-content">
@@ -215,7 +239,7 @@
 					</h4>
 				</div>
 				<div class="modal-body span6">								
-					todo:	${user}			
+					todo:				
 				</div>
 				<div class="modal-footer">
 					<button type="button" class="btn btn-primary" data-dismiss="modal">确定
@@ -230,16 +254,17 @@
 
 <script>
 
-//加载测评数据记录
-var evaluData = null;
-		$.ajax({
-			type:"POST",
-			async: false,
-			url:"${ctx}/businesscheckplan/businessCheckPlan/checkReport?checkPlanId=${businessCheckPlan.id}&deptId=",
-			dataType:"json",
-			success: function(json){
-				evaluData = json;				
-			}});
+	//加载测评数据记录
+	var evaluData = null;
+	$.ajax({
+		type: "POST",
+		async: false,
+		url: "${ctx}/businesscheckplan/businessCheckPlan/checkReport?checkPlanId=${businessCheckPlan.id}&deptId=",
+		dataType: "json",
+		success: function (json) {
+			evaluData = json;
+		}
+	});
 
 // 初始化DataGrid对象
 $('#dataGrid').dataGrid({
@@ -286,12 +311,13 @@ $(".btnList").bind('onClick', function(){
 });
 
 //异步下载
+/*
 $('#btnExport').click(function(){
 	js.ajaxSubmitForm($('#searchForm'), {
 		url:'${ctx}/demo/print',
 		downloadFile:true
 	});
-});
+});*/
 
 $(function(){
 	$("#printReport").click(function(){
@@ -328,4 +354,63 @@ function viewDitail(name, depat_name){
 }
 
 
+	$(function () {
+		$('#btnExport').click(function () {
+			js.ajaxSubmitForm($('#searchForm'), {
+				url: '${ctx}/businesscheckplan/businessCheckPlan/exportData',
+				downloadFile: true
+			});
+		});
+		$('#btnImport').click(function () {
+			js.layer.open({
+				type: 1,
+				area: ['400px'],
+				title: '导入用户数据',
+				resize: false,
+				scrollbar: true,
+				content: js.template('importTpl'),
+				success: function (layero, index) {
+					layero.find('input[type="checkbox"]').iCheck();
+				},
+				btn: ['<i class="fa fa-check"></i> 导入',
+					'<i class="fa fa-remove"></i> 取消'],
+				btn1: function (index, layero) {
+					var form = {
+						inputForm: layero.find('#inputForm'),
+						file: layero.find('#file').val()
+					};
+					if (form.file == '' || (!js.endWith(form.file, '.xls') && !js.endWith(form.file, '.xlsx'))) {
+						js.showMessage("${text('文件不正确，请选择后缀为 “xls”或“xlsx”的文件。')}", null, 'warning');
+						return false;
+					}
+					js.ajaxSubmitForm(form.inputForm, function (data) {
+						js.showMessage(data.message);
+						if (data.result == Global.TRUE) {
+							js.layer.closeAll();
+						}
+						page();
+					}, "json");
+					return true;
+				}
+			});
+		});
+	});
 </script>
+<script id="importTpl" type="text/template">//<!--
+<form id="inputForm" action="${ctx}/businesscheckplan/businessCheckPlan/importData" method="post" enctype="multipart/form-data"
+	class="form-horizontal mt20 mb10" style="overflow:auto;max-height:200px;">
+	<div class="row">
+		<div class="col-xs-12 col-xs-offset-1">
+			<input type="file" id="file" name="file" class="form-file"/>
+			<div class="mt10 pt5">
+				<#form:checkbox name="updateSupport" label="${text('是否更新已经存在的用户数据')}" class="form-control"
+					title="${text('如果用户编码已经存在，更新这条数据。')}"/> &nbsp;
+				<a href="${ctx}/businesscheckplan/businessCheckPlan/importTemplate" class="btn btn-default btn-xs"><i class="fa fa-file-excel-o"></i> ${text('下载模板')}</a>
+			</div>
+			<font color="red" class="pull-left mt10">
+				${text('提示：仅允许导入“xls”或“xlsx”格式文件！')}
+			</font>
+		</div>
+	</div>
+</form>
+//--></script>

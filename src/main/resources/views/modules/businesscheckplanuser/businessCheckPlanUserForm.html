@@ -102,9 +102,12 @@ $(function(){
 	OfficeInfo();
 	$("#jointWorkDepartmentsName").change(function(){
 		OfficeInfo();
-		var str=$(this).val().split(',');
+		var v = $(this).val();
 		$("#btnSubmit").find(".badge").remove();
-		$("#btnSubmit").append("<span class='badge bg-green'>"+ str.length +"</span>");
+		if(v != undefined && v != ""){
+			var str=v.split(',');			
+			$("#btnSubmit").append("<span class='badge bg-green'>"+ str.length +"</span>");
+			}		
 	});
 
 	$(".timeline-item").click(function(){
@@ -113,11 +116,15 @@ $(function(){
 })
 
 function OfficeInfo(){
-	var str=$("#jointWorkDepartmentsName").val().split(',');
-	$("#officeInfo").html(" " + str.length + "个 ");
+	var v = $("#jointWorkDepartmentsName").val();
 	$(".timeline-item").html("");
-	$(str).each(function(index, item){		
-		$(".timeline-item").append('<div class="col-xs-1 col-sm-2" style="padding:5px 0"> <button type="button" class="btn btn-default btn-sm"><i class="fa fa-cogs"> '+ item +' </button></div>');
-	});
+	if( v != undefined && v != ""){
+		var str=v.split(',');
+		$("#officeInfo").html(" " + str.length + "个 ");		
+		$(str).each(function(index, item){		
+			$(".timeline-item").append('<div class="col-xs-1 col-sm-2" style="padding:5px 0"> <button type="button" class="btn btn-default btn-sm"><i class="fa fa-cogs"> '+ item +' </button></div>');
+		});		
+	}
+	
 }
 </script>

@@ -4,6 +4,12 @@
 package com.jeesite.modules.entity;
 
 import javax.validation.constraints.NotBlank;
+
+import com.jeesite.common.mybatis.annotation.JoinTable;
+import com.jeesite.modules.sys.entity.Office;
+import com.jeesite.modules.sys.entity.User;
+import lombok.Getter;
+import lombok.Setter;
 import org.hibernate.validator.constraints.Length;
 import java.util.Date;
 
@@ -25,15 +31,24 @@ import com.jeesite.common.mybatis.mapper.query.QueryType;
 		@Column(name="title", attrName="title", label="标题", queryType=QueryType.LIKE),
 		@Column(name="start_time", attrName="startTime", label="获奖时间"),
 		@Column(name="end_time", attrName="endTime", label="获奖时间", isQuery=false),
-		@Column(name="dept_id", attrName="deptId", label="参评单位", isQuery=false),
-		@Column(name="exe_user", attrName="exeUser", label="实施人员", isQuery=false),
+		@Column(name="dept_id", attrName="office.officeCode", label="参评单位", isQuery=false),
+		@Column(name="dept_name", attrName="office.officeName", label="参评单位", isQuery=false),
+		@Column(name="exe_user_id", attrName="user.userCode", label="实施人员", isQuery=false),
+		@Column(name="exe_user_name", attrName="user.userName", label="实施人员", isQuery=false),
 		@Column(name="score", attrName="score", label="总分"),
 		@Column(name="has_opinion", attrName="hasOpinion", label="是否收集测评意见", isQuery=false),
 		@Column(name="form_template", attrName="formTemplate", label="测评模板", isQuery=false),
 		@Column(includeEntity=DataEntity.class),
 		@Column(name="audit_by", attrName="auditBy", label="审批者", isInsert=false, isQuery=false),
 		@Column(name="audit_date", attrName="auditDate", label="审批时间", isInsert=false, isQuery=false),
-	}, orderBy="a.update_date DESC"
+	}, joinTable = {
+		@JoinTable(type = JoinTable.Type.LEFT_JOIN, entity = Office.class, alias = "office",
+				on = "office.office_code = a.dept_id", attrName = "office",
+				columns = {@Column(includeEntity = Office.class)}),
+		@JoinTable(type = JoinTable.Type.LEFT_JOIN, entity = User.class, alias = "user",
+				on = "user.user_code = a.exe_user_id", attrName = "user",
+				columns = {@Column(includeEntity = User.class)}),
+},orderBy="a.update_date DESC"
 )
 public class Evalu extends DataEntity<Evalu> {
 	
@@ -41,8 +56,15 @@ public class Evalu extends DataEntity<Evalu> {
 	private String title;		// 标题
 	private Date startTime;		// 获奖时间
 	private Date endTime;		// 获奖时间
-	private String deptId;		// 参评单位
-	private String exeUser;		// 实施人员
+
+
+	@Setter
+	@Getter
+	private Office office;    // 参评单位
+	@Getter
+	@Setter
+	private User user;		// 实施人(多)
+//	private String exeUser;		// 实施人员
 	private Double score;		// 总分
 	private String hasOpinion;		// 是否收集测评意见
 	private String formTemplate;		// 测评模板
@@ -87,25 +109,25 @@ public class Evalu extends DataEntity<Evalu> {
 		this.endTime = endTime;
 	}
 	
-	@NotBlank(message="参评单位不能为空")
-	@Length(min=0, max=500, message="参评单位长度不能超过 500 个字符")
-	public String getDeptId() {
-		return deptId;
-	}
-
-	public void setDeptId(String deptId) {
-		this.deptId = deptId;
-	}
-	
-	@NotBlank(message="实施人员不能为空")
-	@Length(min=0, max=500, message="实施人员长度不能超过 500 个字符")
-	public String getExeUser() {
-		return exeUser;
-	}
-
-	public void setExeUser(String exeUser) {
-		this.exeUser = exeUser;
-	}
+//
+//	@Length(min=0, max=500, message="参评单位长度不能超过 500 个字符")
+//	public String getDeptId() {
+//		return deptId;
+//	}
+//
+//	public void setDeptId(String deptId) {
+//		this.deptId = deptId;
+//	}
+//
+//	@NotBlank(message="实施人员不能为空")
+//	@Length(min=0, max=500, message="实施人员长度不能超过 500 个字符")
+//	public String getExeUser() {
+//		return exeUser;
+//	}
+//
+//	public void setExeUser(String exeUser) {
+//		this.exeUser = exeUser;
+//	}
 	
 	public Double getScore() {
 		return score;
