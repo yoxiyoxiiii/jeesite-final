@@ -14,6 +14,7 @@ import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.validator.constraints.Length;
 
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -32,6 +33,8 @@ import java.util.List;
 		@Column(name="msg", attrName="msg", label="驳回信息"),
 		@Column(name="update_by", attrName="updateBy", label="操作人"),
 		@Column(name="data_type", attrName="dataType", label="数据类型"),
+		@Column(name="create_date", attrName="createDate", label="创建时间"),
+		@Column(name="update_date", attrName="updateDate", label="更新时间"),
 	},
 		joinTable = {
 				@JoinTable(type = JoinTable.Type.LEFT_JOIN, entity = BusinessTargetDataItem.class, alias = "businessTargetDataItem",
@@ -78,6 +81,13 @@ public class BusinessTargetDataInfo extends DataEntity<BusinessTargetDataInfo> {
 	@Getter
 	@Setter
 	private String  updateBy;		// 操作人
+
+	@Getter
+	@Setter
+	private Date updateDate;
+	@Getter
+	@Setter
+	private Date creteDate;
 
 	@Getter
 	@Setter

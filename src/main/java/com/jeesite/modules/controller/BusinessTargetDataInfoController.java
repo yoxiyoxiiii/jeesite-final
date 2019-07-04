@@ -28,6 +28,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -194,6 +195,8 @@ public class BusinessTargetDataInfoController extends BaseController {
 			dataItem.setId(collect.get(i));
 			businessTargetDataInfo.setBusinessTargetDataItem(dataItem);
 			businessTargetDataInfo.setDataInfo(dataCollect.get(i));
+			businessTargetDataInfo.setCreteDate(new Date());
+			businessTargetDataInfo.setUpdateDate(new Date());
 			businessTargetDataInfoService.save(businessTargetDataInfo,userTaskId);
 		}
 		return renderResult(Global.TRUE, text("保存上报的数据成功！"));
@@ -252,7 +255,7 @@ public class BusinessTargetDataInfoController extends BaseController {
 		String userCode = businessTargetDataInfo.getUser().getUserCode();
 		businessPlanUserTaskService.updateStatus(targetId, dataItemId, userCode,"4");//标记被驳回。
 		businessTargetTaskMonitorService.updateBy(userCode, targetId, businessTargetDataInfo.getBusinessStageTarget2().getId(),"4");// 驳回
-
+		businessTargetDataInfo.setUpdateDate(new Date());
 		businessTargetDataInfoService.update(businessTargetDataInfo);
 		//MsgPushUtils.push()
 		return "redirect:list";
