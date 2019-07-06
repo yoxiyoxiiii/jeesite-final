@@ -3,14 +3,15 @@
  */
 package com.jeesite.modules.entity;
 
-import org.hibernate.validator.constraints.Length;
-import java.util.Date;
-
 import com.fasterxml.jackson.annotation.JsonFormat;
-
 import com.jeesite.common.entity.DataEntity;
 import com.jeesite.common.mybatis.annotation.Column;
 import com.jeesite.common.mybatis.annotation.Table;
+import lombok.Getter;
+import lombok.Setter;
+import org.hibernate.validator.constraints.Length;
+
+import java.util.Date;
 
 /**
  * 考核评分Entity
@@ -30,6 +31,7 @@ import com.jeesite.common.mybatis.annotation.Table;
 		@Column(name="audit_date", attrName="auditDate", label="审批时间"),
 		@Column(name="target_id", attrName="targetId", label="考核明显ID"),
 		@Column(name="dept_id", attrName="deptId", label="考核部门ID"),
+		@Column(name="stage_id", attrName="stageId", label="考核部门ID"),
 	}, orderBy="a.update_date DESC"
 )
 public class BusinessPlanScore extends DataEntity<BusinessPlanScore> {
@@ -45,7 +47,10 @@ public class BusinessPlanScore extends DataEntity<BusinessPlanScore> {
 	private Date auditDate;		// 审批时间
 	private String targetId;		// 考核明显ID
 	private String deptId;		// 考核部门ID
-	
+	@Setter
+	@Getter
+	private String stageId;		//期数
+
 	public BusinessPlanScore() {
 		this(null);
 	}

@@ -10,9 +10,11 @@ import com.jeesite.common.collect.MapUtils;
 import com.jeesite.common.config.Global;
 import com.jeesite.common.lang.StringUtils;
 import com.jeesite.common.web.BaseController;
+import com.jeesite.modules.entity.BusinessPlanScore;
 import com.jeesite.modules.entity.BusinessTarget2;
 import com.jeesite.modules.entity.BusinessTargetDataInfo;
 import com.jeesite.modules.entity.BusinessTargetTaskMonitor;
+import com.jeesite.modules.service.BusinessPlanScoreService;
 import com.jeesite.modules.service.BusinessTarget2Service;
 import com.jeesite.modules.service.BusinessTargetDataInfoService;
 import com.jeesite.modules.service.BusinessTargetTaskMonitorService;
@@ -46,6 +48,8 @@ public class BusinessTargetTaskMonitorController extends BaseController {
 
 	@Autowired
 	private BusinessTargetDataInfoService businessTargetDataInfoService;
+	@Autowired
+	private BusinessPlanScoreService businessPlanScoreService;
 	
 	/**
 	 * 获取数据
@@ -243,6 +247,7 @@ public class BusinessTargetTaskMonitorController extends BaseController {
 		return renderResult(Global.TRUE, "数据修复成功");
 	}
 
+
 	@RequiresPermissions("businesstargettaskmonitor:businessTargetTaskMonitor:edit")
 	@RequestMapping(value = "score")
 	@ResponseBody
@@ -261,7 +266,14 @@ public class BusinessTargetTaskMonitorController extends BaseController {
 		}
 
 		Interpreter bsh = new Interpreter();
-		String result =(String) bsh.eval(doltOrgt);//计算结果
+		Object result = bsh.eval(doltOrgt);//计算结果
+		BusinessPlanScore businessPlanScore = new BusinessPlanScore();
+		businessPlanScore.setDeptId(deptId);
+		businessPlanScore.setPlanTotalScore(String.valueOf(result));
+		businessPlanScore.setPlanTotalScoreOld(String.valueOf(result));
+		businessPlanScore.setTargetId(targetId);
+		businessPlanScore.setStageId(stageId);
+		businessPlanScoreService.save(businessPlanScore);
 		return renderResult(Global.TRUE, "分数计算成功!");
 	}
 	
