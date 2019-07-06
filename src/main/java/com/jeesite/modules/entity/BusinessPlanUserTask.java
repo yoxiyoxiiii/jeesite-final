@@ -24,6 +24,7 @@ import java.util.Date;
 @Table(name="business_plan_user_task", alias="a", columns={
 		@Column(name="id", attrName="id", label="id", isPK=true),
 		@Column(name="user_id", attrName="user.userCode", label="任务所属的user"),
+		@Column(name="user_id", attrName="userId", label="任务所属的user"),
 		@Column(name="monitor_id", attrName="monitorId", label="监控ID"),
 		@Column(name="business_check_plan_id", attrName="businessCheckPlanId", label="任务所属的user"),
 		@Column(name="department_id", attrName="office.officeCode", label="任务所属的部门"),
@@ -64,6 +65,9 @@ public class BusinessPlanUserTask extends DataEntity<BusinessPlanUserTask> {
 	@Setter
 	@Getter
 	private User user;		// 任务所属的user
+	@Setter
+	@Getter
+	private String userId;		//
 	@Setter
 	@Getter
 	private BusinessTarget2 businessTarget;		// 任务关联的目标
