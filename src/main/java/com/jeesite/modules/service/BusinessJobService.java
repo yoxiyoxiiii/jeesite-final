@@ -22,7 +22,7 @@ import java.util.List;
  * @version 2019-04-28
  */
 @Service
-@Transactional(readOnly=true)
+@Transactional(readOnly=false)
 public class BusinessJobService extends CrudService<BusinessJobDao, BusinessJob> {
 
 	@Autowired
