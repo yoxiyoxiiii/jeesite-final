@@ -72,8 +72,7 @@ public class BusinessPlanUserTaskController extends BaseController {
 	@RequestMapping(value = "listData")
 	@ResponseBody
 	public Page<BusinessPlanUserTask> listData(BusinessPlanUserTask businessPlanUserTask, HttpServletRequest request, HttpServletResponse response) {
-		String userCode = UserUtils.getUser().getUserCode();
-		businessPlanUserTask.setUserId(userCode);
+		businessPlanUserTask.setUserId(UserUtils.getUser().getUserCode());
 		businessPlanUserTask.setPage(new Page<>(request, response));
 		Page<BusinessPlanUserTask> page = businessPlanUserTaskService.findPage(businessPlanUserTask);
 		return page;

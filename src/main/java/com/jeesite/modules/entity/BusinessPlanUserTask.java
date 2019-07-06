@@ -67,7 +67,7 @@ public class BusinessPlanUserTask extends DataEntity<BusinessPlanUserTask> {
 	private User user;		// 任务所属的user
 	@Setter
 	@Getter
-	private String userId;		//
+	private String userId;
 	@Setter
 	@Getter
 	private BusinessTarget2 businessTarget;		// 任务关联的目标
