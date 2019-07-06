@@ -25,6 +25,7 @@ import com.jeesite.common.web.BaseController;
 import com.jeesite.modules.entity.Evalu;
 import com.jeesite.modules.service.EvaluService;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -87,10 +88,33 @@ public class EvaluController extends BaseController {
 	@PostMapping(value = "save")
 	@ResponseBody
 	public String save(@Validated Evalu evalu) {
+		evalu.setStatus( evalu.STATUS_DRAFT);
 		evaluService.save(evalu);
 		return renderResult(Global.TRUE, text("保存民主测评成功！"));
 	}
-	
+
+	/**
+	 * 审批
+	 */
+	@RequiresPermissions("evalu:evalu:edit")
+	@RequestMapping(value = "audit")
+	@ResponseBody
+	public String audit(Evalu evalu, String status) {
+		Map<String, Object> objectMap = new HashMap<>();
+		switch(status){
+			case "0":
+				//todo:审批通过时启动定时任务
+//				objectMap = evaluService.start(businessCheckPlan);
+				break;
+			default:
+				objectMap.put("result", Global.TRUE);
+				objectMap.put("msg", "民主测评流程操作成功");
+				break;
+		}
+		evalu.setStatus(status);
+		evaluService.updateStatus(evalu);
+		return renderResult((String) objectMap.get("result"), text((String) objectMap.get("msg")));
+	}
 	/**
 	 * 停用民主测评
 	 */

@@ -53,7 +53,7 @@
 								<span class="required ">*</span> ${text('参评单位')}：<i class="fa icon-question hide"></i></label>
 							<div class="col-sm-8">
 								<#form:treeselect id="deptId" title="${text('机构选择')}"
-									path="deptId" labelPath=""
+									path="office.officeCode" labelPath="office.officeName"
 									url="${ctx}/sys/office/treeData"
 									class="required" allowClear="true" checkbox="true"/>
 							</div>
@@ -63,11 +63,10 @@
 						<div class="form-group">
 							<label class="control-label col-sm-4" title="">
 								<span class="required ">*</span> ${text('实施人员')}：<i class="fa icon-question hide"></i></label>
-							<div class="col-sm-8">
-								<#form:treeselect id="exeUser" title="${text('用户选择')}"
-									path="exeUser" labelPath=""
-									url="${ctx}/sys/office/treeData?isLoadUser=true"
-									class="required" allowClear="true" checkbox="true"/>
+							<div class="col-sm-8">								
+								<#form:listselect id="exeUserId" title="${text('用户选择')}"
+									url="${ctx}/sys/user/userSelect?userType=employee" allowClear="false"
+									path="user.userCode"  labelPath="user.userName" value= "id" checkbox="true" itemCode="userCode" itemName="userName"/>
 							</div>
 						</div>
 					</div>

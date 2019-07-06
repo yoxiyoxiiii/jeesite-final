@@ -292,11 +292,11 @@ public class EvaluLibController extends BaseController {
 
 //		List<User> users =
 		//参评领导
-		List<Map<String, Object>>  users = evaluService.findUsers(evalu.getExeUser());
+//		List<Map<String, Object>>  users = evaluService.findUsers(evalu.getUser());
 		model.addAttribute("evaluLib", evaluLib);
 		model.addAttribute("listEvaluLib",listEvaluLib);
 		model.addAttribute("evalu",evalu);
-		model.addAttribute("users",users);
+		model.addAttribute("users",evalu.getUser());
 		return "modules/evalu/evaluDataGrid";
 	}
 
@@ -412,7 +412,7 @@ public class EvaluLibController extends BaseController {
 			model.addAttribute("office", office);
 		}
 
-		List<Map<String, Object>>  users = evaluService.findUsers(evalu.getExeUser());
+		List<Map<String, Object>>  users = evaluService.findUsers(evalu.getUser().getUserCode());
 		model.addAttribute("listEvaluLib", listEvaluLib);
 		model.addAttribute("evalu",evalu);
 		model.addAttribute("user",UserUtils.getUser());

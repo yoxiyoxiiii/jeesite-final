@@ -12,7 +12,7 @@
 		<#form:form id="inputForm" model="${businessTargetDataInfo}" action="${ctx}/businesstargetdatainfo/businessTargetDataInfo/save" method="post" class="form-horizontal">
 			<div class="box-body">
 				<div class="form-unit">${text('基本信息')}</div>
-				<#form:hidden path="id"/>
+				
 				<input hidden name="businessTargetId" id="businessTargetId" value="${businessTargetId}">
 				<input name="userTaskId" hidden value="${userTaskId}">
 				<div class="row">

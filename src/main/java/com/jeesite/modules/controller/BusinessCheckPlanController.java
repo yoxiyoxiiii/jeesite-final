@@ -4,26 +4,37 @@
 package com.jeesite.modules.controller;
 
 import com.jeesite.common.codec.EncodeUtils;
+import com.jeesite.common.collect.ListUtils;
 import com.jeesite.common.config.Global;
 import com.jeesite.common.entity.Page;
+import com.jeesite.common.lang.DateUtils;
 import com.jeesite.common.mapper.JsonMapper;
+import com.jeesite.common.utils.excel.ExcelExport;
+import com.jeesite.common.utils.excel.annotation.ExcelField;
 import com.jeesite.common.web.BaseController;
 import com.jeesite.modules.entity.BusinessCheckPlan;
+import com.jeesite.modules.entity.BusinessTargetDataInfo;
 import com.jeesite.modules.service.BusinessCheckPlanService;
 import com.jeesite.modules.service.BusinessTarget2Service;
+import com.jeesite.modules.service.BusinessTargetDataInfoService;
+import com.jeesite.modules.sys.entity.EmpUser;
 import com.jeesite.modules.sys.entity.Office;
+import com.jeesite.modules.sys.entity.User;
 import com.jeesite.modules.sys.service.OfficeService;
 import com.jeesite.modules.sys.utils.UserUtils;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.quartz.SchedulerException;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -41,6 +52,9 @@ public class BusinessCheckPlanController extends BaseController {
 
 	@Autowired
 	private OfficeService officeService;
+
+	@Autowired
+	private BusinessTargetDataInfoService businessTargetDataInfoService;
 	/**
 	 * 获取数据
 	 */
@@ -168,9 +182,26 @@ public class BusinessCheckPlanController extends BaseController {
 	@RequestMapping(value = "audit")
 	@ResponseBody
 	public String audit(BusinessCheckPlan businessCheckPlan, String status) {
+		Map<String, Object> objectMap = new HashMap<>();
+		switch(status){
+			case "4":
+				//提交审批. 需要检查总分\考核人员分配
+				objectMap.put("result", Global.TRUE);
+				objectMap.put("msg", "需要检查总分\\考核人员分配");
+				break;
+			case "100":
+				//启动考核,采集数据
+				objectMap = businessCheckPlanService.start(businessCheckPlan);
+				break;
+			default:
+				objectMap.put("result", Global.TRUE);
+				objectMap.put("msg", "考核计划流程操作成功");
+				break;
+		}
 		businessCheckPlan.setStatus(status);
 		businessCheckPlanService.updateStatus(businessCheckPlan);
-		return renderResult(Global.TRUE, text("考核计划流程操作成功"));
+		return renderResult((String) objectMap.get("result"), text((String) objectMap.get("msg")));
+
 		//todo:流程状态需要内部控制
 		//todo: 当前120时,必须先判断是否关联了奖扣和测评
 	}
@@ -201,7 +232,7 @@ public class BusinessCheckPlanController extends BaseController {
 	/**
 	 * 获取绩效报告
 	 */
-	@RequestMapping(value = "evaluReport")
+	@RequestMapping(value = "checkReport")
 	@ResponseBody
 	public List<Map<String, Object>> checkReport(String checkPlanId, String createBy, String deptId) {
 		return businessCheckPlanService.findReport(checkPlanId, createBy, deptId);
@@ -312,6 +343,59 @@ public class BusinessCheckPlanController extends BaseController {
 //		model.addAttribute("evalu",evalu);
 //		model.addAttribute("users",users);
 		return "modules/businesscheckplan/businessCheckPlanDataTarget";
+	}
+
+	/**
+	 * 导出采集数据
+	 */
+	@RequiresPermissions("businesscheckplan:businessCheckPlan:edit")
+	@RequestMapping(value = "exportData")
+	public void exportData(BusinessCheckPlan businessCheckPlan, Boolean isAll, String ctrlPermi, HttpServletResponse response) {
+
+		/*if (!(isAll != null && isAll)){
+			businessCheckPlanService.addDataScopeFilter(businessCheckPlan, ctrlPermi);
+		}*/
+		BusinessTargetDataInfo businessTargetDataInfo = new BusinessTargetDataInfo();
+		List<BusinessTargetDataInfo> list = businessTargetDataInfoService.findList(businessTargetDataInfo);
+		String fileName = "用户数据" + DateUtils.getDate("yyyyMMddHHmmss") + ".xlsx";
+		try(ExcelExport ee = new ExcelExport("用户数据", BusinessTargetDataInfo.class)){
+			ee.setDataList(list).write(response, fileName);
+		}catch(Exception e){
+			fileName = e.getMessage();
+		}
+		fileName += ";";
+	}
+
+	/**
+	 * 下载导入采集数据模板
+	 */
+	@RequiresPermissions("businesscheckplan:businessCheckPlan:edit")
+	@RequestMapping(value = "importTemplate")
+	public void importTemplate(HttpServletResponse response) {
+        BusinessTargetDataInfo businessTargetDataInfo = new BusinessTargetDataInfo();
+        businessTargetDataInfo.setId("00000-000-0000-1");
+        List<BusinessTargetDataInfo> list = businessTargetDataInfoService.findList(businessTargetDataInfo);
+		String fileName = "用户数据模板.xlsx";
+		try(ExcelExport ee = new ExcelExport("用户数据", EmpUser.class, ExcelField.Type.IMPORT)){
+			ee.setDataList(list).write(response, fileName);
+		}
+	}
+
+
+	/**
+	 * 导入上报数据
+	 */
+	@ResponseBody
+	@RequiresPermissions("businesscheckplan:businessCheckPlan:edit")
+	@PostMapping(value = "importData")
+	public String importData(MultipartFile file, String updateSupport) {
+		try {
+			boolean isUpdateSupport = Global.YES.equals(updateSupport);
+			String message = businessTargetDataInfoService.importData(file, isUpdateSupport);
+			return renderResult(Global.TRUE, "posfull:"+message);
+		} catch (Exception ex) {
+			return renderResult(Global.FALSE, "posfull:"+ex.getMessage());
+		}
 	}
 
 }

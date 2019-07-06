@@ -14,6 +14,12 @@ import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.validator.constraints.Length;
 
+import com.jeesite.common.utils.excel.annotation.ExcelField;
+import com.jeesite.common.utils.excel.annotation.ExcelField.Align;
+import com.jeesite.common.utils.excel.annotation.ExcelFields;
+import com.jeesite.common.utils.excel.fieldtype.CompanyType;
+import com.jeesite.common.utils.excel.fieldtype.OfficeType;
+
 import java.util.Date;
 import java.util.List;
 
@@ -54,7 +60,9 @@ import java.util.List;
 		orderBy="a.id DESC"
 )
 public class BusinessTargetDataInfo extends DataEntity<BusinessTargetDataInfo> {
-	
+
+
+	@ExcelField(title="编号",  align=Align.CENTER, sort=10)
 	private static final long serialVersionUID = 1L;
 
 	@Getter
@@ -62,6 +70,7 @@ public class BusinessTargetDataInfo extends DataEntity<BusinessTargetDataInfo> {
 	private String targetDataItemId; // 数据项
 	@Getter
 	@Setter
+	@ExcelField(title="数据项", align = Align.CENTER, sort=20)
 	private BusinessTargetDataItem businessTargetDataItem; // 数据项
 	@Getter
 	@Setter
@@ -69,6 +78,8 @@ public class BusinessTargetDataInfo extends DataEntity<BusinessTargetDataInfo> {
 	@Getter
 	@Setter
 	private User user;		// 数据上报的人/部门
+
+	@ExcelField(title="具体的数据", align=Align.CENTER, sort=40)
 	private String dataInfo;		// 具体的数据
 	private Integer dataType;		// 数据类型
 
@@ -127,5 +138,6 @@ public class BusinessTargetDataInfo extends DataEntity<BusinessTargetDataInfo> {
 	public void setDataType(Integer dataType) {
 		this.dataType = dataType;
 	}
-	
+
+
 }
