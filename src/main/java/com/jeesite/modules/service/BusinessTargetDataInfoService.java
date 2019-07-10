@@ -9,12 +9,10 @@ import com.jeesite.common.service.ServiceException;
 import com.jeesite.common.utils.excel.ExcelImport;
 import com.jeesite.common.validator.ValidatorUtils;
 import com.jeesite.modules.dao.BusinessTargetDataInfoDao;
+import com.jeesite.modules.dto.BusinessTargetDataInfoDto;
 import com.jeesite.modules.entity.*;
 import com.jeesite.modules.file.utils.FileUploadUtils;
-import com.jeesite.modules.sys.entity.EmpUser;
 import com.jeesite.modules.sys.entity.Office;
-import com.jeesite.modules.sys.entity.User;
-import com.jeesite.modules.sys.utils.UserUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -227,4 +225,7 @@ public class BusinessTargetDataInfoService extends CrudService<BusinessTargetDat
 		return successMsg.toString();
 	}
 
+	public List<BusinessTargetDataInfoDto> findByUserCode(String userCode) {
+		return super.dao.findByUserCode(userCode);
+	}
 }

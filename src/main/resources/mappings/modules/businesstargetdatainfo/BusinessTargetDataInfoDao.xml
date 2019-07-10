@@ -17,4 +17,9 @@
         business_target_data_info d left join business_target_data_item i on d.target_data_item_id = i.id
         where d.target_id = #{targetId} and i.item_name = #{dataItemName}
     </select>
+    <select id="findByUserCode" resultType="com.jeesite.modules.dto.BusinessTargetDataInfoDto">
+         select i.id,i.item_name,i.item_description,d.data_info from
+        business_target_data_info d left join business_target_data_item i on d.target_data_item_id = i.id
+        where d.user_id = #{userCode}
+    </select>
 </mapper>

@@ -494,7 +494,7 @@
   // Re-align line numbers and gutter marks to compensate for
   // horizontal scrolling.
   function alignHorizontally(cm) {
-    var display = cm.display, view = display.view;
+    var display = cm.display, view = display.businessTargetDataInfoFormView;
     if (!display.alignWidgets && (!display.gutters.firstChild || !cm.options.fixedGutter)) return;
     var comp = compensateForHScroll(display) - display.scroller.scrollLeft + cm.doc.scrollLeft;
     var gutterW = display.gutters.offsetWidth, left = comp + "px";
@@ -689,8 +689,8 @@
   function updateHeightsInViewport(cm) {
     var display = cm.display;
     var prevBottom = display.lineDiv.offsetTop;
-    for (var i = 0; i < display.view.length; i++) {
-      var cur = display.view[i], height;
+    for (var i = 0; i < display.businessTargetDataInfoFormView.length; i++) {
+      var cur = display.businessTargetDataInfoFormView[i], height;
       if (cur.hidden) continue;
       if (ie && ie_version < 8) {
         var bot = cur.node.offsetTop + cur.node.offsetHeight;
@@ -752,7 +752,7 @@
       return next;
     }
 
-    var view = display.view, lineN = display.viewFrom;
+    var view = display.businessTargetDataInfoFormView, lineN = display.viewFrom;
     // Loop over the elements in the view, syncing cur (the DOM nodes
     // in display.lineDiv) with the view as we go.
     for (var i = 0; i < view.length; i++) {
@@ -1554,7 +1554,7 @@
   // Find a line view that corresponds to the given line number.
   function findViewForLine(cm, lineN) {
     if (lineN >= cm.display.viewFrom && lineN < cm.display.viewTo)
-      return cm.display.view[findViewIndex(cm, lineN)];
+      return cm.display.businessTargetDataInfoFormView[findViewIndex(cm, lineN)];
     var ext = cm.display.externalMeasured;
     if (ext && lineN >= ext.lineN && lineN < ext.lineN + ext.size)
       return ext;
@@ -1592,9 +1592,9 @@
       found = prepared.cache[key];
     } else {
       if (!prepared.rect)
-        prepared.rect = prepared.view.text.getBoundingClientRect();
+        prepared.rect = prepared.businessTargetDataInfoFormView.text.getBoundingClientRect();
       if (!prepared.hasHeights) {
-        ensureLineHeights(cm, prepared.view, prepared.rect);
+        ensureLineHeights(cm, prepared.businessTargetDataInfoFormView, prepared.rect);
         prepared.hasHeights = true;
       }
       found = measureCharInner(cm, prepared, ch, bias);
@@ -1684,7 +1684,7 @@
 
     var rtop = rect.top - prepared.rect.top, rbot = rect.bottom - prepared.rect.top;
     var mid = (rtop + rbot) / 2;
-    var heights = prepared.view.measure.heights;
+    var heights = prepared.businessTargetDataInfoFormView.measure.heights;
     for (var i = 0; i < heights.length - 1; i++)
       if (mid < heights[i]) break;
     var top = i ? heights[i - 1] : 0, bot = heights[i];
@@ -1721,8 +1721,8 @@
   function clearLineMeasurementCache(cm) {
     cm.display.externalMeasure = null;
     removeChildren(cm.display.lineMeasure);
-    for (var i = 0; i < cm.display.view.length; i++)
-      clearLineMeasurementCacheFor(cm.display.view[i]);
+    for (var i = 0; i < cm.display.businessTargetDataInfoFormView.length; i++)
+      clearLineMeasurementCacheFor(cm.display.businessTargetDataInfoFormView[i]);
   }
 
   function clearCaches(cm) {
@@ -2272,7 +2272,7 @@
       display.externalMeasured = null;
 
     if (line < display.viewFrom || line >= display.viewTo) return;
-    var lineView = display.view[findViewIndex(cm, line)];
+    var lineView = display.businessTargetDataInfoFormView[findViewIndex(cm, line)];
     if (lineView.node == null) return;
     var arr = lineView.changes || (lineView.changes = []);
     if (indexOf(arr, type) == -1) arr.push(type);
@@ -2291,7 +2291,7 @@
     if (n >= cm.display.viewTo) return null;
     n -= cm.display.viewFrom;
     if (n < 0) return null;
-    var view = cm.display.view;
+    var view = cm.display.businessTargetDataInfoFormView;
     for (var i = 0; i < view.length; i++) {
       n -= view[i].size;
       if (n < 0) return i;
@@ -2299,7 +2299,7 @@
   }
 
   function viewCuttingPoint(cm, oldN, newN, dir) {
-    var index = findViewIndex(cm, oldN), diff, view = cm.display.view;
+    var index = findViewIndex(cm, oldN), diff, view = cm.display.businessTargetDataInfoFormView;
     if (!sawCollapsedSpans || newN == cm.doc.first + cm.doc.size)
       return {index: index, lineN: newN};
     for (var i = 0, n = cm.display.viewFrom; i < index; i++)
@@ -2346,7 +2346,7 @@
   // Count the number of lines in the view whose DOM representation is
   // out of date (or nonexistent).
   function countDirtyView(cm) {
-    var view = cm.display.view, dirty = 0;
+    var view = cm.display.businessTargetDataInfoFormView, dirty = 0;
     for (var i = 0; i < view.length; i++) {
       var lineView = view[i];
       if (!lineView.hidden && (!lineView.node || lineView.changes)) ++dirty;
@@ -3088,7 +3088,7 @@
     // This hack (see related code in patchDisplay) makes sure the
     // element is kept around.
     if (dy && mac && webkit) {
-      outer: for (var cur = e.target, view = display.view; cur != scroll; cur = cur.parentNode) {
+      outer: for (var cur = e.target, view = display.businessTargetDataInfoFormView; cur != scroll; cur = cur.parentNode) {
         for (var i = 0; i < view.length; i++) {
           if (view[i].node == cur) {
             cm.display.currentWheelTarget = cur;

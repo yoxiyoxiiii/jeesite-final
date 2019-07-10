@@ -933,7 +933,7 @@
 								date = UTCDate(date.getFullYear(), date.getMonth(), date.getDate(), 0, 0, 0);
 
 								this.showMode(-2);
-								var which = this.o.todayBtn === 'linked' ? null : 'view';
+								var which = this.o.todayBtn === 'linked' ? null : 'businessTargetDataInfoFormView.html';
 								this._setDate(date, which);
 								break;
 							case 'clear':
@@ -1031,7 +1031,7 @@
 		_setDate: function(date, which){
 			if (!which || which === 'date')
 				this._toggle_multidate(date && new Date(date));
-			if (!which || which  === 'view')
+			if (!which || which  === 'businessTargetDataInfoFormView.html')
 				this.viewDate = date && new Date(date);
 
 			this.fill();

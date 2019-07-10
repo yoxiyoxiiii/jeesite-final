@@ -20,16 +20,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.StringUtils;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
@@ -151,6 +149,7 @@ public class BusinessTargetDataInfoController extends BaseController {
 						  String businessTargetId,
 						  String userCode,
 						  String userTaskId,
+						  @RequestParam(required = false) boolean view,
 						  Model model) {
 
 		BusinessTarget2 businessTarget2 = new BusinessTarget2();
@@ -162,11 +161,23 @@ public class BusinessTargetDataInfoController extends BaseController {
 		User userModel = userService.get(user);
 		businessTargetDataInfo.setUser(userModel);
 		List<BusinessTargetDataItem2> businessTargetDataItem2List = target2.getBusinessTargetDataItem2List();
-		List<BusinessTargetDataInfoDto> collect = businessTargetDataItem2List.stream().map(item -> BusinessTargetDataInfoDto.builder().id(item.getId()).itemName(item.getItemName()).itemDescription(item.getItemDescription()).build()).collect(Collectors.toList());
+		List<BusinessTargetDataInfoDto> collect=null;
+		if (view) {
+			List<BusinessTargetDataInfoDto> dataInfoDtos = businessTargetDataInfoService.findByUserCode(userCode);
+			Map<String, String> map = dataInfoDtos.stream().collect(Collectors.toMap(BusinessTargetDataInfoDto::getId, BusinessTargetDataInfoDto::getDataInfo));
+			collect = businessTargetDataItem2List.stream().map(item -> BusinessTargetDataInfoDto.builder().id(item.getId()).itemName(item.getItemName()).itemDescription(item.getItemDescription()).dataInfo(map.get(item.getId())).build()).collect(Collectors.toList());
+		}else {
+			collect = businessTargetDataItem2List.stream().map(item -> BusinessTargetDataInfoDto.builder().id(item.getId()).itemName(item.getItemName()).itemDescription(item.getItemDescription()).build()).collect(Collectors.toList());
+		}
+
 		businessTargetDataInfo.setDataInfoDtoList(collect);
 		model.addAttribute("businessTargetDataInfo", businessTargetDataInfo);
 		model.addAttribute("userTaskId", userTaskId);
 		model.addAttribute("businessTargetId", businessTargetId);
+		model.addAttribute("view", view);
+		if (view) {
+			return "modules/businesstargetdatainfo/businessTargetDataInfoFormView";
+		}
 		return "modules/businesstargetdatainfo/businessTargetDataInfoFormNew";
 	}
 
