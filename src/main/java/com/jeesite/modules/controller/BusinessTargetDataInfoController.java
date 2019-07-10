@@ -7,10 +7,7 @@ import com.jeesite.common.config.Global;
 import com.jeesite.common.entity.Page;
 import com.jeesite.common.web.BaseController;
 import com.jeesite.modules.dto.BusinessTargetDataInfoDto;
-import com.jeesite.modules.entity.BusinessTarget2;
-import com.jeesite.modules.entity.BusinessTargetDataInfo;
-import com.jeesite.modules.entity.BusinessTargetDataItem;
-import com.jeesite.modules.entity.BusinessTargetDataItem2;
+import com.jeesite.modules.entity.*;
 import com.jeesite.modules.service.*;
 import com.jeesite.modules.sys.entity.User;
 import com.jeesite.modules.sys.service.UserService;
@@ -66,35 +63,47 @@ public class BusinessTargetDataInfoController extends BaseController {
 		return businessTargetDataInfoService.get(id, isNewRecord);
 	}
 	
+//	/**
+//	 * 查询列表
+//	 */
+//	@RequiresPermissions("businesstargetdatainfo:businessTargetDataInfo:view")
+//	@RequestMapping(value = {"list", ""})
+//	public String list(BusinessTargetDataInfo businessTargetDataInfo,String userCode,Model model) {
+//		model.addAttribute("userCode", userCode);
+//		model.addAttribute("businessTargetDataInfo", businessTargetDataInfo);
+//		return "modules/businesstargetdatainfo/businessTargetDataInfoList";
+//	}
 	/**
 	 * 查询列表
 	 */
 	@RequiresPermissions("businesstargetdatainfo:businessTargetDataInfo:view")
 	@RequestMapping(value = {"list", ""})
-	public String list(BusinessTargetDataInfo businessTargetDataInfo,String userCode,Model model) {
-		model.addAttribute("userCode", userCode);
-		model.addAttribute("businessTargetDataInfo", businessTargetDataInfo);
-		return "modules/businesstargetdatainfo/businessTargetDataInfoList";
+	public String list(BusinessPlanUserTask businessPlanUserTask, Model model) {
+		model.addAttribute("businessPlanUserTask", businessPlanUserTask);
+		return "modules/businesstargetdatainfo/businessPlanUserTaskList";
 	}
-	
+
 	/**
 	 * 查询列表数据
 	 */
 	@RequiresPermissions("businesstargetdatainfo:businessTargetDataInfo:view")
 	@RequestMapping(value = "listData")
 	@ResponseBody
-	public Page<BusinessTargetDataInfo> listData(BusinessTargetDataInfo businessTargetDataInfo, String userCode,HttpServletRequest request, HttpServletResponse response) {
+	public Page<BusinessPlanUserTask> listData(BusinessPlanUserTask businessPlanUserTask,HttpServletRequest request, HttpServletResponse response) {
 
-		businessTargetDataInfo.setPage(new Page<>(request, response));
-		if (StringUtils.isEmpty(userCode)) {
-			Page<BusinessTargetDataInfo> page = businessTargetDataInfoService.findPage(businessTargetDataInfo);
-			return page;
-		}
-		//更具用户过滤
-		User user = new User();
-		user.setUserCode(userCode);
-		businessTargetDataInfo.setUser(user);
-		return businessTargetDataInfoService.findPage(businessTargetDataInfo);
+//		businessTargetDataInfo.setPage(new Page<>(request, response));
+//		if (StringUtils.isEmpty(userCode)) {
+//			Page<BusinessTargetDataInfo> page = businessTargetDataInfoService.findPage(businessTargetDataInfo);
+//			return page;
+//		}
+//		//更具用户过滤
+//		User user = new User();
+//		user.setUserCode(userCode);
+//		businessTargetDataInfo.setUser(user);
+//		return businessTargetDataInfoService.findPage(businessTargetDataInfo);
+		businessPlanUserTask.setPage(new Page<>(request, response));
+		Page<BusinessPlanUserTask> page = businessPlanUserTaskService.findPage(businessPlanUserTask);
+		return page;
 	}
 
 	/**
