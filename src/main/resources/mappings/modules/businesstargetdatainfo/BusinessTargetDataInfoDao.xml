@@ -1,16 +1,20 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.jeesite.modules.dao.BusinessTargetDataInfoDao">
-	
-	<!-- 查询数据
-	<select id="findList" resultType="BusinessTargetDataInfo">
-		SELECT ${sqlMap.column.toSql()}
-		FROM ${sqlMap.table.toSql()}
-		<where>
-			${sqlMap.where.toSql()}
-		</where>
-		ORDER BY ${sqlMap.order.toSql()}
-	</select> -->
+    <update id="updateStatusBy">
+        update business_target_data_info set data_status = #{status}
+        where user_id = #{userCode} and target_data_item_id = #{dataItemId}
+    </update>
+
+    <!-- 查询数据
+    <select id="findList" resultType="BusinessTargetDataInfo">
+        SELECT ${sqlMap.column.toSql()}
+        FROM ${sqlMap.table.toSql()}
+        <where>
+            ${sqlMap.where.toSql()}
+        </where>
+        ORDER BY ${sqlMap.order.toSql()}
+    </select> -->
 
     <select id="findByItemName" resultType="com.jeesite.modules.entity.BusinessTargetDataInfo">
         select * from

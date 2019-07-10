@@ -27,7 +27,7 @@ import java.util.List;
  * @version 2019-06-07
  */
 @Service
-@Transactional(readOnly=true)
+@Transactional(readOnly=false)
 public class BusinessTargetDataInfoService extends CrudService<BusinessTargetDataInfoDao, BusinessTargetDataInfo> {
 
 	@Autowired
@@ -227,5 +227,14 @@ public class BusinessTargetDataInfoService extends CrudService<BusinessTargetDat
 
 	public List<BusinessTargetDataInfoDto> findByUserCode(String userCode) {
 		return super.dao.findByUserCode(userCode);
+	}
+
+	@Transactional(readOnly=false)
+	public void updateStatusBy(String userCode, String dataItemIds, String status) {
+		//上报的数据
+		String[] split = dataItemIds.split(",");
+		for (String id: split) {
+			super.dao.updateStatusBy(userCode, id, status);
+		}
 	}
 }

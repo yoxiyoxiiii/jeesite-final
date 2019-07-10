@@ -23,4 +23,8 @@ public interface BusinessTargetDataInfoDao extends CrudDao<BusinessTargetDataInf
                                           @Param("dataItemName") String dataItemName);
 
     List<BusinessTargetDataInfoDto> findByUserCode(@Param("userCode")String userCode);
+
+    void updateStatusBy(@Param("userCode") String userCode,
+                        @Param("dataItemId") String dataItemId,
+                        @Param("status") String status);
 }
