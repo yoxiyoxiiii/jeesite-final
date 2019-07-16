@@ -238,12 +238,22 @@ public class BusinessTargetDataInfoService extends CrudService<BusinessTargetDat
 	}
 
 	@Transactional(readOnly=false)
-	public void updateStatusBy(String userCode, String dataItemIds, String status) {
+	public void updateStatusByItems(String userCode,
+							   String dataItemIds,
+							   String status,
+							   String stageId,
+							   String targetId,
+							   String userTaskId
+							   ) {
 		//上报的数据
 		String[] split = dataItemIds.split(",");
 		for (String id: split) {
 			super.dao.updateStatusBy(userCode, id, status);
 		}
+		//更新个人任务
+		businessPlanUserTaskService.updateStatusById(userTaskId,"3");//完成
+		businessTargetTaskMonitorService.updateBy(userCode, targetId, stageId,"3");// 完成
+
 	}
 
 

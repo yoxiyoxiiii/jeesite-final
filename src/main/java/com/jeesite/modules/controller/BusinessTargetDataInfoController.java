@@ -259,9 +259,14 @@ public class BusinessTargetDataInfoController extends BaseController {
 	@RequiresPermissions("businesstargetdatainfo:businessTargetDataInfo:edit")
 	@RequestMapping(value = "enable")
 	@ResponseBody
-	public String enable(BusinessTargetDataInfo businessTargetDataInfo, String status) {
+	public String enable(BusinessTargetDataInfo businessTargetDataInfo,
+						 String status,
+						 String stageId,
+						 String userTaskId,
+						 String businessTargetId) {
 		String dtosId = businessTargetDataInfo.getId();
-		businessTargetDataInfoService.updateStatusBy(UserUtils.getUser().getUserCode(), dtosId,status );
+		//上报的数据UserUtils.getUser().getUserCode(), dtosId,status ,stageId,userTaskId, businessTargetId
+		businessTargetDataInfoService.updateStatusByItems(businessTargetDataInfo.getUser().getUserCode(),dtosId,status,stageId,businessTargetId, userTaskId);
 		return renderResult(Global.TRUE, text("操作成功!"));
 	}
 

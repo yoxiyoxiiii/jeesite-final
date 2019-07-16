@@ -84,4 +84,8 @@ public class BusinessPlanUserTaskService extends CrudService<BusinessPlanUserTas
 	public List<BusinessPlanUserTask> findPageDisCount(int pNo, int pSize) {
 		return super.dao.findPageDisCount(pNo-1, pSize);
 	}
+
+	public void updateStatusById(String userTaskId, String status) {
+		super.dao.updateStatusById(userTaskId, status);
+	}
 }

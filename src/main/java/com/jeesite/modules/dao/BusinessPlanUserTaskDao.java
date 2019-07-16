@@ -29,4 +29,7 @@ public interface BusinessPlanUserTaskDao extends CrudDao<BusinessPlanUserTask> {
                              @Param("dataItemId") String stageId,
                              @Param("userCode") String userCode,
                              @Param("status") String status);
+
+    void updateStatusById(@Param("userTaskId") String userTaskId,
+                          @Param("status") String status);
 }
