@@ -24,4 +24,9 @@ public interface BusinessPlanUserTaskDao extends CrudDao<BusinessPlanUserTask> {
                         @Param("status") String status);
 
     List<BusinessPlanUserTask> findPageDisCount(@Param("pNo")int pNo, @Param("pSize")int pSize);
+
+    void updateStatusByItems(@Param("targetId")  String targetId,
+                             @Param("dataItemId") String stageId,
+                             @Param("userCode") String userCode,
+                             @Param("status") String status);
 }

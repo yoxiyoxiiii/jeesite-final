@@ -134,7 +134,7 @@ public class BusinessTargetDataInfoController extends BaseController {
 	public String saveReport(BusinessTargetDataInfo businessTargetDataInfo, Model model) {
 		businessTargetDataInfo.setDataStatus("1");//待审核
 		businessTargetDataInfo.setIsNewRecord(false);
-		businessTargetDataInfoService.saveReport(businessTargetDataInfo);
+//		businessTargetDataInfoService.saveReport(businessTargetDataInfo);
 		model.addAttribute("businessTargetDataInfo", businessTargetDataInfo);
 		return renderResult(Global.TRUE, text("保存上报的数据成功！"));
 	}
@@ -158,7 +158,9 @@ public class BusinessTargetDataInfoController extends BaseController {
 						  String businessTargetId,
 						  String userCode,
 						  String userTaskId,
+						  String stageId,
 						  @RequestParam(required = false) boolean view,
+						  @RequestParam(required = false) boolean report,
 						  Model model) {
 
 		BusinessTarget2 businessTarget2 = new BusinessTarget2();
@@ -178,12 +180,14 @@ public class BusinessTargetDataInfoController extends BaseController {
 		}else {
 			collect = businessTargetDataItem2List.stream().map(item -> BusinessTargetDataInfoDto.builder().id(item.getId()).itemName(item.getItemName()).itemDescription(item.getItemDescription()).build()).collect(Collectors.toList());
 		}
-
 		businessTargetDataInfo.setDataInfoDtoList(collect);
 		model.addAttribute("businessTargetDataInfo", businessTargetDataInfo);
 		model.addAttribute("userTaskId", userTaskId);
+		model.addAttribute("userCode", userCode);
 		model.addAttribute("businessTargetId", businessTargetId);
+		model.addAttribute("stageId", stageId);
 		model.addAttribute("view", view);
+		model.addAttribute("report", report);
 		if (view) {
 			return "modules/businesstargetdatainfo/businessTargetDataInfoFormView";
 		}
@@ -197,12 +201,17 @@ public class BusinessTargetDataInfoController extends BaseController {
 	@RequiresPermissions("businesstargetdatainfo:businessTargetDataInfo:edit")
 	@PostMapping(value = "save")
 	@ResponseBody
-	public String save(BusinessTargetDataInfo dataInfoDtos, String userTaskId) {
+	public String save(BusinessTargetDataInfo dataInfoDtos, String userTaskId,
+					   @RequestParam(required = false) boolean report, String stageId) {
 		String dtosId = dataInfoDtos.getId();
 		//上报的数据
 		String dataInfo = dataInfoDtos.getDataInfo();
 		String[] dataList = dataInfo.split(",");
 		String[] split = dtosId.split(",");
+		if (report) {
+			String targetId = dataInfoDtos.getBusinessTarget().getId();
+			businessPlanUserTaskService.updateStatusByItems(targetId,stageId,dataInfoDtos.getUser().getUserCode(),"5");//重新填报
+		}
 
 		//数据项ID
 		List<String> collect = Arrays.asList(split).stream().filter(item ->!StringUtils.isEmpty(item)).collect(Collectors.toList());
@@ -217,7 +226,16 @@ public class BusinessTargetDataInfoController extends BaseController {
 			businessTargetDataInfo.setDataInfo(dataCollect.get(i));
 			businessTargetDataInfo.setCreteDate(new Date());
 			businessTargetDataInfo.setUpdateDate(new Date());
-			businessTargetDataInfoService.save(businessTargetDataInfo,userTaskId);
+			if (report) {//重新上报
+				businessTargetDataInfo.setDataStatus("1");//待审核
+				businessTargetDataInfo.setIsNewRecord(false);
+				BusinessStageTarget2 businessStageTarget2 = new BusinessStageTarget2();
+				businessStageTarget2.setId(stageId);
+				businessTargetDataInfo.setBusinessStageTarget2(businessStageTarget2);
+				businessTargetDataInfoService.saveReport(businessTargetDataInfo,stageId);
+			} else {
+				businessTargetDataInfoService.save(businessTargetDataInfo,userTaskId);
+			}
 		}
 		return renderResult(Global.TRUE, text("保存上报的数据成功！"));
 	}
@@ -250,32 +268,32 @@ public class BusinessTargetDataInfoController extends BaseController {
 	/**
 	 *
 	 * 数据填报驳回
-	 * @param id
+	 * @param
 	 * @return
 	 */
 	@RequiresPermissions("businesstargetdatainfo:businessTargetDataInfo:edit")
 	@RequestMapping(value = "back")
-	public String back(String id, Model model) {
-		model.addAttribute("id",id);
+	public String back(String userTaskId,
+					   String userCode,
+					   String businessTargetId,
+					   String stageId,
+					   Model model) {
+		model.addAttribute("userTaskId",userTaskId);
+		model.addAttribute("userCode",userCode);
+		model.addAttribute("stageId",stageId);
+		model.addAttribute("businessTargetId",businessTargetId);
 		return "modules/businesstargetdatainfo/back";
 	}
 
 
 	@RequiresPermissions("businesstargetdatainfo:businessTargetDataInfo:edit")
 	@RequestMapping(value = "saveBack")
-	public String saveBack(String id, String msg) {
-		BusinessTargetDataInfo businessTargetDataInfo = businessTargetDataInfoService.get(id);
-		businessTargetDataInfo.setMsg(msg);
-		businessTargetDataInfo.setDataStatus("3");//驳回
-		businessTargetDataInfo.setUpdateBy(UserUtils.getUser().getUserCode());
-		String dataItemId = businessTargetDataInfo.getBusinessTargetDataItem().getId();
-		String targetId = businessTargetDataInfo.getBusinessTarget().getId();
+	public String saveBack(String stageId,
+						   String userCode,
+						   String businessTargetId,
+						   String msg) {
 
-		String userCode = businessTargetDataInfo.getUser().getUserCode();
-		businessPlanUserTaskService.updateStatus(targetId, dataItemId, userCode,"4");//标记被驳回。
-		businessTargetTaskMonitorService.updateBy(userCode, targetId, businessTargetDataInfo.getBusinessStageTarget2().getId(),"4");// 驳回
-		businessTargetDataInfo.setUpdateDate(new Date());
-		businessTargetDataInfoService.update(businessTargetDataInfo);
+		businessTargetDataInfoService.saveBack(stageId,userCode,businessTargetId, msg);
 		//MsgPushUtils.push()
 		return "redirect:list";
 //		return renderResult(Global.TRUE, text("操作成功!"));

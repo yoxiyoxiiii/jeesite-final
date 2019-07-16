@@ -3,6 +3,10 @@
 	<div class="box box-main">
 		<#form:form id="inputForm" model="${businessTargetDataInfo}" action="${ctx}/businesstargetdatainfo/businessTargetDataInfo/saveBack" method="post" class="form-horizontal">
 		<div class="box-body">
+			<input value="${userCode}" name="userCode" hidden>
+			<input value="${userTaskId}" name="userTaskId" hidden>
+			<input value="${businessTargetId}" name="businessTargetId" hidden>
+			<input value="${stageId}" name="stageId" hidden>
 			<div class="form-unit">${text('驳回理由')}</div>
 			<#form:hidden path="id"/>
 			<div class="row">

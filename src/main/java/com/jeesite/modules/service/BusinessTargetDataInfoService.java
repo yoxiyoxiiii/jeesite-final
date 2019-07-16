@@ -13,12 +13,15 @@ import com.jeesite.modules.dto.BusinessTargetDataInfoDto;
 import com.jeesite.modules.entity.*;
 import com.jeesite.modules.file.utils.FileUploadUtils;
 import com.jeesite.modules.sys.entity.Office;
+import com.jeesite.modules.sys.entity.User;
+import com.jeesite.modules.sys.utils.UserUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.ConstraintViolationException;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -35,11 +38,12 @@ public class BusinessTargetDataInfoService extends CrudService<BusinessTargetDat
 	@Autowired
 	private BusinessCheckPlanUserService checkPlanUserService;
 	@Autowired
-	private BusinessCheckPlanService businessCheckPlanService;
-	@Autowired
 	private BusinessTargetTaskMonitorService businessTargetTaskMonitorService;
 	@Autowired
 	private BusinessPlanUserTaskService businessPlanUserTaskService;
+
+	@Autowired
+	private BusinessTargetDataInfoService businessTargetDataInfoService;
 	/**
 	 * 获取单条数据
 	 * @param businessTargetDataInfo
@@ -146,15 +150,19 @@ public class BusinessTargetDataInfoService extends CrudService<BusinessTargetDat
 	}
 
 	@Transactional(readOnly=false)
-	public void saveReport(BusinessTargetDataInfo businessTargetDataInfo) {
+	public void saveReport(BusinessTargetDataInfo businessTargetDataInfo , String stageId) {
 		businessTargetDataInfo.setDataStatus("1");//待审核
 		businessTargetDataInfo.setIsNewRecord(false);
 		String userCode = businessTargetDataInfo.getUser().getUserCode();
 		String targetId = businessTargetDataInfo.getBusinessTarget().getId();
 		String dataItemId = businessTargetDataInfo.getBusinessTargetDataItem().getId();
 		businessPlanUserTaskService.updateStatus(targetId,dataItemId, userCode, "5");//重报
-		businessTargetTaskMonitorService.updateBy(userCode, targetId,businessTargetDataInfo.getBusinessStageTarget2().getId(),"5");//将监控状态修改未 已重报
-		this.save(businessTargetDataInfo);
+		businessTargetTaskMonitorService.updateBy(userCode, targetId,businessTargetDataInfo.getBusinessStageTarget2().getId(),"5");//将监控状态修改未 已重报businessTargetDataInfo。
+		this.updateStatusBy(targetId,dataItemId,userCode,stageId,businessTargetDataInfo.getDataInfo(),businessTargetDataInfo.getDataStatus());
+	}
+
+	private void updateStatusBy(String targetId, String dataItemId, String userCode, String stageId, String dataInfo, String status) {
+		super.dao.updateStatusByItems(targetId, dataItemId, userCode, stageId, dataInfo, status);
 	}
 
 	public BusinessTargetDataInfo findByItemName(String dataItemName, String targetId) {
@@ -236,5 +244,36 @@ public class BusinessTargetDataInfoService extends CrudService<BusinessTargetDat
 		for (String id: split) {
 			super.dao.updateStatusBy(userCode, id, status);
 		}
+	}
+
+
+
+	@Transactional(readOnly=false)
+	public void saveBack(String stageId, String userCode, String businessTargetId, String msg) {
+		BusinessTargetDataInfo businessTargetDataInfo = new BusinessTargetDataInfo();
+		User user = new User();
+		user.setUserCode(userCode);
+		businessTargetDataInfo.setUser(user);
+		BusinessTarget2 businessTarget2 = new BusinessTarget2();
+		businessTarget2.setId(businessTargetId);
+		businessTargetDataInfo.setBusinessTarget(businessTarget2);
+		BusinessStageTarget2 businessStageTarget2 = new BusinessStageTarget2();
+		businessStageTarget2.setId(stageId);
+		businessTargetDataInfo.setBusinessStageTarget2(businessStageTarget2);
+
+		List<BusinessTargetDataInfo> businessTargetDataInfos = businessTargetDataInfoService.findList(businessTargetDataInfo);
+
+		businessTargetDataInfos.forEach(item->{
+			item.setMsg(msg);
+			item.setDataStatus("3");//驳回
+			item.setUpdateBy(UserUtils.getUser().getUserCode());
+			item.setUpdateDate(new Date());
+			businessTargetDataInfoService.update(item);
+		});
+
+		businessPlanUserTaskService.updateStatusByItems(businessTargetId, stageId, userCode,"4");//标记被驳回。
+
+		//businessTargetTaskMonitorService.updateBy(userCode, targetId, businessTargetDataInfo.getBusinessStageTarget2().getId(),"4");// 驳回
+		businessTargetTaskMonitorService.updateBy(userCode, businessTargetId, stageId,"4");// 驳回
 	}
 }

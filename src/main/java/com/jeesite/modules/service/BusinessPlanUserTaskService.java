@@ -76,6 +76,11 @@ public class BusinessPlanUserTaskService extends CrudService<BusinessPlanUserTas
 		super.dao.updateStatusBy(targetId, dataItemId, userCode, status);
 	}
 
+	@Transactional(readOnly=false)
+	public void updateStatusByItems(String targetId, String stageId,String userCode, String status) {
+		super.dao.updateStatusByItems(targetId, stageId, userCode, status);
+	}
+
 	public List<BusinessPlanUserTask> findPageDisCount(int pNo, int pSize) {
 		return super.dao.findPageDisCount(pNo-1, pSize);
 	}

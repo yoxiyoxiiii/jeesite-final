@@ -5,6 +5,13 @@
         update business_target_data_info set data_status = #{status}
         where user_id = #{userCode} and target_data_item_id = #{dataItemId}
     </update>
+    <update id="updateStatusByItems">
+        update business_target_data_info set data_status = #{status},data_info = #{dataInfo}
+        where user_id = #{userCode}
+         and target_data_item_id = #{dataItemId}
+          and stage_id = #{stageId}
+          and target_id = #{targetId}
+    </update>
 
     <!-- 查询数据
     <select id="findList" resultType="BusinessTargetDataInfo">

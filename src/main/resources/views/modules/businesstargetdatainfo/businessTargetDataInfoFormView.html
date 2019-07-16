@@ -70,8 +70,11 @@
 				<div class="row">
 					<div class="col-sm-offset-2 col-sm-10">
 						<% if (hasPermi('businesstargetdatainfo:businessTargetDataInfo:edit')){ %>
-						<button type="submit" onclick="sub()" class="btn btn-sm btn-primary" id="btnSubmit"><i class="fa fa-check"></i> ${text('通过')}</button>&nbsp;
+						<button type="submit" onclick="sub()" class="btn btn-sm btn-primary" id="btnSubmit"><i class="fa fa-check"></i> ${text('通过')}</button>
+						&nbsp;&nbsp;
+						<a href="${ctx}/businesstargetdatainfo/businessTargetDataInfo/back?userTaskId=${userTaskId}&userCode=${userCode}&businessTargetId=${businessTargetId}&stageId=${stageId}" class="sel_btn ch_cls" >驳回</a>
 						<% } %>
+						&nbsp;&nbsp;
 						<button type="button"  class="btn btn-sm btn-default" id="btnCancel" onclick="js.closeCurrentTabPage()"><i class="fa fa-reply-all"></i> ${text('关 闭')}</button>
 					</div>
 				</div>
@@ -128,3 +131,22 @@ $("#businessTargetDataItem2DataGrid").dataGrid({
 </script>
 
 </div>
+<style>
+	.sel_btn{
+		height: 29px;
+		line-height: 21px;
+		padding: 0 10px;
+		background: #02bafa;
+		border: 1px #26bbdb solid;
+		border-radius: 3px;
+		/*color: #fff;*/
+		display: inline-block;
+		text-decoration: none;
+		font-size: 12px;
+		font-style: normal;
+		outline: none;
+	}
+	.ch_cls{
+		background: #e4e4e4;
+	}
+</style>

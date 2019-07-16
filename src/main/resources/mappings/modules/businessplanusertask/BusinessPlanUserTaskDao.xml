@@ -16,6 +16,10 @@
         update business_plan_user_task set task_status = #{status}
          where user_id = #{userCode} and target_id = #{targetId} and target_data_item_id = #{dataItemId}
     </update>
+    <update id="updateStatusByItems">
+         update business_plan_user_task set task_status = #{status}
+         where user_id = #{userCode} and target_id = #{targetId} and stage_id = #{stageId}
+    </update>
     <select id="findPageDisCount" resultType="com.jeesite.modules.entity.BusinessPlanUserTask">
         select distinct(target_id) from business_plan_user_task ;
     </select>
